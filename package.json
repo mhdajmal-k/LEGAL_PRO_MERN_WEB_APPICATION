@@ -1,0 +1,11 @@
+{
+  "name": "legalpro",
+  "version": "1.0.0",
+  "description": "A MERN STACK WEB APPLICATION WITH FRONTEND IN VITE REACT AND BACKEND AS NODE AND EXPRESS USING TYPESCIRPT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
