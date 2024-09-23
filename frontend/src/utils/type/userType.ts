@@ -1,6 +1,6 @@
 export default interface UserState {
   userInfo: {
-    name: string;
+    userName: string;
     email: string;
   } | null;
   loading: boolean;
@@ -8,7 +8,8 @@ export default interface UserState {
 }
 
 export default interface userSignUp {
-  name?: string;
+  userName?: string;
   email?: string;
   password?: string;
+  confirmPassword?: string;
 }

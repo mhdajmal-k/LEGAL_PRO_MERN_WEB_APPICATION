@@ -4,25 +4,52 @@ import signUpImage from "../../assets/images/signUP.jpg";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from 'formik';
 import { validationSchema } from "../../utils/validator/validationSchema";
+import { useDispatch, useSelector } from 'react-redux';
+// import { useNavigate } from 'react-router-dom';
+import { signUpUser } from '../../services/store/features/userServices';
+import { AppDispatch, RootState } from '../../services/store/store';
+import userSignUp from "../../utils/type/userType"
+import { toast } from 'sonner'; // Import Sonner
+import CustomToast from './CustomToast';
+import { useNavigate } from 'react-router-dom';
+
 
 const SignUpForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState<Boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<Boolean>(false);
 
+    const navigate = useNavigate()
+    const dispatch: AppDispatch = useDispatch()
+    const { loading, error } = useSelector((state: RootState) => state.user)
     const formik = useFormik({
         initialValues: {
             userName: '',
             email: '',
             password: '',
             confirmPassword: '',
+            userInfo: null,
+            loading: false,
+            error: null
         },
         validationSchema,
         validateOnChange: true,
         validateOnBlur: true,
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
+        onSubmit: async (values: userSignUp) => {
+            try {
+                const response = await dispatch(signUpUser(values)).unwrap();
+                console.log(response.message, "is the response//////////////////////ddddddddddddddd//////////");
+                toast(<CustomToast message={response.message} type="success" />);
+                setTimeout(() => {
+                    navigate('/otpVerify')
+                }, 2000)
+
+            } catch (error: any) {
+                toast(<CustomToast message={error.response.message} type="error" />);
+            }
+
         },
     });
+
 
     return (
         <div className='container flex justify-center items-center min-h-screen bg-white'>
@@ -105,10 +132,27 @@ const SignUpForm: React.FC = () => {
                                 {showConfirmPassword ? <FaRegEye className="h-5 w-5" /> : <FaEyeSlash className="h-5 w-5" />}
                             </button>
                         </div>
+                        {loading ? (
+                            <Button
+                                color="primary"
+                                type="submit"
+                                className="w-full"
+                                isLoading
+                                disabled
+                            >
+                                Signing Up...
+                            </Button>
+                        ) : (
+                            <Button
+                                color="primary"
+                                type="submit"
+                                className="w-full"
+                            >
+                                Sign Up
+                            </Button>
+                        )}
+                        {error && <div className="text-red-500 mt-2 text-center">{error}</div>}
 
-                        <Button color="primary" type="submit" className="w-full">
-                            Sign Up
-                        </Button>
                         <Button
                             variant="bordered"
                             className="w-full mt-2"

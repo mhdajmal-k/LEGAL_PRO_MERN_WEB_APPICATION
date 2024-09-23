@@ -1,6 +1,8 @@
 import axios from "axios";
-
-const apiUrl = process.env.REACT_APP_API_URL;
+// import dotenv from "dotenv";
+// dotenv.config();
+const apiUrl = import.meta.env.VITE_API_URL;
+console.log(apiUrl);
 
 const axiosInstance = axios.create({
   baseURL: apiUrl,
@@ -8,6 +10,7 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 export default axiosInstance;
