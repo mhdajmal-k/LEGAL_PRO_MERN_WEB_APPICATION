@@ -11,7 +11,7 @@ import { AppDispatch, RootState } from '../../services/store/store';
 import userSignUp from "../../utils/type/userType"
 import { toast } from 'sonner'; // Import Sonner
 import CustomToast from './CustomToast';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 const SignUpForm: React.FC = () => {
@@ -37,14 +37,18 @@ const SignUpForm: React.FC = () => {
         onSubmit: async (values: userSignUp) => {
             try {
                 const response = await dispatch(signUpUser(values)).unwrap();
-                console.log(response.message, "is the response//////////////////////ddddddddddddddd//////////");
-                toast(<CustomToast message={response.message} type="success" />);
-                setTimeout(() => {
-                    navigate('/otpVerify')
-                }, 2000)
+                if (response.data.status = true) {
+                    console.log(response.message, "is the response//////////////////////ddddddddddddddd//////////");
+                    toast(<CustomToast message={response.message} type="success" />);
+                    setTimeout(() => {
+                        navigate('/otpVerify')
+                    }, 2000)
+                }
+
 
             } catch (error: any) {
-                toast(<CustomToast message={error.response.message} type="error" />);
+                console.log(error, "from here")
+                toast(<CustomToast message={error} type="error" />);
             }
 
         },
@@ -172,10 +176,11 @@ const SignUpForm: React.FC = () => {
                     </div>
                 </div>
                 <p className="mt-4 text-center text-sm text-gray-600">
-                    Already have an account? <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">Sign in</a>
-                </p>
-            </div>
-        </div>
+                    Already have an account? <Link to={"/login"} className='text-blue-900' >Sign In </Link>
+                </p></div>
+
+        </div >
+
     );
 };
 

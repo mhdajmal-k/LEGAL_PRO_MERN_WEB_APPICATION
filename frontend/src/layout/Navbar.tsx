@@ -2,10 +2,16 @@ import React, { useState } from 'react';
 import Logo from '../assets/images/logo.png';
 import { Button } from "@nextui-org/button";
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '../services/store/store';
+import { IoIosNotifications } from "react-icons/io";
+import { FaHeart } from "react-icons/fa";
+import { Avatar } from "@nextui-org/react";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  const dispatch: AppDispatch = useDispatch()
+  const { loading, userInfo, error } = useSelector((state: RootState) => state.user)
   return (
     <nav className="bg-primary p-2">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -37,7 +43,15 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* SignUp and Become a Lawyer Buttons */}
-        <div className="hidden md:flex space-x-6 text- font-semibold">
+        {userInfo?.userName ? <div className='flex justify-between items-center'>
+          <div className='flex'><IoIosNotifications /></div>
+          <div className='flex'><FaHeart /></div>
+          <div className='flex'>
+
+            <Avatar isBordered radius="full" src="https://i.pravatar.cc/150?u=a04258114e29026708c" />
+          </div>
+          <div><span>{userInfo?.userName}</span></div>
+        </div> : <div className="hidden md:flex space-x-6 text- font-semibold">
           <Button size="sm" className="bg-secondary text-black font-bold hover:bg-secondary-50">
             <Link to="/signup">
               SIGN UP
@@ -48,7 +62,8 @@ const Navbar: React.FC = () => {
               Become a Lawyer
             </Link>
           </Button>
-        </div>
+        </div>}
+
 
         {/* Hamburger menu for mobile */}
         <div className="md:hidden">

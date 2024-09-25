@@ -4,8 +4,9 @@ import CustomButton from '../CustomButton';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 import { verifyOtp } from '../../services/store/features/userServices';
+import CustomToast from './CustomToast';
+import { toast } from 'sonner';
 
 const OtpFrom: React.FC = () => {
     const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
@@ -30,7 +31,6 @@ const OtpFrom: React.FC = () => {
 
     const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const value = e.target.value;
-
         if (/^\d$/.test(value)) {
             const newOtp = [...otp];
             newOtp[index] = value;
@@ -46,8 +46,21 @@ const OtpFrom: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const otpCode = otp.join('');
-        const response = await dispatch(verifyOtp(otpCode)).unwrap()
-        console.log(response)
+        if (otpCode == "") toast(<CustomToast message="otp is required" type="error" />);
+        try {
+            const response = await dispatch(verifyOtp(otpCode)).unwrap()
+            if (response) {
+                setTimeout(() => {
+                    navigate("/")
+                }, 2000);
+            }
+            console.log(response, "is the response")
+            toast(<CustomToast message={response.message} type="success" />);
+        } catch (error: any) {
+            console.log(error, "dddddddddddddddddddddddddd")
+            toast(<CustomToast message={error} type="error" />);
+        }
+
     };
 
     // Check if all OTP fields are filled

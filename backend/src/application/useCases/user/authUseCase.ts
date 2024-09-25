@@ -2,20 +2,26 @@ import IUserAuthInteractor from "../../../domain/entites/iuseCase/iAuth";
 import { IUser } from "../../../domain/entites/imodels/Iuser";
 import { iEmailService } from "../../../domain/services/IEmailService";
 import iUserRepository from "../../../domain/entites/irepositories/iuserRepositories";
-import { validateUserInput } from "../../../frameWorks/utils/middleware/helpers/validationHelpers";
 import { iOTPService } from "../../../domain/services/iOTPService";
-import jwt from "jsonwebtoken";
-import { generatingSignUpToken } from "../../../frameWorks/utils/jwt";
+import {
+  decodeSingUpToken,
+  generatingSignUpToken,
+} from "../../../frameWorks/utils/jwt";
+import { stat } from "fs";
+import { validateUserInput } from "../../../frameWorks/utils/helpers/validationHelpers";
+import { iJwtService } from "../../../domain/services/ijwtService";
+import IUserResult from "../../../domain/entites/imodels/IUserResult";
 
 class userAuthInteractor implements IUserAuthInteractor {
   constructor(
     private readonly Repository: iUserRepository,
     private readonly nodeMailer: iEmailService,
-    private readonly optGenerator: iOTPService
+    private readonly optGenerator: iOTPService,
+    private readonly jwt: iJwtService
   ) {}
   async userSingUp(
     data: IUser
-  ): Promise<{ status: Boolean; message: string; result: {} }> {
+  ): Promise<{ status: boolean; message: string; result: {} }> {
     try {
       const validateDataError = validateUserInput(data);
       const { email, userName, password } = data;
@@ -41,6 +47,54 @@ class userAuthInteractor implements IUserAuthInteractor {
         result: {},
       };
     }
+  }
+  async verifyOtp(
+    otp: string,
+    token: string
+  ): Promise<{
+    status: boolean;
+    message: string;
+    result?: {} | IUserResult | undefined;
+  }> {
+    const decodeToken = decodeSingUpToken(token);
+    console.log(decodeToken);
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (decodeToken.otpExpiresAt < currentTime)
+      return {
+        status: false,
+        message: "OTP has expired",
+        result: undefined,
+      };
+
+    if (otp !== decodeToken.OTP)
+      return {
+        status: false,
+        message: "entered Invalid OTP",
+        result: undefined,
+      };
+    const creatingNewUser = await this.Repository.createUser(decodeToken.user);
+    if (!creatingNewUser) {
+      const error = new Error();
+      error.message = "Failed to create new user";
+      throw error;
+    }
+
+    if (!creatingNewUser)
+      return {
+        status: false,
+        message: "Failed to create new user",
+        result: undefined,
+      };
+    const jwtToken = this.jwt.generateToken(creatingNewUser._id, "user");
+    const { password, ...userDataWithoutPassword } = creatingNewUser.toObject();
+    return {
+      status: true,
+      message: "OTP verified successfully",
+      result: {
+        user: userDataWithoutPassword,
+        tokenJwt: jwtToken,
+      },
+    };
   }
 }
 

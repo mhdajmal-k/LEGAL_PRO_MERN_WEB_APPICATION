@@ -5,6 +5,7 @@ import OTPService from "../../../services/OTPServices";
 import UserAuthRepository from "../../../../interFace/repositories/userRepositories/userAuthRepository";
 import { config } from "../../../config/envConfig";
 import EmailService from "../../../services/mailer";
+import JwtToken from "../../../services/jwt";
 
 export const authRouter = Router();
 console.log(config.EMAIL_PASS, "is the cofirge");
@@ -14,13 +15,19 @@ const emailService = new EmailService(
   process.env.EMAIL_PASS as string
 );
 const optGenerator = new OTPService();
+const jwtToken = new JwtToken(config.JWT_SECRET);
 const repository = new UserAuthRepository();
 const interactor = new userAuthInteractor(
   repository,
   emailService,
-  optGenerator
+  optGenerator,
+  jwtToken
 );
 
 const userAuthController = new UserAuthController(interactor);
 
 authRouter.post("/signup", userAuthController.signUp.bind(userAuthController));
+authRouter.post(
+  "/verify-otp",
+  userAuthController.verifyOtp.bind(userAuthController)
+);

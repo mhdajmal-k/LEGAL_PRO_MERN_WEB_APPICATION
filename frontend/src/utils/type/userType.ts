@@ -13,3 +13,7 @@ export default interface userSignUp {
   password?: string;
   confirmPassword?: string;
 }
+export interface userLoginData {
+  email: string;
+  password: string;
+}

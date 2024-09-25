@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import UserState from "../../../utils/type/userType";
-import { signUpUser, verifyOtp } from "./userServices";
+import { loginUser, signUpUser, verifyOtp } from "./userServices";
 
 const initialState: UserState = {
   userInfo: null,
@@ -29,18 +29,31 @@ const userSlice = createSlice({
       })
       .addCase(signUpUser.rejected, (state, actions) => {
         state.loading = false;
-        console.log(actions);
+        state.error = actions.payload as string;
         // state.error = actions.payload.message;
       })
       .addCase(verifyOtp.pending, (state) => {
         state.loading = true;
       })
-      .addCase(verifyOtp.fulfilled, (state) => {
+      .addCase(verifyOtp.fulfilled, (state, actions) => {
+        state.userInfo = actions.payload.result;
         state.loading = false;
       })
       .addCase(verifyOtp.rejected, (state, actions) => {
         state.loading = false;
-        console.log(actions);
+        state.error = actions.payload as string;
+        // state.error = actions.payload.message;
+      })
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loginUser.fulfilled, (state) => {
+        // state.userInfo = actions.payload;
+        state.loading = false;
+      })
+      .addCase(loginUser.rejected, (state, actions) => {
+        state.loading = false;
+        state.error = actions.payload as string;
         // state.error = actions.payload.message;
       });
   },
