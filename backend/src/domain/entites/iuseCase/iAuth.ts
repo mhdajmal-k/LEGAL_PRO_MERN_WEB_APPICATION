@@ -13,6 +13,9 @@ interface IUserAuthInteractor {
     message: string;
     result?: {} | IUserResult | undefined;
   }>;
+  userLogin(
+    user: IUser
+  ): Promise<{ status: boolean; message: string; result: IUserResult | null }>;
 }
 
 export default IUserAuthInteractor;

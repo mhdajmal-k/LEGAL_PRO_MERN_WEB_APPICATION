@@ -41,15 +41,14 @@ class UserAuthController {
 
   async verifyOtp(req: Request, res: Response): Promise<any> {
     try {
-      console.log(req.cookies, "is the cookies");
       const { otp } = req.body;
-      console.log("hi from contorller");
+
       if (!otp || otp.trim() == "")
         return res
           .status(400)
           .json({ success: false, message: "otp is required", result: {} });
       const token = req.cookies.auth_token;
-      console.log(token, "this is the token");
+
       if (!token)
         return res.status(400).json({
           success: false,
@@ -79,6 +78,44 @@ class UserAuthController {
           result: {},
         });
       }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async loginUser(req: Request, res: Response): Promise<any> {
+    try {
+      const { email, password } = req.body;
+      if (!email || email.trim() == "" || !password || password.trim() == "") {
+        return res.status(400).json({
+          success: false,
+          message: "Email and password are required",
+          result: {},
+        });
+      }
+      const response = await this.userAuthInteractor.userLogin(req.body);
+      console.log(response, "is she pormise");
+      const { status, message, result } = response;
+      if (status) {
+        const data = result as IUserResult;
+        res.cookie("auth_accessToken", data.tokenJwt, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 5 * 60 * 1000,
+        });
+
+        return res.status(200).json({
+          success: true,
+          message: response.message,
+          result: data.user,
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: response.message,
+          result: {},
+        });
+      }
+      return res.status;
     } catch (error) {
       console.log(error);
     }

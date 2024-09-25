@@ -1,8 +1,8 @@
 import { Router } from "express";
 import userAuthInteractor from "../../../../application/useCases/user/authUseCase";
-import UserAuthController from "../../../../interFace/controlers/user/userAuthController";
+import UserAuthController from "../../../../interFace_adapters/controlers/user/userAuthController";
 import OTPService from "../../../services/OTPServices";
-import UserAuthRepository from "../../../../interFace/repositories/userRepositories/userAuthRepository";
+import UserAuthRepository from "../../../../interFace_adapters/repositories/userRepositories/userAuthRepository";
 import { config } from "../../../config/envConfig";
 import EmailService from "../../../services/mailer";
 import JwtToken from "../../../services/jwt";
@@ -30,4 +30,8 @@ authRouter.post("/signup", userAuthController.signUp.bind(userAuthController));
 authRouter.post(
   "/verify-otp",
   userAuthController.verifyOtp.bind(userAuthController)
+);
+authRouter.post(
+  "/login",
+  userAuthController.loginUser.bind(userAuthController)
 );

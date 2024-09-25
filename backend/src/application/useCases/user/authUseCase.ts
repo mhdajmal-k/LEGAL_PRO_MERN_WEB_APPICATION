@@ -7,10 +7,11 @@ import {
   decodeSingUpToken,
   generatingSignUpToken,
 } from "../../../frameWorks/utils/jwt";
-import { stat } from "fs";
+import bcryptjs from "bcryptjs";
 import { validateUserInput } from "../../../frameWorks/utils/helpers/validationHelpers";
 import { iJwtService } from "../../../domain/services/ijwtService";
 import IUserResult from "../../../domain/entites/imodels/IUserResult";
+import { validatePassword } from "../../../frameWorks/utils/validatePassword";
 
 class userAuthInteractor implements IUserAuthInteractor {
   constructor(
@@ -95,6 +96,47 @@ class userAuthInteractor implements IUserAuthInteractor {
         tokenJwt: jwtToken,
       },
     };
+  }
+  async userLogin(
+    user: IUser
+  ): Promise<{ status: boolean; message: string; result: IUserResult | null }> {
+    try {
+      const { email, password } = user;
+      const validUser = await this.Repository.validUser(email);
+      if (!validUser) {
+        return {
+          status: false,
+          message: "Invalid Email",
+          result: null,
+        };
+      }
+      const validPassword = validatePassword(password, validUser.password);
+      if (!validPassword) {
+        return {
+          status: false,
+          message: "Incorrect Password",
+          result: null,
+        };
+      }
+      const jwtToken = this.jwt.generateToken(validUser._id, "user");
+      const { password: userPassword, ...userDataWithoutPassword } =
+        validUser.toObject();
+
+      return {
+        status: true,
+        message: "logged SuccessFully",
+        result: {
+          user: userDataWithoutPassword,
+          tokenJwt: jwtToken,
+        },
+      };
+    } catch (error) {
+      return {
+        status: false,
+        message: "An error occurred during login",
+        result: null,
+      };
+    }
   }
 }
 

@@ -26,5 +26,17 @@ class UserAuthRepository implements iUserRepository {
       console.log(error);
     }
   }
+  async validUser(email: string): Promise<any> {
+    try {
+      const user = await User.findOne({ email: email });
+      if (user) {
+        return user;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 export default UserAuthRepository;
