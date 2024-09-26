@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Button } from "@nextui-org/react";
 import signUpImage from "../../assets/images/signUP.jpg";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
@@ -12,15 +12,24 @@ import userSignUp from "../../utils/type/userType"
 import { toast } from 'sonner'; // Import Sonner
 import CustomToast from './CustomToast';
 import { Link, useNavigate } from 'react-router-dom';
+import { clearError } from '../../services/store/features/userSlice';
 
 
 const SignUpForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState<Boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<Boolean>(false);
 
+
     const navigate = useNavigate()
     const dispatch: AppDispatch = useDispatch()
     const { loading, error } = useSelector((state: RootState) => state.user)
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                dispatch(clearError())
+            }, 2000);
+        }
+    }, [error])
     const formik = useFormik({
         initialValues: {
             userName: '',
@@ -37,13 +46,12 @@ const SignUpForm: React.FC = () => {
         onSubmit: async (values: userSignUp) => {
             try {
                 const response = await dispatch(signUpUser(values)).unwrap();
-                if (response.data.status = true) {
-                    console.log(response.message, "is the response//////////////////////ddddddddddddddd//////////");
-                    toast(<CustomToast message={response.message} type="success" />);
-                    setTimeout(() => {
-                        navigate('/otpVerify')
-                    }, 2000)
-                }
+
+                console.log(response.message, "is the response//////////////////////ddddddddddddddd//////////");
+                toast(<CustomToast message={response.message} type="success" />);
+                setTimeout(() => {
+                    navigate('/otpVerify')
+                }, 1000)
 
 
             } catch (error: any) {

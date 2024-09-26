@@ -48,11 +48,16 @@ export const loginUser = createAsyncThunk(
   async (data: userLoginData, { rejectWithValue }) => {
     try {
       console.log(data, "from the userLogin thunk");
-      const response = await axiosInstance.post(USERLOGIN, { data });
+      const response = await axiosInstance.post(USERLOGIN, data);
       return response.data;
-      console.log(response);
     } catch (error) {
-      console.log(error);
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          return rejectWithValue(error.response.data.message);
+        } else {
+          return rejectWithValue({ error: "Server error" });
+        }
+      }
     }
   }
 );

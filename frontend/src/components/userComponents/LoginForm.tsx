@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Button } from "@nextui-org/react";
 import signUpImage from "../../assets/images/signUP.jpg";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
@@ -12,6 +12,7 @@ import { userLoginData } from "../../utils/type/userType"
 import { toast } from 'sonner'; // Import Sonner
 import CustomToast from './CustomToast';
 import { Link, useNavigate } from 'react-router-dom';
+import { clearError } from '../../services/store/features/userSlice';
 
 
 const LoginForm: React.FC = () => {
@@ -31,12 +32,11 @@ const LoginForm: React.FC = () => {
         onSubmit: async (values: userLoginData) => {
             try {
                 const response = await dispatch(loginUser(values)).unwrap();
-                console.log("Login successful:", response);
-                if (response.data.status = true) {
-                    setTimeout(() => {
-                        navigate('/');
-                    }, 2000);
+                if (response) {
+                    navigate('/');
                 }
+
+
 
             } catch (error: any) {
                 console.error("Login error:", error);
@@ -45,6 +45,13 @@ const LoginForm: React.FC = () => {
         },
     });
 
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                dispatch(clearError())
+            }, 2000);
+        }
+    }, [error])
 
 
     return (
@@ -125,7 +132,7 @@ const LoginForm: React.FC = () => {
 
                 </div>
                 <p className="mt-4 text-center text-sm text-gray-600">
-                    Dont have an Account? <Link to={"/login"} className='text-blue-900' >Sign Up </Link>
+                    Dont have an Account? <Link to={"/signup"} className='text-blue-900' >Sign Up </Link>
                 </p></div>
 
         </div >

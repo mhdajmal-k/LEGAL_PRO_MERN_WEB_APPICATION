@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { verifyOtp } from '../../services/store/features/userServices';
 import CustomToast from './CustomToast';
 import { toast } from 'sonner';
+import { clearError } from '../../services/store/features/userSlice';
 
 const OtpFrom: React.FC = () => {
     const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
@@ -26,8 +27,15 @@ const OtpFrom: React.FC = () => {
                 clearInterval(Timer);
             }
         }, 1000);
+
+        if (error) {
+            setTimeout(() => {
+                dispatch(clearError())
+            }, 2000);
+        }
+
         return () => clearInterval(Timer);
-    }, [timer]);
+    }, [timer, error]);
 
     const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const value = e.target.value;
@@ -62,6 +70,7 @@ const OtpFrom: React.FC = () => {
         }
 
     };
+
 
     // Check if all OTP fields are filled
     const isOtpComplete = otp.every((digit) => digit !== "");

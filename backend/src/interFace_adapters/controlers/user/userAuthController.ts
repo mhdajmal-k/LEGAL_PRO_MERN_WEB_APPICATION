@@ -9,7 +9,6 @@ class UserAuthController {
     try {
       const data = req.body;
       const response = await this.userAuthInteractor.userSingUp(data);
-
       if (response.status) {
         //
         res.cookie("auth_token", response.result, {
