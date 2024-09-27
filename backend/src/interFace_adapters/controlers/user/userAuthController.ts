@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import IUserAuthInteractor from "../../../domain/entites/iuseCase/iAuth";
 import IUserResult from "../../../domain/entites/imodels/IUserResult";
 
@@ -10,7 +10,6 @@ class UserAuthController {
       const data = req.body;
       const response = await this.userAuthInteractor.userSingUp(data);
       if (response.status) {
-        //
         res.cookie("auth_token", response.result, {
           httpOnly: true,
           sameSite: "strict",
@@ -64,7 +63,7 @@ class UserAuthController {
           sameSite: "strict",
           maxAge: 5 * 60 * 1000,
         });
-
+        res.clearCookie("auth_token");
         return res.status(200).json({
           success: true,
           message: response.message,
@@ -81,7 +80,11 @@ class UserAuthController {
       console.log(error);
     }
   }
-  async loginUser(req: Request, res: Response): Promise<any> {
+  async loginUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
     try {
       const { email, password } = req.body;
       if (!email || email.trim() == "" || !password || password.trim() == "") {
@@ -101,8 +104,8 @@ class UserAuthController {
           sameSite: "strict",
           maxAge: 5 * 60 * 1000,
         });
-
-        return res.status(200).json({
+        res.clearCookie("auth_token");
+        res.status(200).json({
           success: true,
           message: response.message,
           result: data.user,
@@ -117,6 +120,40 @@ class UserAuthController {
       return res.status;
     } catch (error) {
       console.log(error);
+      next(error);
+    }
+  }
+  async resendOtp(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const token = req.cookies.auth_token;
+      console.log(token, "is the token");
+      if (!token) {
+        return res.status(400).json({
+          success: false,
+          message: "Session is expired, please try again",
+          result: {},
+        });
+      }
+      const response = await this.userAuthInteractor.resendOtp(token);
+      if (response.status) {
+        res.clearCookie("auth_token");
+        res.cookie("auth_token", response.result, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 5 * 60 * 1000,
+        });
+        return res.status(200).json({
+          success: response.status,
+          message: response.message,
+          result: {},
+        });
+      }
+    } catch (error) {
+      next(error);
     }
   }
 }

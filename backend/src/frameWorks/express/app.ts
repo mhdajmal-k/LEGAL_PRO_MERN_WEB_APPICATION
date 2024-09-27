@@ -9,10 +9,19 @@ import { connectToDatabase } from "../database/mongoDbCongig";
 import { config } from "../config/envConfig";
 import routes from "./routers/routers";
 import { errorHandler } from "../middleware/errorHandiler";
+import helmet from "helmet";
+import morgan from "morgan";
 
 const app = express();
 const server = http.createServer(app);
+
 dotenv.config();
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
+
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors(corsOptions));
