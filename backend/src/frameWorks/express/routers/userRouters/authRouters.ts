@@ -37,5 +37,5 @@ authRouter.post(
 );
 authRouter.post(
   "/resend-otp",
-  userAuthController.loginUser.bind(userAuthController)
+  userAuthController.resendOtp.bind(userAuthController)
 );

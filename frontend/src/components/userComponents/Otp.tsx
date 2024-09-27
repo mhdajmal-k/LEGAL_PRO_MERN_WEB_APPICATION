@@ -4,14 +4,17 @@ import CustomButton from '../CustomButton';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { verifyOtp } from '../../services/store/features/userServices';
+import { resendOtp, verifyOtp } from '../../services/store/features/userServices';
 import CustomToast from './CustomToast';
 import { toast } from 'sonner';
 import { clearError } from '../../services/store/features/userSlice';
 
+
 const OtpFrom: React.FC = () => {
+
     const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
-    const [timer, setTimer] = useState<number>(60);
+    const [timer, setTimer] = useState<number>(5);
+    const [otpError, setOtpError] = useState<string>("");
     const [resendEnabled, setResendEnabled] = useState<boolean>(false);
 
     const navigate = useNavigate();
@@ -43,6 +46,7 @@ const OtpFrom: React.FC = () => {
             const newOtp = [...otp];
             newOtp[index] = value;
             setOtp(newOtp);
+            setOtpError("");
 
             const nextInput = document.getElementById(`otp-${index + 1}`);
             if (nextInput) {
@@ -50,6 +54,18 @@ const OtpFrom: React.FC = () => {
             }
         }
     };
+    const OtpResend = async () => {
+        console.log("hi")
+        try {
+            const response = await dispatch(resendOtp()).unwrap()
+            if (response) {
+                toast(<CustomToast message={response.message} type="success" />);
+            }
+        } catch (error: any) {
+            toast(<CustomToast message={error} type="error" />);
+        }
+
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -57,19 +73,16 @@ const OtpFrom: React.FC = () => {
         if (otpCode == "") toast(<CustomToast message="otp is required" type="error" />);
         try {
             const response = await dispatch(verifyOtp(otpCode)).unwrap()
-            if (response) {
-                setTimeout(() => {
-                    navigate("/")
-                }, 2000);
-            }
-            console.log(response, "is the response")
+            navigate("/")
             toast(<CustomToast message={response.message} type="success" />);
         } catch (error: any) {
+            setOtp(Array(6).fill(""));
             console.log(error, "dddddddddddddddddddddddddd")
             toast(<CustomToast message={error} type="error" />);
         }
 
     };
+
 
 
     // Check if all OTP fields are filled
@@ -108,12 +121,13 @@ const OtpFrom: React.FC = () => {
 
                 <div className='flex justify-between items-center mt-4'>
                     <span>{timer > 0 ? `Resend OTP in ${timer}` : "Didn't Receive OTP?"}</span>
-                    {error && <span>{error}</span>}
+
                     {timer === 0 && (
                         <button
                             onClick={() => {
                                 setTimer(60);
                                 setResendEnabled(false);
+                                OtpResend()
                             }}
                             className={`text-blue-500 ${resendEnabled ? '' : 'disabled:text-gray-400'}`}
                             disabled={!resendEnabled}
@@ -122,6 +136,7 @@ const OtpFrom: React.FC = () => {
                         </button>
                     )}
                 </div>
+                {error && <span className='mt-3 text-red-500'>{error}</span>}
             </div>
         </div>
     );

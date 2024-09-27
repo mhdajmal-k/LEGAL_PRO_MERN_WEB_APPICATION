@@ -13,6 +13,7 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
       unique: true,
+      index: true,
     },
     password: {
       type: String,
