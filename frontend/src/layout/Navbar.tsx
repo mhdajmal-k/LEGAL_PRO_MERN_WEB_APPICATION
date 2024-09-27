@@ -13,8 +13,8 @@ const Navbar: React.FC = () => {
   const dispatch: AppDispatch = useDispatch()
   const { loading, userInfo, error } = useSelector((state: RootState) => state.user)
   return (
-    <nav className="bg-primary p-2">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
+    <nav className="bg-primary p-2 ">
+      <div className="max-w-7xl mx-auto flex justify-between items-center ">
         {/* Logo and Title */}
         <div className="flex items-center mx-2.5  m:items-center m:space-x-2  ">
           <img src={Logo} className='w-10' alt="logo" />
