@@ -20,15 +20,9 @@ export const signUpUser = createAsyncThunk(
       if (error instanceof AxiosError) {
         if (error.response) {
           return rejectWithValue(error.response.data.message);
-        } else if (error.request) {
-          // The request was made but no response was received
-          return rejectWithValue(
-            "Network error. Please check your connection or try again later."
-          );
         }
       }
-      // For any other types of errors
-      return rejectWithValue("An unexpected error occurred. Please try again.");
+      return rejectWithValue("Network error. try again later.");
     }
   }
 );
