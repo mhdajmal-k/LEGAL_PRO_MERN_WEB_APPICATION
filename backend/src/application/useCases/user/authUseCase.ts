@@ -12,6 +12,7 @@ import { validateUserInput } from "../../../frameWorks/utils/helpers/validationH
 import { iJwtService } from "../../../domain/services/ijwtService";
 import IUserResult from "../../../domain/entites/imodels/IUserResult";
 import { validatePassword } from "../../../frameWorks/utils/validatePassword";
+import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 
 class userAuthInteractor implements IUserAuthInteractor {
   constructor(
@@ -34,7 +35,7 @@ class userAuthInteractor implements IUserAuthInteractor {
         return { status: false, message: "user Already Exists", result: {} };
       }
       const OTP = this.optGenerator.generateOTP();
-      await this.nodeMailer.sendOTP(email, OTP, userName);
+      this.nodeMailer.sendOTP(email, OTP, userName);
       const SingUPTempToken = generatingSignUpToken(data, OTP);
       return {
         status: true,
@@ -136,6 +137,35 @@ class userAuthInteractor implements IUserAuthInteractor {
         message: "An error occurred during login",
         result: null,
       };
+    }
+  }
+  async resendOtp(
+    token: string
+  ): Promise<{ status: boolean; message: string; result: string | null }> {
+    try {
+      const OTP = this.optGenerator.generateOTP();
+      const decodeToken = decodeSingUpToken(token);
+      console.log(decodeToken);
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (decodeToken.otpExpiresAt < currentTime) {
+        console.log("hi");
+        const error: CustomError = new Error("Session is expired, try again");
+        error.statusCode = 400;
+        throw error;
+      }
+      this.nodeMailer.sendOTP(
+        decodeToken.user.email,
+        OTP,
+        decodeToken.user.userName
+      );
+      const newSignUpToken = generatingSignUpToken(decodeToken.user, OTP);
+      return {
+        status: true,
+        message: "New OTP has been sent successfully",
+        result: newSignUpToken,
+      };
+    } catch (error) {
+      throw error;
     }
   }
 }

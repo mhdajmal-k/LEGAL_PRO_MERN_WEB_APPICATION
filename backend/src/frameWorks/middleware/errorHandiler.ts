@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from "express";
+export interface CustomError extends Error {
+  statusCode?: number;
+  statusMessage?: string;
+}
 
 export const errorHandler = (
-  err: Error,
+  err: CustomError,
   req: Request,
   res: Response,
   next: NextFunction
