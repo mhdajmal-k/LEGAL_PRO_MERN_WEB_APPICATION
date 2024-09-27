@@ -49,9 +49,9 @@ const SignUpForm: React.FC = () => {
 
                 console.log(response.message, "is the response//////////////////////ddddddddddddddd//////////");
                 toast(<CustomToast message={response.message} type="success" />);
-                setTimeout(() => {
-                    navigate('/otpVerify')
-                }, 1000)
+
+                navigate('/otpVerify')
+
 
 
             } catch (error: any) {
@@ -120,7 +120,7 @@ const SignUpForm: React.FC = () => {
                             </button>
                         </div>
 
-                        <div className="mb-4 relative">
+                        <div className="mb-4 relative whitespace-nowrap">
                             <Input
                                 type={showConfirmPassword ? "text" : "password"}
                                 label="Confirm Password"
@@ -133,7 +133,7 @@ const SignUpForm: React.FC = () => {
                                 value={formik.values.confirmPassword}
                             />
                             {formik.errors.confirmPassword && formik.touched.confirmPassword ? (
-                                <div className='text-red-500 text-sm'>{formik.errors.confirmPassword}</div>
+                                <div className='text-red-500 text-sm '>{formik.errors.confirmPassword}</div>
                             ) : null}
                             <button
                                 type="button"

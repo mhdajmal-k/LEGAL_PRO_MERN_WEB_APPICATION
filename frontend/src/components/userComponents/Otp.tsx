@@ -108,7 +108,7 @@ const OtpFrom: React.FC = () => {
 
                 <div className='flex justify-between items-center mt-4'>
                     <span>{timer > 0 ? `Resend OTP in ${timer}` : "Didn't Receive OTP?"}</span>
-                    {error && <span>{error}</span>}
+
                     {timer === 0 && (
                         <button
                             onClick={() => {
@@ -122,6 +122,7 @@ const OtpFrom: React.FC = () => {
                         </button>
                     )}
                 </div>
+                {error && <span className='mt-3 text-red-500'>{error}</span>}
             </div>
         </div>
     );
