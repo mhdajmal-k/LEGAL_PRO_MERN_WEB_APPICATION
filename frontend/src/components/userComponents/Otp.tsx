@@ -13,7 +13,7 @@ import { clearError } from '../../services/store/features/userSlice';
 const OtpFrom: React.FC = () => {
 
     const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
-    const [timer, setTimer] = useState<number>(5);
+    const [timer, setTimer] = useState<number>(60);
     const [otpError, setOtpError] = useState<string>("");
     const [resendEnabled, setResendEnabled] = useState<boolean>(false);
 
