@@ -1,3 +1,5 @@
+import e from "express";
+
 export const isNullOrEmpty = (value: string | null | undefined): boolean =>
   value == null || value == undefined || value.trim() == "";
 
@@ -18,6 +20,22 @@ export const validatePassword = (password: string): string | null =>
 export const validateUsername = (userName: string): string | null =>
   isNullOrEmpty(userName) ? "Username is required" : null;
 
+export const validateGender = (gender: string): string | null =>
+  isNullOrEmpty(gender) ? "Gender is required" : null;
+
+export const validateCity = (city: string): string | null =>
+  isNullOrEmpty(city) ? "City is required" : null;
+
+export const validateState = (state: string): string | null =>
+  isNullOrEmpty(state) ? "State is required" : null;
+
+export const validateZipCode = (zipCode: string): string | null =>
+  isNullOrEmpty(zipCode)
+    ? "Zip code is required"
+    : !/^\d{5,6}$/.test(zipCode)
+    ? "Invalid zip code format"
+    : null;
+
 export const validateUserInput = (data: {
   email: string;
   password: string;
@@ -30,4 +48,37 @@ export const validateUserInput = (data: {
     : validateUsernameError
     ? validateUsernameError
     : validatePassword(data.password);
+};
+
+export const validateLawyerInput = (data: {
+  email: string;
+  userName: string;
+  gender: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  password: string;
+}): string | null => {
+  // Basic user validations
+  const emailError = validateEmail(data.email);
+  const usernameError = validateUsername(data.userName);
+  const passwordError = validatePassword(data.password);
+  if (emailError) return emailError;
+  if (usernameError) return usernameError;
+  if (passwordError) return passwordError;
+
+  // Additional Lawyer-specific validations
+  const genderError = validateGender(data.gender);
+  const cityError = validateCity(data.city);
+  const stateError = validateState(data.state);
+  const zipCodeError = validateZipCode(data.zipCode);
+
+  // Return the first encountered error
+  return genderError
+    ? genderError
+    : cityError
+    ? cityError
+    : stateError
+    ? stateError
+    : zipCodeError;
 };

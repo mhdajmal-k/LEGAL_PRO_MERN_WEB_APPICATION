@@ -3,12 +3,16 @@ import axiosInstance from "../../api/axiosConfigue";
 import { LawyerSignUp } from "../../../utils/type/userType";
 import { LAWYERSIGNUP } from "../../api/lawerApi";
 import { AxiosError } from "axios";
+import { LawyerSignUpResponse } from "../../../utils/type/lawyerType";
 
 export const signUpLawyer = createAsyncThunk(
   "user/singUpUser",
   async (LawyerData: LawyerSignUp, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(LAWYERSIGNUP, LawyerData);
+      const response = await axiosInstance.post<LawyerSignUpResponse>(
+        LAWYERSIGNUP,
+        LawyerData
+      );
       console.log(response.data, "//////////////////////////////////");
       return response.data;
     } catch (error) {
