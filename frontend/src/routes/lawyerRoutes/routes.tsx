@@ -6,6 +6,7 @@ const LawyerRoutes: React.FC = () => {
     return (
         <Routes>
             <Route path='/signup' element={<LawyerSingUp />} />
+            <Route path='/verify-otp' element={<LawyerSingUp />} />
         </Routes>
     )
 }

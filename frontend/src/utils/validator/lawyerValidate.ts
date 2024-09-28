@@ -32,6 +32,9 @@ export const lawyerValidationSchema = Yup.object({
     .required("Confirm Password is required"),
   city: Yup.string().trim().required("city is required").min(3, "invalid city"),
   state: Yup.string().trim().required("required State"),
-  zipCode: Yup.string().trim().required("required zipCode"),
+  zipCode: Yup.string()
+    .trim()
+    .required("required zipCode")
+    .max(6, "invalid zipCode"),
   gender: Yup.string().required("Gender is required"),
 });
