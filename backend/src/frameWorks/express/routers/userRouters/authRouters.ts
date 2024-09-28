@@ -8,7 +8,6 @@ import EmailService from "../../../services/mailer";
 import JwtToken from "../../../services/jwt";
 
 export const authRouter = Router();
-console.log(config.EMAIL_PASS, "is the cofirge");
 require("dotenv").config();
 const emailService = new EmailService(
   process.env.EMAIL_ID as string,

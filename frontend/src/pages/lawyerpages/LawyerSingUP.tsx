@@ -6,19 +6,19 @@ import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from 'formik';
 import { clearError } from '../../services/store/features/lawyerSlilce';
 import { toast } from 'sonner';
-// import CustomToast from '../UserAuth/CustomToast';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { lawyerValidationSchema } from '../../utils/validator/lawyerValidate';
 import { signUpLawyer } from '../../services/store/features/lawyerServices';
 import CustomToast from '../../components/userComponents/CustomToast';
 
+
 const LawyerSignUp: React.FC = () => {
     const [showPassword, setShowPassword] = useState<Boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<Boolean>(false);
 
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const dispatch: AppDispatch = useDispatch();
     const { loading, error } = useSelector((state: RootState) => state.lawyer);
 
@@ -49,8 +49,11 @@ const LawyerSignUp: React.FC = () => {
             console.log(values)
             try {
                 const response = await dispatch(signUpLawyer(values)).unwrap();
-                toast(<CustomToast message={response.message} type="success" />);
-                // navigate('/otpVerify');
+                if (response.status) {
+                    toast(<CustomToast message={response.message} type="success" />);
+                    navigate('/otpVerify');
+                }
+
             } catch (error: any) {
                 toast(<CustomToast message={error} type="error" />);
             }
@@ -67,7 +70,7 @@ const LawyerSignUp: React.FC = () => {
                         <div className="flex">
                             <div className="w-4/5 p-6">
                                 <div className="mb-4">
-                                    <span className="bg-primary text-white px-2 py-1 rounded text-sm">Step 1/4</span>
+                                    <span className="bg-primary text-white px-2 py-1 rounded text-sm">Step 1/3</span>
                                     <h2 className="text-xl font-semibold mt-2">Personal Information</h2>
                                 </div>
                                 <form className="space-y-4 container" onSubmit={formik.handleSubmit}>
