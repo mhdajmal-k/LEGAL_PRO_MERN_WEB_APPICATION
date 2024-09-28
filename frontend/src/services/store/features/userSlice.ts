@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import UserState from "../../../utils/type/userType";
+import { UserState } from "../../../utils/type/userType";
 import { loginUser, resendOtp, signUpUser, verifyOtp } from "./userServices";
 
 const initialState: UserState = {

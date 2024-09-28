@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import userSignData, { userLoginData } from "../../../utils/type/userType";
+// import {userSignData,userLoginData } from "../../../utils/type/userType";
 import axiosInstance from "../../api/axiosConfigue";
 import {
   RESENDOTP,
@@ -8,10 +8,11 @@ import {
   VERIFYINGOTP,
 } from "../../api/userApi";
 import { AxiosError } from "axios";
+import { userLoginData, userSignUp } from "../../../utils/type/userType";
 
 export const signUpUser = createAsyncThunk(
   "user/singUpUser",
-  async (userData: userSignData, { rejectWithValue }) => {
+  async (userData: userSignUp, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(USERSIGNUP, userData);
       console.log(response.data, "//////////////////////////////////");
