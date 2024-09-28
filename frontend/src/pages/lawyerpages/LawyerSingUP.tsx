@@ -4,21 +4,23 @@ import LegalFooter from '../../layout/footer';
 import { Button, Input } from '@nextui-org/react';
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from 'formik';
-import { clearError } from '../../services/store/features/userSlice';
+import { clearError } from '../../services/store/features/lawyerSlilce';
 import { toast } from 'sonner';
 // import CustomToast from '../UserAuth/CustomToast';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { lawyerValidationSchema } from '../../utils/validator/lawyerValidate';
+import { signUpLawyer } from '../../services/store/features/lawyerServices';
+import CustomToast from '../../components/userComponents/CustomToast';
 
 const LawyerSignUp: React.FC = () => {
     const [showPassword, setShowPassword] = useState<Boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<Boolean>(false);
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const dispatch: AppDispatch = useDispatch();
-    const { loading, error } = useSelector((state: RootState) => state.user);
+    const { loading, error } = useSelector((state: RootState) => state.lawyer);
 
     useEffect(() => {
         if (error) {
@@ -43,15 +45,15 @@ const LawyerSignUp: React.FC = () => {
         validateOnChange: true,
         validateOnBlur: true,
         onSubmit: async (values) => {
-            alert({ values })
+
             console.log(values)
-            // try {
-            //     const response = await dispatch(signUpUser(values)).unwrap();
-            //     toast(<CustomToast message={response.message} type="success" />);
-            //     navigate('/otpVerify');
-            // } catch (error: any) {
-            //     toast(<CustomToast message={error} type="error" />);
-            // }
+            try {
+                const response = await dispatch(signUpLawyer(values)).unwrap();
+                toast(<CustomToast message={response.message} type="success" />);
+                // navigate('/otpVerify');
+            } catch (error: any) {
+                toast(<CustomToast message={error} type="error" />);
+            }
         },
     });
 
