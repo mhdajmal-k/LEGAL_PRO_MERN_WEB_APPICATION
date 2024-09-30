@@ -8,11 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { useNavigate } from 'react-router-dom';
 import { signUpUser } from '../../services/store/features/userServices';
 import { AppDispatch, RootState } from '../../services/store/store';
-import userSignUp from "../../utils/type/userType"
+// import userSignUp from "../../utils/type/userType"
 import { toast } from 'sonner'; // Import Sonner
 import CustomToast from './CustomToast';
 import { Link, useNavigate } from 'react-router-dom';
 import { clearError } from '../../services/store/features/userSlice';
+import { userSignUp } from '../../utils/type/userType';
 
 
 const SignUpForm: React.FC = () => {
@@ -32,10 +33,10 @@ const SignUpForm: React.FC = () => {
     }, [error])
     const formik = useFormik({
         initialValues: {
-            userName: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
+            userName: 'ajmal',
+            email: 'ajmalchundappuram@gmail.com',
+            password: '@Ajmal111',
+            confirmPassword: '@Ajmal111',
             userInfo: null,
             loading: false,
             error: null

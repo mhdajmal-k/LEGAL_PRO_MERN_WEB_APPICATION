@@ -1,9 +1,16 @@
 import React from 'react'
+import Navbar from '../../layout/Navbar'
+import LegalFooter from '../../layout/footer'
+import LawyerOtpFrom from '../../components/lawyerComponents/Otp'
 
-const VerifyOtp: React.FC = () => {
+const LawyerVerifyOtp: React.FC = () => {
     return (
-        <div>VerifyOtp</div>
+        <div>
+            <Navbar />
+            <LawyerOtpFrom />
+            <LegalFooter />
+        </div>
     )
 }
 
-export default VerifyOtp
+export default LawyerVerifyOtp

@@ -53,14 +53,14 @@ const LawyerSignUp: React.FC = () => {
 
     const formik = useFormik({
         initialValues: {
-            userName: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
+            userName: 'ajmal',
+            email: 'ajmalchundappuram@gmail.com',
+            password: '@Ajmal111',
+            confirmPassword: '@Ajmal111',
             gender: '',
-            city: '',
-            state: '',
-            zipCode: '',
+            city: 'calicut',
+            state: 'kerala',
+            zipCode: '789878',
         },
         validationSchema: lawyerValidationSchema,
         validateOnChange: true,
@@ -78,9 +78,10 @@ const LawyerSignUp: React.FC = () => {
             try {
                 const lawyerSignUpData: LawyerSignUpData = Object.fromEntries(formData) as LawyerSignUpData;
                 const response = await dispatch(signUpLawyer(lawyerSignUpData)).unwrap();
+                console.log(response, "checking.....")
                 if (response.status) {
                     toast(<CustomToast message={response.message} type="success" />);
-                    navigate('/otpVerify');
+                    navigate('/lawyer/verify-otp');
                 }
                 console.log(lawyerSignUpData)
             } catch (error: any) {

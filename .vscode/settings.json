@@ -4,6 +4,7 @@
         "RESENDOTP",
         "resened",
         "USERSIGNUP",
-        "VERIFYINGOTP"
+        "VERIFYINGOTP",
+        "zipcode"
     ]
 }
