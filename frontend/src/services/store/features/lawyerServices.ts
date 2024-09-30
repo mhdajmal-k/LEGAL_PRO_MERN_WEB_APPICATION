@@ -1,17 +1,22 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosConfigue";
-import { LawyerSignUp } from "../../../utils/type/userType";
+import { LawyerSignUpData } from "../../../utils/type/userType";
 import { LAWYERSIGNUP } from "../../api/lawerApi";
 import { AxiosError } from "axios";
 import { LawyerSignUpResponse } from "../../../utils/type/lawyerType";
 
 export const signUpLawyer = createAsyncThunk(
   "user/singUpUser",
-  async (LawyerData: LawyerSignUp, { rejectWithValue }) => {
+  async (LawyerData: LawyerSignUpData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post<LawyerSignUpResponse>(
         LAWYERSIGNUP,
-        LawyerData
+        LawyerData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       console.log(response.data, "//////////////////////////////////");
       return response.data;

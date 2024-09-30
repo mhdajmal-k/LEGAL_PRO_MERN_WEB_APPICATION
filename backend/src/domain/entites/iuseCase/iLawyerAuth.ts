@@ -3,7 +3,8 @@ import IUserResult from "../imodels/IUserResult";
 
 interface ILawyerAuthInteractor {
   lawyerSingUp(
-    user: ILawyer
+    user: ILawyer,
+    file?: Express.Multer.File
   ): Promise<{ statusCode: number; message: string; result: string | {} }>;
   verifyOtp(
     otp: string,
