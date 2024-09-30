@@ -19,7 +19,9 @@ export interface ILawyer extends Document {
   about?: string;
   city?: string;
   state?: string;
+  zipcode?: string;
   verified?: boolean;
   practice_area?: string[];
   block?: boolean;
+  token?: string;
 }
