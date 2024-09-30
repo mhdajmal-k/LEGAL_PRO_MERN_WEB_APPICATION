@@ -72,7 +72,6 @@ const LawyerOtpFrom: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const otpCode = otp.join('');
-        alert(otpCode)
         if (otpCode == "") toast(<CustomToast message="otp is required" type="error" />);
         try {
             const response = await dispatch(lawyerVerifyOtp(otpCode)).unwrap()
