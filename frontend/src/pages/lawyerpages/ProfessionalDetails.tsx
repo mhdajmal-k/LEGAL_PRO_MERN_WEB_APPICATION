@@ -1,11 +1,12 @@
 import React from "react";
 import Navbar from "../../layout/Navbar";
 import LegalFooter from "../../layout/footer";
+import ProfessionalData from "../../components/lawyerComponents/ProfessionalData";
 
 const ProfessionalDetails: React.FC = () => {
     return <>
         <Navbar />
-        <h1>hi</h1>
+        <ProfessionalData />
         <LegalFooter />
     </>
 }
