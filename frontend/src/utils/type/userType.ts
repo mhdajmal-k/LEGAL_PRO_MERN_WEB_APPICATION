@@ -26,12 +26,13 @@ export interface lawyerInfo {
   email?: string;
 }
 
-export interface LawyerSignUp {
+export interface LawyerSignUpData {
   userName?: string;
   email?: string;
-  gender: string;
-  city: string;
-  state: string;
-  zipCode: string;
+  gender?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
   password?: string;
+  image?: string;
 }

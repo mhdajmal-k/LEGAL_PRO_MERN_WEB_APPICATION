@@ -7,23 +7,26 @@ class LawyerAuthController {
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<any> {
+  ): Promise<void> {
     try {
       const data = req.body;
+      const file = req.file;
+
       const validateDataError = validateLawyerInput(data);
       if (validateDataError) {
         res
           .status(400)
           .json({ status: false, message: validateDataError, result: {} });
+        return;
       }
-      const response = await this.lawyerAuthInteractor.lawyerSingUp(data);
-      res
-        .status(response.statusCode)
-        .json({
-          status: true,
-          message: response.message,
-          result: response.result,
-        });
+
+      const response = await this.lawyerAuthInteractor.lawyerSingUp(data, file);
+
+      res.status(response.statusCode).json({
+        status: true,
+        message: response.message,
+        result: response.result,
+      });
     } catch (error) {
       next(error);
     }
