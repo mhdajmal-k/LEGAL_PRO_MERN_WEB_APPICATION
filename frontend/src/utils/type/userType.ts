@@ -13,6 +13,9 @@ export interface userSignUp {
   email?: string;
   password?: string;
   confirmPassword?: string;
+  userInfo?: any;
+  loading?: false;
+  error?: null;
 }
 
 export interface userLoginData {
