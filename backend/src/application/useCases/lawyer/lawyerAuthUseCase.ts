@@ -5,6 +5,7 @@ import { iEmailService } from "../../../domain/services/IEmailService";
 import { iJwtService } from "../../../domain/services/ijwtService";
 import { iOTPService } from "../../../domain/services/iOTPService";
 import { S3Service } from "../../../frameWorks/config/s3Setup";
+import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 import { generatingSignUpToken } from "../../../frameWorks/utils/jwt";
 class LawyerAuthInteractor implements ILawyerAuthInteractor {
   constructor(
