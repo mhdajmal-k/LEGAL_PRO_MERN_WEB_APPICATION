@@ -3,16 +3,17 @@ import { IUser } from "../../../domain/entites/imodels/Iuser";
 import { iEmailService } from "../../../domain/services/IEmailService";
 import iUserRepository from "../../../domain/entites/irepositories/iuserRepositories";
 import { iOTPService } from "../../../domain/services/iOTPService";
+
+import bcryptjs from "bcryptjs";
+import { iJwtService } from "../../../domain/services/ijwtService";
+import IUserResult from "../../../domain/entites/imodels/IUserResult";
+import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
+import { validateUserInput } from "../../../frameWorks/utils/helpers/validationHelpers";
 import {
   decodeSingUpToken,
   generatingSignUpToken,
 } from "../../../frameWorks/utils/jwt";
-import bcryptjs from "bcryptjs";
-import { validateUserInput } from "../../../frameWorks/utils/helpers/validationHelpers";
-import { iJwtService } from "../../../domain/services/ijwtService";
-import IUserResult from "../../../domain/entites/imodels/IUserResult";
 import { validatePassword } from "../../../frameWorks/utils/validatePassword";
-import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 
 class userAuthInteractor implements IUserAuthInteractor {
   constructor(
