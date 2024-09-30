@@ -12,23 +12,44 @@ import { AppDispatch, RootState } from '../../services/store/store';
 import { lawyerValidationSchema } from '../../utils/validator/lawyerValidate';
 import { signUpLawyer } from '../../services/store/features/lawyerServices';
 import CustomToast from '../../components/userComponents/CustomToast';
+import { IoMdClose } from "react-icons/io";
+import { LawyerSignUpData } from '../../utils/type/userType';
 
 
 const LawyerSignUp: React.FC = () => {
     const [showPassword, setShowPassword] = useState<Boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<Boolean>(false);
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [previewAImage, setPreviewImage] = useState<string | null>(null)
+
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setSelectedImage(file)
+            setPreviewImage(URL.createObjectURL(file))
+        }
+    };
+
 
     const navigate = useNavigate();
     const dispatch: AppDispatch = useDispatch();
     const { loading, error } = useSelector((state: RootState) => state.lawyer);
 
     useEffect(() => {
+
+
+
         if (error) {
             setTimeout(() => {
                 dispatch(clearError());
             }, 2000);
         }
-    }, [error, dispatch]);
+        return () => {
+            if (previewAImage) {
+                URL.revokeObjectURL(previewAImage); // Cleanup memory when component unmounts or on re-render
+            }
+        };
+    }, [error, dispatch, previewAImage]);
 
     const formik = useFormik({
         initialValues: {
@@ -45,20 +66,37 @@ const LawyerSignUp: React.FC = () => {
         validateOnChange: true,
         validateOnBlur: true,
         onSubmit: async (values) => {
+            const formData = new FormData()
+            Object.keys(values).forEach(Key => {
+                formData.append(Key, values[Key as keyof typeof values])
+            })
 
-            console.log(values)
+            console.log(formData)
+            if (selectedImage) {
+                formData.append('image', selectedImage);
+            }
             try {
-                const response = await dispatch(signUpLawyer(values)).unwrap();
+                const lawyerSignUpData: LawyerSignUpData = Object.fromEntries(formData) as LawyerSignUpData;
+                const response = await dispatch(signUpLawyer(lawyerSignUpData)).unwrap();
                 if (response.status) {
                     toast(<CustomToast message={response.message} type="success" />);
                     navigate('/otpVerify');
                 }
-
+                console.log(lawyerSignUpData)
             } catch (error: any) {
                 toast(<CustomToast message={error} type="error" />);
             }
         },
     });
+    const handelRemove = () => {
+        if (previewAImage) {
+            URL.revokeObjectURL(previewAImage)
+        }
+        setSelectedImage(null)
+        setPreviewImage(null)
+
+
+    }
 
     return (
         <>
@@ -118,7 +156,27 @@ const LawyerSignUp: React.FC = () => {
                                         isInvalid={!!formik.errors.email && formik.touched.email}
                                     />
                                     {formik.errors.email && formik.touched.email ? <div className='text-red-500 text-sm'>{formik.errors.email}</div> : null}
+                                    <div className='py-4'>
+                                        <input
+                                            type='file'
+                                            onChange={handleImageChange}
+                                            accept='image/*'
+                                            style={{ display: 'none' }}
+                                            id="imageUpload"
+                                        />
+                                        <label htmlFor="imageUpload" className="cursor-pointer font-light bg-primary text-white px-1 py-2 rounded">
+                                            Select Profile Image
+                                        </label>
 
+                                        {previewAImage && (
+                                            <div style={{ marginTop: '10px' }}>
+                                                <img src={previewAImage} alt='Selected' className='w-36 h-32 object-contain' />
+                                                <button onClick={handelRemove} className="mt-2 text-red-500">
+                                                    <IoMdClose /> Remove
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
                                     <div className="flex space-x-4">
                                         <Input
                                             type="text"

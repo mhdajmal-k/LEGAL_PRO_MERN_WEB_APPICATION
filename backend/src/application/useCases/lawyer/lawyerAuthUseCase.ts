@@ -4,36 +4,46 @@ import ILawyerAuthInteractor from "../../../domain/entites/iuseCase/iLawyerAuth"
 import { iEmailService } from "../../../domain/services/IEmailService";
 import { iJwtService } from "../../../domain/services/ijwtService";
 import { iOTPService } from "../../../domain/services/iOTPService";
+import { S3Service } from "../../../frameWorks/config/s3Setup";
 import { generatingSignUpToken } from "../../../frameWorks/utils/jwt";
 class LawyerAuthInteractor implements ILawyerAuthInteractor {
   constructor(
     private readonly Repository: iLawyerRepository,
     private readonly nodeMailer: iEmailService,
     private readonly optGenerator: iOTPService,
-    private readonly jwt: iJwtService
+    private readonly jwt: iJwtService,
+    private s3Service: S3Service
   ) {}
   async lawyerSingUp(
-    data: ILawyer
+    data: ILawyer,
+    file?: Express.Multer.File
   ): Promise<{ statusCode: number; message: string; result: string | {} }> {
     try {
-      console.log(data, "from the auth lawery");
       const { email, userName, password } = data;
       const userExists = await this.Repository.lawyerAlreadyExist(email);
       if (userExists) {
-        return { statusCode: 409, message: "user Already Exists", result: {} };
+        return { statusCode: 409, message: "User Already Exists", result: {} };
+      }
+
+      if (file) {
+        const key = `lawyer-profiles/${Date.now()}-${file.originalname}`;
+        await this.s3Service.uploadFile(file, key);
+        data.profile_picture = key;
       }
       const OTP = this.optGenerator.generateOTP();
       this.nodeMailer.sendOTP(email, OTP, userName);
-      const SingUPTempToken = generatingSignUpToken(data, OTP);
+      const SingUPTempToken = this.jwt.generateToken(data, OTP);
+
       return {
         statusCode: 200,
-        message: "OTP sended SuccessFully",
+        message: "OTP sent successfully",
         result: SingUPTempToken,
       };
     } catch (error) {
       throw error;
     }
   }
+
   async verifyOtp(
     otp: string,
     token: string
