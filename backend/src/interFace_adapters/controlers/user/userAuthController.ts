@@ -17,20 +17,20 @@ class UserAuthController {
         });
 
         return res.status(200).json({
-          success: true,
+          status: response.status,
           message: response.message,
           result: {},
         });
       } else {
         return res.status(400).json({
-          success: false,
+          status: response.status,
           message: response.message,
           result: {},
         });
       }
     } catch (error: any) {
       return res.status(500).json({
-        success: false,
+        status: false,
         message: error.message || "Internal Server Error",
         result: {},
       });
@@ -44,12 +44,12 @@ class UserAuthController {
       if (!otp || otp.trim() == "")
         return res
           .status(400)
-          .json({ success: false, message: "otp is required", result: {} });
+          .json({ status: false, message: "otp is required", result: {} });
       const token = req.cookies.auth_token;
 
       if (!token)
         return res.status(400).json({
-          success: false,
+          status: false,
           message: "session is expired try again",
           result: {},
         });
@@ -65,13 +65,13 @@ class UserAuthController {
         });
         res.clearCookie("auth_token");
         return res.status(200).json({
-          success: true,
+          status: status,
           message: response.message,
           result: data.user,
         });
       } else {
         res.status(400).json({
-          success: false,
+          success: status,
           message: response.message,
           result: {},
         });
@@ -89,7 +89,7 @@ class UserAuthController {
       const { email, password } = req.body;
       if (!email || email.trim() == "" || !password || password.trim() == "") {
         return res.status(400).json({
-          success: false,
+          status: false,
           message: "Email and password are required",
           result: {},
         });
@@ -106,13 +106,13 @@ class UserAuthController {
         });
         res.clearCookie("auth_token");
         res.status(200).json({
-          success: true,
+          status: status,
           message: response.message,
           result: data.user,
         });
       } else {
         res.status(400).json({
-          success: false,
+          status: status,
           message: response.message,
           result: {},
         });
@@ -133,7 +133,7 @@ class UserAuthController {
       console.log(token, "is the token");
       if (!token) {
         return res.status(400).json({
-          success: false,
+          status: status,
           message: "Session is expired, please try again",
           result: {},
         });
@@ -147,7 +147,7 @@ class UserAuthController {
           maxAge: 5 * 60 * 1000,
         });
         return res.status(200).json({
-          success: response.status,
+          status: response.status,
           message: response.message,
           result: {},
         });

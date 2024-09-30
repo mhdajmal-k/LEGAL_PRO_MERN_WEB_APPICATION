@@ -37,3 +37,7 @@ lawyerAuthRouter.post(
   upload.single("image"),
   lawyerAuthController.lawyerSignUp.bind(lawyerAuthController)
 );
+lawyerAuthRouter.post(
+  "/verify-otp",
+  lawyerAuthController.lawyerVerifyOtp.bind(lawyerAuthController)
+);

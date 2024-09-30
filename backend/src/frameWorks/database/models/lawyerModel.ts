@@ -17,6 +17,7 @@ const lawyerSchema = new Schema<ILawyerType>(
     about: { type: String },
     city: { type: String },
     state: { type: String },
+    zipcode: { type: String },
     verified: { type: Boolean, default: false },
     practice_area: { type: [String], required: true },
     block: { type: Boolean, default: false },
