@@ -19,6 +19,16 @@ class LawyerAuthController {
           .json({ status: false, message: validateDataError, result: {} });
         return;
       }
+      if (!file) {
+        res
+          .status(400)
+          .json({
+            status: false,
+            message: "profile image is required",
+            result: {},
+          });
+        return;
+      }
 
       const response = await this.lawyerAuthInteractor.lawyerSingUp(data, file);
 
