@@ -75,8 +75,11 @@ const LawyerOtpFrom: React.FC = () => {
         if (otpCode == "") toast(<CustomToast message="otp is required" type="error" />);
         try {
             const response = await dispatch(lawyerVerifyOtp(otpCode)).unwrap()
-            navigate("/")
-            toast(<CustomToast message={response.message} type="success" />);
+            if (response.status) {
+                navigate("/lawyer/ProfessionalData")
+                toast(<CustomToast message={response.message} type="success" />);
+            }
+
         } catch (error: any) {
             setOtp(Array(6).fill(""));
             console.log(error, "dddddddddddddddddddddddddd")
