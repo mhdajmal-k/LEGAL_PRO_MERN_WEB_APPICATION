@@ -37,7 +37,7 @@ class LawyerAuthController {
         maxAge: 5 * 60 * 1000,
       });
 
-      res.status(200).json({
+      res.status(response.statusCode).json({
         status: true,
         message: response.message,
         result: {},
