@@ -8,6 +8,7 @@ import Select, { ActionMeta, MultiValue } from "react-select"
 import { IoMdClose } from 'react-icons/io';
 import { clearError } from '../../services/store/features/lawyerSlilce';
 import { lawyerProfessionalValidate } from '../../utils/validator/lawyerValidate';
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@nextui-org/react';
 
 import { verifyProfessionalData } from '../../services/store/features/lawyerServices';
 import CustomToast from '../userComponents/CustomToast';
@@ -27,6 +28,7 @@ const ProfessionalData: React.FC = () => {
     const [previewImageIndia, setPreviewImageIndia] = useState<string | null>(null);
     const [selectedImageKerala, setSelectedImageKerala] = useState<File | null>(null);
     const [previewImageKerala, setPreviewImageKerala] = useState<string | null>(null);
+    const [modalOpen, setModalOpen] = useState(false);
     const Navigate = useNavigate()
     const handleIndiaImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -97,7 +99,7 @@ const ProfessionalData: React.FC = () => {
                 console.log(response, "checking.....")
                 if (response.status) {
                     toast(<CustomToast message={response.message} type="success" />);
-                    Navigate('/');
+                    setModalOpen(true);
                 }
             } catch (error: any) {
                 toast(<CustomToast message={error} type="error" />);
@@ -335,6 +337,43 @@ const ProfessionalData: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <Modal
+                backdrop="opaque"
+                isOpen={modalOpen}
+                onOpenChange={() => setModalOpen(false)}
+                radius="lg"
+                classNames={{
+                    body: "py-6",
+                    backdrop: "bg-[#292f46]/50 backdrop-opacity-40",
+                    base: "border-[#292f46] bg-[#19172c] dark:bg-[#19172c] text-[#a8b0d3]",
+                    header: "border-b-[1px] border-[#292f46]",
+                    footer: "border-t-[1px] border-[#292f46]",
+                    closeButton: "hover:bg-white/5 active:bg-white/10",
+                }}
+            >
+                <ModalContent>
+                    {() => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Submitted Successfully</ModalHeader>
+                            <ModalBody>
+                                <h1>Submitted Successfully</h1>
+                                <p>
+                                    Thank you for registering with LegalPro. We have received your details and documents.
+                                </p>
+                                <p>
+                                    Our team will review your submission to verify your credentials, which usually takes 24 to 48 hours. Once approved, you will eceive a confirmation email, and your profile will be activated. You can then access the lawyer dashboard, manage your profile, and start receiving client inquiries.
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button className="bg-primary shadow-lg shadow-indigo-500/20 text-white" onClick={() => Navigate("/")}>
+                                    Back to Login Page
+                                </Button>
+                            </ModalFooter>
+                        </>
+                        // onPress={onClose}
+                    )}
+                </ModalContent>
+            </Modal>
         </div>
     );
 };
