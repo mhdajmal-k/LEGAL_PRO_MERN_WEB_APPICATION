@@ -38,3 +38,27 @@ export const lawyerValidationSchema = Yup.object({
     .max(6, "invalid zipCode"),
   gender: Yup.string().required("Gender is required"),
 });
+
+export const lawyerProfessionalValidate = Yup.object({
+  barCouncilNumber: Yup.string()
+    .trim()
+    .min(3, "Username must be at least 3 letters")
+    .max(20, "Username must be less than 20 letters")
+    .required("barCouncilNumber is required"),
+  designation: Yup.string().trim().required("designation is required"),
+  aboutMe: Yup.string()
+    .trim()
+    .min(10, " must be at least 10 letters")
+    .max(300, " must be less than 50 letters")
+    .required("aboutMe is required"),
+  yearsOfExperience: Yup.string()
+    .trim()
+    .required("yearsOfExperience is required"),
+  practiceArea: Yup.array()
+    .of(Yup.string().required("Required"))
+    .min(1, "Please select at least one practice area"),
+  languages: Yup.array()
+    .of(Yup.string())
+    .min(1, "Please select at least one language"),
+  courtPracticeArea: Yup.string().required("Court Practice Area is required"),
+});

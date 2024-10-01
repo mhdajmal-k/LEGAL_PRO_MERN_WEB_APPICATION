@@ -75,8 +75,11 @@ const LawyerOtpFrom: React.FC = () => {
         if (otpCode == "") toast(<CustomToast message="otp is required" type="error" />);
         try {
             const response = await dispatch(lawyerVerifyOtp(otpCode)).unwrap()
-            navigate("/")
-            toast(<CustomToast message={response.message} type="success" />);
+            if (response.status) {
+                navigate("/lawyer/ProfessionalData")
+                toast(<CustomToast message={response.message} type="success" />);
+            }
+
         } catch (error: any) {
             setOtp(Array(6).fill(""));
             console.log(error, "dddddddddddddddddddddddddd")
@@ -93,7 +96,7 @@ const LawyerOtpFrom: React.FC = () => {
     return (
         <div className='flex justify-center items-center min-h-screen bg-gray-100 p-4'>
             <div className='w-full max-w-md bg-white rounded-lg shadow-custom p-7'>
-                <span className="bg-primary text-white px-2 py-1 rounded text-sm">Step 1/3</span>
+                <span className="bg-primary text-white px-2 py-1 rounded text-sm">Step 2/3</span>
                 <div className='flex justify-center mb-4'>
                     <IoCheckmarkCircle className='text-5xl text-green-500' />
                 </div>

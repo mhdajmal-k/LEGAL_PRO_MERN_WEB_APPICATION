@@ -1,6 +1,7 @@
+import { ILawyer } from "../entites/imodels/iLawyer";
 import { IUser } from "../entites/imodels/Iuser";
 
 export interface iJwtService {
-  generateToken(userData: IUser, role: string): string;
-  // verifyToken(Token: string): boolean;
+  generateToken(userData: IUser | ILawyer, role: string): string;
+  verifyToken(Token: string): { id: string; role: string } | null;
 }

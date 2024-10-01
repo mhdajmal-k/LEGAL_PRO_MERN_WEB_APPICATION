@@ -1,8 +1,6 @@
-// src/framework/database/models/userModel.ts
 import mongoose, { Schema, model } from "mongoose";
 import { ILawyer } from "../../../domain/entites/imodels/iLawyer";
 
-// Define the User schema
 type ILawyerType = ILawyer & mongoose.Document;
 const lawyerSchema = new Schema<ILawyerType>(
   {
@@ -13,7 +11,7 @@ const lawyerSchema = new Schema<ILawyerType>(
     gender: { type: String },
     years_of_experience: { type: String },
     languages_spoken: { type: [String], required: true },
-    designation: String,
+    designation: { type: String },
     about: { type: String },
     city: { type: String },
     state: { type: String },

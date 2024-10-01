@@ -1,0 +1,17 @@
+export const practiceAreas = [
+  { label: "Criminal Law", value: "criminal_law" },
+  { label: "Civil Litigation", value: "civil_litigation" },
+  { label: "Corporate Law", value: "corporate_law" },
+  { label: "Family Law", value: "family_law" },
+  { label: "Immigration Law", value: "immigration_law" },
+  { label: "Intellectual Property Law", value: "intellectual_property_law" },
+  { label: "Real Estate Law", value: "real_estate_law" },
+  { label: "Employment Law", value: "employment_law" },
+  { label: "Tax Law", value: "tax_law" },
+  { label: "Personal Injury Law", value: "personal_injury_law" },
+  { label: "Bankruptcy Law", value: "bankruptcy_law" },
+  { label: "Environmental Law", value: "environmental_law" },
+  { label: "Health Care Law", value: "health_care_law" },
+  { label: "Consumer Protection Law", value: "consumer_protection_law" },
+  { label: "Contract Law", value: "contract_law" },
+];

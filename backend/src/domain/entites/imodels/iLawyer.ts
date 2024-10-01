@@ -1,9 +1,10 @@
+import { Request } from "express";
 import { Document } from "mongoose";
 
 interface ICertification {
-  certificateType: string;
-  enrolmentNumber: string;
-  certificate: string;
+  certificateType?: string;
+  enrolmentNumber?: string;
+  certificate?: string;
 }
 
 export interface ILawyer extends Document {
@@ -23,5 +24,25 @@ export interface ILawyer extends Document {
   verified?: boolean;
   practice_area?: string[];
   block?: boolean;
-  token?: string;
+  tokenJwt?: string;
+}
+
+export interface IProfessionalData {
+  practiceArea: string[];
+  yearsOfExperience: string;
+  barCouncilNumber: string;
+  stateBarCouncilNumber?: string;
+  designation: string;
+  courtPracticeArea: string;
+  languages: string[];
+  aboutMe: string;
+  barCouncilCertificate?: string;
+  stateBarCouncilCertificate?: string;
+  certificate?: ICertification[];
+}
+
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+  };
 }

@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { IUser } from "../../../domain/entites/imodels/Iuser";
 import iUserRepository from "../../../domain/entites/irepositories/iuserRepositories";
 import User from "../../../frameWorks/database/models/userModel";
@@ -36,6 +37,15 @@ class UserAuthRepository implements iUserRepository {
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+  async getId(id: string): Promise<Types.ObjectId | null> {
+    try {
+      const userId = await User.findById(id).lean();
+      return userId ? userId?.id : null;
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   }
 }
