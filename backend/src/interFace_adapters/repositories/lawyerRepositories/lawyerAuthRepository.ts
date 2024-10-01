@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { ILawyer } from "../../../domain/entites/imodels/iLawyer";
 import iLawyerRepository from "../../../domain/entites/irepositories/ilawyerRepositories";
 import Lawyer from "../../../frameWorks/database/models/lawyerModel";
@@ -45,6 +46,39 @@ class LawyerAuthRepository implements iLawyerRepository {
   async lawyerAlreadyExist(email: string): Promise<boolean> {
     const lawyer = await Lawyer.findOne({ email: email }).lean();
     return !!lawyer;
+  }
+  async getId(id: string): Promise<Types.ObjectId | null> {
+    try {
+      console.log(id, "is the id");
+      const userId = await Lawyer.findById({ _id: id });
+      return userId ? userId?.id : null;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async updateLawyerProfessionalData(data: any, id: string): Promise<boolean> {
+    try {
+      const updateLawyer = await Lawyer.findByIdAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            practice_area: data.practiceArea,
+            certifications: data.certificate,
+            years_of_experience: data.yearsOfExperience,
+            languages_spoken: data.languages,
+            designation: data.designation,
+            aboutMe: data.aboutMe,
+          },
+        },
+        { new: true }
+      );
+      return updateLawyer ? true : false;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 }
 export default LawyerAuthRepository;

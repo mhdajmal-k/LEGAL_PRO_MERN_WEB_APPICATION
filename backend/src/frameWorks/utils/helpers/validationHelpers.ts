@@ -59,7 +59,6 @@ export const validateLawyerInput = (data: {
   zipCode: string;
   password: string;
 }): string | null => {
-  // Basic user validations
   const emailError = validateEmail(data.email);
   const usernameError = validateUsername(data.userName);
   const passwordError = validatePassword(data.password);
@@ -67,13 +66,10 @@ export const validateLawyerInput = (data: {
   if (usernameError) return usernameError;
   if (passwordError) return passwordError;
 
-  // Additional Lawyer-specific validations
   const genderError = validateGender(data.gender);
   const cityError = validateCity(data.city);
   const stateError = validateState(data.state);
   const zipCodeError = validateZipCode(data.zipCode);
-
-  // Return the first encountered error
   return genderError
     ? genderError
     : cityError
