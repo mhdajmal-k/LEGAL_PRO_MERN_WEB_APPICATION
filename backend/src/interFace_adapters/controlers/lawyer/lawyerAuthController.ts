@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import ILawyerAuthInteractor from "../../../domain/entites/iuseCase/iLawyerAuth";
 import { validateLawyerInput } from "../../../frameWorks/utils/helpers/validationHelpers";
-import { ILawyer } from "../../../domain/entites/imodels/iLawyer";
+import {
+  AuthenticatedRequest,
+  ILawyer,
+} from "../../../domain/entites/imodels/iLawyer";
+import { validateProfessionalDataInput } from "../../../frameWorks/utils/helpers/validateProffesionalData";
 class LawyerAuthController {
   constructor(private lawyerAuthInteractor: ILawyerAuthInteractor) {}
   async lawyerSignUp(
@@ -67,13 +71,14 @@ class LawyerAuthController {
       const { statusCode, message, result } = response;
       if (result) {
         const data = result as ILawyer;
-        res.cookie("auth_lawyerAccessToken", data.token, {
+        res.clearCookie("lawyerAuth_token");
+
+        res.cookie("auth_lawyerAccessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
-          maxAge: 5 * 60 * 1000,
+          maxAge: 60 * 60 * 1000,
         });
-        res.clearCookie("lawyerAuth_token");
-        return res.status(statusCode).json({
+        res.status(statusCode).json({
           status: true,
           message: message,
           result: result,
@@ -87,6 +92,48 @@ class LawyerAuthController {
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async verifyProfessionalData(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const data = req.body;
+      const id = req.user?.id;
+      const files = req.files as
+        | { [fieldname: string]: Express.Multer.File[] }
+        | undefined;
+
+      const validateDataError = validateProfessionalDataInput(data);
+      if (validateDataError) {
+        res
+          .status(400)
+          .json({ status: false, message: validateDataError, result: {} });
+        return;
+      }
+      if (!req.files) {
+        res.status(400).json({
+          status: false,
+          message: "certificate is required image is required",
+          result: {},
+        });
+        return;
+      }
+      const response = await this.lawyerAuthInteractor.verifyProfessionalData(
+        data,
+        files,
+        id
+      );
+      res.status(response.statusCode).json({
+        status: true,
+        message: response.message,
+        result: {},
+      });
+    } catch (error) {
+      next(error);
     }
   }
 }

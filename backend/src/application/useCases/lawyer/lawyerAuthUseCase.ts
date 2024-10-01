@@ -1,4 +1,7 @@
-import { ILawyer } from "../../../domain/entites/imodels/iLawyer";
+import {
+  ILawyer,
+  IProfessionalData,
+} from "../../../domain/entites/imodels/iLawyer";
 import iLawyerRepository from "../../../domain/entites/irepositories/ilawyerRepositories";
 import ILawyerAuthInteractor from "../../../domain/entites/iuseCase/iLawyerAuth";
 import { iEmailService } from "../../../domain/services/IEmailService";
@@ -81,8 +84,10 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         error.message = "Failed to create new user";
         throw error;
       }
+      console.log(creatingNewLawyer, "is the creatingNewLawyer");
 
       const jwtToken = this.jwt.generateToken(creatingNewLawyer._id, "lawyer");
+      console.log(jwtToken, "is the jwt token i createdfffffffffffffff");
       const { password, ...userDataWithoutPassword } =
         creatingNewLawyer.toObject();
       return {
@@ -92,6 +97,68 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
           user: userDataWithoutPassword,
           tokenJwt: jwtToken,
         },
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async verifyProfessionalData(
+    data: IProfessionalData,
+    files?: { [fieldname: string]: Express.Multer.File[] },
+    id?: string
+  ): Promise<{ statusCode: number; message: string; result: string | {} }> {
+    try {
+      const { barCouncilNumber, stateBarCouncilNumber } = data;
+      for (const fieldname in files) {
+        const filesArray = files[fieldname];
+        if (fieldname === "imageIndia") {
+          for (const file of filesArray) {
+            const key = `lawyer-barCouncilIndia/${Date.now()}-${
+              file.originalname
+            }`;
+            const uploadedUrl = await this.s3Service.uploadFile(file, key);
+            data.barCouncilCertificate = uploadedUrl || "";
+          }
+        } else if (fieldname === "imageKerala") {
+          for (const file of filesArray) {
+            const key = `lawyer-barCouncilIndiaKerala/${Date.now()}-${
+              file.originalname
+            }`;
+            const uploadedUrl = await this.s3Service.uploadFile(file, key);
+            data.stateBarCouncilCertificate = uploadedUrl || "";
+          }
+        }
+      }
+      const certificates = [
+        {
+          certificateType: "Bar Council of India",
+          enrolmentNumber: barCouncilNumber,
+          certificate: data.barCouncilCertificate || "",
+        },
+        {
+          certificateType: "State Bar Council of Kerala",
+          enrolmentNumber: stateBarCouncilNumber || "",
+          certificate: data.stateBarCouncilCertificate || "",
+        },
+      ];
+      data.certificate = certificates;
+
+      const updateLawyer = await this.Repository.updateLawyerProfessionalData(
+        data,
+        id as string
+      );
+      if (!updateLawyer) {
+        const error: CustomError = new Error();
+        error.message = "Failed to create Account Try agin";
+        error.statusCode = 400;
+        throw error;
+      }
+
+      return {
+        statusCode: 201,
+        message: "From submitted SuccessFully",
+        result: {},
       };
     } catch (error) {
       throw error;

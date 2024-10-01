@@ -39,3 +39,16 @@ export interface LawyerSignUpData {
   password?: string;
   image?: string;
 }
+
+export interface LawyerProfessionalData {
+  practiceArea: string[] | any;
+  yearsOfExperience: string;
+  barCouncilNumber: string;
+  stateBarCouncilNumber?: string;
+  designation: string;
+  courtPracticeArea: string;
+  languages: string[];
+  aboutMe: string;
+  selectedImageIndia?: File;
+  selectedImageKerala?: File;
+}
