@@ -127,6 +127,7 @@ class LawyerAuthController {
         files,
         id
       );
+      console.log("success");
       res.status(response.statusCode).json({
         status: true,
         message: response.message,
