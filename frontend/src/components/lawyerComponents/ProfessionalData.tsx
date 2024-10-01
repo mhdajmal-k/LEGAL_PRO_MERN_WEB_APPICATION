@@ -37,7 +37,11 @@ const ProfessionalData: React.FC = () => {
             setPreviewImageIndia(URL.createObjectURL(file));
         }
     };
-
+    if (modalOpen) {
+        setTimeout(() => {
+            Navigate("/lawyer/login")
+        }, 3000)
+    }
     const handleKeralaImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -98,7 +102,6 @@ const ProfessionalData: React.FC = () => {
                 const response = await dispatch(verifyProfessionalData(formData)).unwrap();
                 console.log(response, "checking.....")
                 if (response.status) {
-                    toast(<CustomToast message={response.message} type="success" />);
                     setModalOpen(true);
                 }
             } catch (error: any) {
