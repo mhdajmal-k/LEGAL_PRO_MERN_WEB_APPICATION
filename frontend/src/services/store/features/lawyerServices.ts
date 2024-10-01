@@ -5,6 +5,7 @@ import {
   LAWYERRESENDOTP,
   LAWYERSIGNUP,
   LAWYERVERIFYINGOTP,
+  LAWYERVERIFYPROFESSIONALDATA,
 } from "../../api/lawerApi";
 import { AxiosError } from "axios";
 import { LawyerSignUpResponse } from "../../../utils/type/lawyerType";
@@ -67,6 +68,36 @@ export const lawyerResendOtp = createAsyncThunk(
     try {
       console.log("hi");
       const response = await axiosInstance.post(LAWYERRESENDOTP);
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const verifyProfessionalData = createAsyncThunk(
+  "lawyer/verifyProfessionalData",
+  async (ProfessionalData: FormData, { rejectWithValue }) => {
+    console.log(ProfessionalData, "is the lawyerdata from the service");
+    try {
+      console.log("hi");
+      const response = await axiosInstance.post(
+        LAWYERVERIFYPROFESSIONALDATA,
+        ProfessionalData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";

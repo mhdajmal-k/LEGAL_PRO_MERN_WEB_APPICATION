@@ -8,6 +8,7 @@ import JwtToken from "../../../services/jwt";
 import LawyerAuthController from "../../../../interFace_adapters/controlers/lawyer/lawyerAuthController";
 import multer from "multer";
 import { S3Service } from "../../../config/s3Setup";
+import { authorization } from "../../../middleware/authMilddlewere";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -40,4 +41,14 @@ lawyerAuthRouter.post(
 lawyerAuthRouter.post(
   "/verify-otp",
   lawyerAuthController.lawyerVerifyOtp.bind(lawyerAuthController)
+);
+
+lawyerAuthRouter.post(
+  "/verify-professionalData",
+  authorization("lawyer"),
+  upload.fields([
+    { name: "imageIndia", maxCount: 1 },
+    { name: "imageKerala", maxCount: 1 },
+  ]),
+  lawyerAuthController.verifyProfessionalData.bind(lawyerAuthController)
 );

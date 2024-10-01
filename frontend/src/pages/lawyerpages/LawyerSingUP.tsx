@@ -71,12 +71,13 @@ const LawyerSignUp: React.FC = () => {
                 formData.append(Key, values[Key as keyof typeof values])
             })
 
-            console.log(formData)
+
             if (selectedImage) {
                 formData.append('image', selectedImage);
             }
             try {
                 const lawyerSignUpData: LawyerSignUpData = Object.fromEntries(formData) as LawyerSignUpData;
+                console.log(lawyerSignUpData)
                 const response = await dispatch(signUpLawyer(lawyerSignUpData)).unwrap();
                 console.log(response, "checking.....")
                 if (response.status) {

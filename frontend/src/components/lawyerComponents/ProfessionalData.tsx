@@ -1,11 +1,19 @@
 import { Button, Input } from '@nextui-org/react';
 import { useFormik } from 'formik';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { practiceAreas } from '../../utils/constants/PracticeAreas';
 import Select, { ActionMeta, MultiValue } from "react-select"
 import { IoMdClose } from 'react-icons/io';
+import { clearError } from '../../services/store/features/lawyerSlilce';
+import { lawyerProfessionalValidate } from '../../utils/validator/lawyerValidate';
+
+import { verifyProfessionalData } from '../../services/store/features/lawyerServices';
+import CustomToast from '../userComponents/CustomToast';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
+
 interface OptionType {
     value: string;
     label: string;
@@ -19,7 +27,7 @@ const ProfessionalData: React.FC = () => {
     const [previewImageIndia, setPreviewImageIndia] = useState<string | null>(null);
     const [selectedImageKerala, setSelectedImageKerala] = useState<File | null>(null);
     const [previewImageKerala, setPreviewImageKerala] = useState<string | null>(null);
-
+    const Navigate = useNavigate()
     const handleIndiaImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -61,39 +69,54 @@ const ProfessionalData: React.FC = () => {
     const formik = useFormik({
         initialValues: {
             practiceArea: [] as string[],
-            yearsOfExperience: '',
+            yearsOfExperience: "",
             barCouncilNumber: '',
             stateBarCouncilNumber: '',
             designation: '',
             courtPracticeArea: '',
             languages: [],
             aboutMe: '',
-        },
-        onSubmit: async (values) => {
-            const formData = new FormData()
-            console.log(values)
-            // Object.keys(values).forEach(Key => {
-            //     formData.append(Key, values[Key as keyof typeof values])
-            // })
 
-            // console.log(formData)
-            // if (selectedImage) {
-            //     formData.append('image', selectedImage);
-            // }
-            // try {
-            //     const lawyerSignUpData: LawyerSignUpData = Object.fromEntries(formData) as LawyerSignUpData;
-            //     const response = await dispatch(signUpLawyer(lawyerSignUpData)).unwrap();
-            //     console.log(response, "checking.....")
-            //     if (response.status) {
-            //         toast(<CustomToast message={response.message} type="success" />);
-            //         navigate('/lawyer/verify-otp');
-            //     }
-            //     console.log(lawyerSignUpData)
-            // } catch (error: any) {
-            //     toast(<CustomToast message={error} type="error" />);
-            // }
-        },
+        }, validationSchema: lawyerProfessionalValidate,
+        validateOnChange: true,
+        validateOnBlur: true,
+        onSubmit: async (values) => {
+            const formData = new FormData();
+            formData.append('practiceArea', JSON.stringify(values.practiceArea));
+            formData.append('yearsOfExperience', values.yearsOfExperience);
+            formData.append('barCouncilNumber', values.barCouncilNumber);
+            formData.append('stateBarCouncilNumber', values.stateBarCouncilNumber);
+            formData.append('designation', values.designation);
+            formData.append('courtPracticeArea', values.courtPracticeArea);
+            formData.append('languages', JSON.stringify(values.languages));
+            formData.append('aboutMe', values.aboutMe);
+            if (selectedImageIndia) formData.append('imageIndia', selectedImageIndia);
+            if (selectedImageKerala) formData.append('imageKerala', selectedImageKerala);
+            try {
+                const response = await dispatch(verifyProfessionalData(formData)).unwrap();
+                console.log(response, "checking.....")
+                if (response.status) {
+                    toast(<CustomToast message={response.message} type="success" />);
+                    Navigate('/');
+                }
+            } catch (error: any) {
+                toast(<CustomToast message={error} type="error" />);
+            }
+        }
     });
+
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                dispatch(clearError());
+            }, 2000);
+        }
+        return () => {
+            if (previewImageKerala) URL.revokeObjectURL(previewImageKerala)
+            if (previewImageIndia) URL.revokeObjectURL(previewImageIndia)
+        };
+    }, [error, dispatch, previewImageIndia, previewImageKerala]);
+
 
     return (
         <div className='container'>
@@ -136,6 +159,8 @@ const ProfessionalData: React.FC = () => {
                                         }),
                                     }}
                                 />
+                                {formik.errors.practiceArea && formik.touched.practiceArea ? <div className='text-red-500 text-sm'>{formik.errors.practiceArea}</div> : null}
+
 
 
                                 <select
@@ -152,6 +177,7 @@ const ProfessionalData: React.FC = () => {
                                     <option value="4">5+ years</option>
 
                                 </select>
+                                {formik.errors.yearsOfExperience && formik.touched.yearsOfExperience ? <div className='text-red-500 text-sm'>{formik.errors.yearsOfExperience}</div> : null}
                                 <div className="space-y-4">
 
                                     <div className="md:flex   items-end space-x-4">
@@ -167,6 +193,8 @@ const ProfessionalData: React.FC = () => {
                                                 variant="bordered"
                                                 className="w-full"
                                             />
+                                            {formik.errors.barCouncilNumber && formik.touched.barCouncilNumber ? <div className='text-red-500 text-sm'>{formik.errors.barCouncilNumber}</div> : null}
+
                                         </div>
 
                                         {/* Image Upload for Bar Council of India */}
@@ -210,6 +238,7 @@ const ProfessionalData: React.FC = () => {
                                             />
                                         </div>
 
+
                                         {/* Image Upload for State Bar Council */}
                                         <div className='py-2'>
                                             <input
@@ -249,6 +278,8 @@ const ProfessionalData: React.FC = () => {
                                         <option value="senior Advocate">Senior Advocate</option>
                                         {/* Add more designation options */}
                                     </select>
+                                    {formik.errors.designation && formik.touched.designation ? <div className='text-red-500 text-sm'>{formik.errors.designation}</div> : null}
+
                                     <select
                                         name="courtPracticeArea"
                                         onChange={formik.handleChange}
@@ -260,6 +291,8 @@ const ProfessionalData: React.FC = () => {
                                         <option value="high Court">High Court</option>
                                         <option value="supreme Court">Supreme Court</option>
                                     </select>
+                                    {formik.errors.courtPracticeArea && formik.touched.courtPracticeArea ? <div className='text-red-500 text-sm'>{formik.errors.courtPracticeArea}</div> : null}
+
                                 </div>
 
                                 <div className=''>
@@ -278,6 +311,8 @@ const ProfessionalData: React.FC = () => {
                                             </label>
                                         ))}
                                     </div>
+                                    {formik.errors.languages && formik.touched.languages ? <div className='text-red-500 text-sm'>{formik.errors.languages}</div> : null}
+
                                 </div>
 
                                 <textarea
@@ -287,6 +322,8 @@ const ProfessionalData: React.FC = () => {
                                     value={formik.values.aboutMe}
                                     className="w-full p-2 border rounded bg-gray-300"
                                 />
+                                {formik.errors.aboutMe && formik.touched.aboutMe ? <div className='text-red-500 text-sm'>{formik.errors.aboutMe}</div> : null}
+
 
                                 <Button color="primary" type="submit" className="w-full">
                                     {loading ? "Signing Up..." : "Sign Up as Lawyer"}

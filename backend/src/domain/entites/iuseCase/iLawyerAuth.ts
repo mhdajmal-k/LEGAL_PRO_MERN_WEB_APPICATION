@@ -1,4 +1,4 @@
-import { ILawyer } from "../imodels/iLawyer";
+import { ILawyer, IProfessionalData } from "../imodels/iLawyer";
 import IUserResult from "../imodels/IUserResult";
 
 interface ILawyerAuthInteractor {
@@ -14,6 +14,11 @@ interface ILawyerAuthInteractor {
     message: string;
     result?: {} | ILawyer | undefined;
   }>;
+  verifyProfessionalData(
+    data: IProfessionalData,
+    files?: { [fieldname: string]: Express.Multer.File[] },
+    id?: string
+  ): Promise<{ statusCode: number; message: string; result: string | {} }>;
   //   laLogin(
   //     user: IUser
   //   ): Promise<{ status: boolean; message: string; result: IUserResult | null }>;
