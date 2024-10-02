@@ -18,12 +18,15 @@ export const signUpUser = createAsyncThunk(
       console.log(response.data, "//////////////////////////////////");
       return response.data;
     } catch (error) {
+      let errorMessage = "Network error. try again later.";
       if (error instanceof AxiosError) {
         if (error.response) {
-          return rejectWithValue(error.response.data.message);
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
         }
       }
-      return rejectWithValue("Network error. try again later.");
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -38,12 +41,15 @@ export const verifyOtp = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
+      let errorMessage = "Network error. try again later.";
       if (error instanceof AxiosError) {
         if (error.response) {
-          return rejectWithValue(error.response.data.message);
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
         }
-        return rejectWithValue({ error: "Server error" });
       }
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -55,12 +61,15 @@ export const loginUser = createAsyncThunk(
       const response = await axiosInstance.post(USERLOGIN, data);
       return response.data;
     } catch (error) {
+      let errorMessage = "Network error. try again later.";
       if (error instanceof AxiosError) {
         if (error.response) {
-          return rejectWithValue(error.response.data.message);
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
         }
-        return rejectWithValue({ error: "Server error" });
       }
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -73,12 +82,15 @@ export const resendOtp = createAsyncThunk(
       const response = await axiosInstance.post(RESENDOTP);
       return response.data;
     } catch (error) {
+      let errorMessage = "Network error. try again later.";
       if (error instanceof AxiosError) {
         if (error.response) {
-          return rejectWithValue(error.response.data.message);
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
         }
       }
-      return rejectWithValue({ error: "Server error" });
+      return rejectWithValue(errorMessage);
     }
   }
 );

@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../services/store/store';
 import { IoIosNotifications } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
-import { Avatar } from "@nextui-org/react";
+import { Tooltip, Avatar } from "@nextui-org/react";
+
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -43,26 +44,55 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* SignUp and Become a Lawyer Buttons */}
-        {userInfo?.userName ? <div className='flex justify-between items-center'>
-          <div className='flex'><IoIosNotifications /></div>
-          <div className='flex'><FaHeart /></div>
-          <div className='flex'>
+        <div>
+          {userInfo?.userName ? (
+            <div className='flex items-center space-x-4'>
+              <div className='flex items-center'>
+                <IoIosNotifications className="text-xl" />
+              </div>
+              <div className='flex items-center'>
+                <FaHeart className="text-xl" />
+              </div>
+              <Tooltip
+                content={
+                  <div className="py-2">
+                    <Button className="w-full mb-2 justify-start" variant="light">
+                      <div className="text-sm font-normal">Profile</div>
+                    </Button>
+                    <Button className="w-full justify-start" variant="light">
+                      <div className="text-sm font-normal">LogOut</div>
+                    </Button>
+                  </div>
+                }
+              >
+                <Avatar
+                  isBordered
+                  radius="full"
+                  src={userInfo.email || "https://i.pravatar.cc/150?u=default"}
+                  alt={userInfo.userName}
+                  className="cursor-pointer"
+                />
+              </Tooltip>
+              <div>
+                <span className="text-sm font-medium">{userInfo.userName}</span>
+              </div>
+            </div>
+          ) : (
+            <div className="flex space-x-4">
+              <Button size="sm" className="bg-secondary text-black font-bold hover:bg-secondary-50">
+                <Link to="/signup">
+                  SIGN UP
+                </Link>
+              </Button>
+              <Button size="sm" className="bg-secondary text-black font-bold hover:bg-secondary-50">
+                <Link to="/become-lawyer" className='uppercase'>
+                  Become a Lawyer
+                </Link>
+              </Button>
+            </div>
+          )}
+        </div>
 
-            <Avatar isBordered radius="full" src="https://i.pravatar.cc/150?u=a04258114e29026708c" />
-          </div>
-          <div><span>{userInfo?.userName}</span></div>
-        </div> : <div className="hidden md:flex space-x-6 text- font-semibold">
-          <Button size="sm" className="bg-secondary text-black font-bold hover:bg-secondary-50">
-            <Link to="/signup">
-              SIGN UP
-            </Link>
-          </Button>
-          <Button size="sm" className="bg-secondary text-black font-bold hover:bg-secondary-50">
-            <Link to="/become-lawyer" className='uppercase'>
-              Become a Lawyer
-            </Link>
-          </Button>
-        </div>}
 
 
         {/* Hamburger menu for mobile */}
