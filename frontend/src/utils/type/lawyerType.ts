@@ -5,5 +5,11 @@ interface SignUpResult {
 export interface LawyerSignUpResponse {
   status: number;
   message: string;
-  result: SignUpResult | null;
+  result: SignUpResult | null | string;
+}
+
+export interface response {
+  status: number;
+  message: string;
+  result: null | string | any;
 }

@@ -10,4 +10,5 @@ export interface IUser extends Document {
   block?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+  role?: string;
 }
