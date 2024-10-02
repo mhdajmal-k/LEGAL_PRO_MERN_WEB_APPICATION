@@ -7,7 +7,6 @@ const userSchema = new Schema<IUser>(
   {
     userName: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
@@ -21,7 +20,6 @@ const userSchema = new Schema<IUser>(
     },
     phoneNumber: {
       type: Number,
-      unique: true,
     },
     profilePicture: {
       type: String,
@@ -30,6 +28,7 @@ const userSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    role: { type: String, enum: ["user", "lawyer", "admin"], default: "user" },
   },
   { timestamps: true }
 );
