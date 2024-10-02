@@ -121,8 +121,7 @@ class userAuthInteractor implements IUserAuthInteractor {
         };
       }
       const jwtToken = this.jwt.generateToken(validUser._id, "user");
-      const { password: userPassword, ...userDataWithoutPassword } =
-        validUser.toObject();
+      const { password: userPassword, ...userDataWithoutPassword } = validUser;
 
       return {
         status: true,
@@ -133,6 +132,7 @@ class userAuthInteractor implements IUserAuthInteractor {
         },
       };
     } catch (error) {
+      console.log(error);
       return {
         status: false,
         message: "An error occurred during login",
