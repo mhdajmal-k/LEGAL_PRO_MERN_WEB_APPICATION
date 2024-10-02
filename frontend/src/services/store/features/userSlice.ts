@@ -43,10 +43,12 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = actions.payload as string;
       })
-      .addCase(loginUser.pending, (state) => {
+      .addCase(loginUser.pending, (state, actions) => {
+        state.userInfo = null;
         state.loading = true;
       })
-      .addCase(loginUser.fulfilled, (state) => {
+      .addCase(loginUser.fulfilled, (state, actions) => {
+        state.userInfo = actions.payload.result;
         state.loading = false;
       })
       .addCase(loginUser.rejected, (state, actions) => {
