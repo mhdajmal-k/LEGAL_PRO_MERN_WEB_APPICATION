@@ -1,4 +1,3 @@
-// Use named exports for each interface
 export interface UserState {
   userInfo: {
     userName: string;

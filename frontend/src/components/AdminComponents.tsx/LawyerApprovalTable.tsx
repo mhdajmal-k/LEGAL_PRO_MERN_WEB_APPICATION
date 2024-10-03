@@ -58,7 +58,7 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data }) => {
                             key={user._id}
                             className="hover:bg-gray-100 transition duration-300 ease-in-out even:bg-gray-50"
                         >
-                            {/* Profile Image */}
+
                             <td className="px-6 py-4 whitespace-nowrap">
                                 <div className="flex items-center">
                                     <div className="h-10 w-10">

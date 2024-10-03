@@ -89,7 +89,7 @@ const AdminLoginForm: React.FC = () => {
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
                                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                                        style={{ position: "absolute", right: '10px', top: '50%', transform: 'translateY(-50%)' }} // Ensures the button doesn't move
+                                        style={{ position: "absolute", right: '10px', top: '50%', transform: 'translateY(-50%)' }}
                                     >
                                         {showPassword ? <FaRegEye className="h-5 w-5" /> : <FaEyeSlash className="h-5 w-5" />}
                                     </button>

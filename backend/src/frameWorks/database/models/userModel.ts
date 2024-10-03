@@ -1,8 +1,6 @@
-// src/framework/database/models/userModel.ts
 import mongoose, { Schema, model } from "mongoose";
-import { IUser } from "../../../domain/entites/imodels/Iuser"; // Correct path for IUser
+import { IUser } from "../../../domain/entites/imodels/Iuser";
 
-// Define the User schema
 const userSchema = new Schema<IUser>(
   {
     userName: {
