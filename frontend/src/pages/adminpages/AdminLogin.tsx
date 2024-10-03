@@ -21,8 +21,8 @@ const AdminLoginForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState<Boolean>(false);
     const formik = useFormik({
         initialValues: {
-            email: 'ajmalchundappuram@gmail.com',
-            password: '@Ajmal111',
+            email: '',
+            password: '',
         },
         validationSchema: adminValidationSchema,
         validateOnChange: true,
@@ -32,8 +32,8 @@ const AdminLoginForm: React.FC = () => {
                 const response = await axiosInstance.post(ADMINLOGIN, values) as response;
                 console.log(response, "checking.....")
 
-                toast(<CustomToast message={response.message} type="success" />);
-                navigate('/admin/');
+
+                navigate('/admin/dashboard');
 
             } catch (error: any) {
                 let errorMessage = "An unknown error occurred";

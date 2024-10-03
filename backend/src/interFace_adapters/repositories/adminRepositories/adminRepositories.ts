@@ -1,4 +1,5 @@
 import iAdminRepository from "../../../domain/entites/irepositories/IadminRepositries";
+import Lawyer from "../../../frameWorks/database/models/lawyerModel";
 import User from "../../../frameWorks/database/models/userModel";
 import { hashPassword } from "../../../frameWorks/utils/helpers/passwordHelper";
 
@@ -38,6 +39,17 @@ class AdminRepository implements iAdminRepository {
       return users;
     } catch (error) {
       throw new Error("Could not fetch users");
+    }
+  }
+  async getPendingApprovalLawyers(): Promise<any> {
+    try {
+      const lawyers = await Lawyer.find({ verified: { $ne: true } })
+        .select("-password")
+        .sort({ createdAt: -1 })
+        .lean();
+      return lawyers;
+    } catch (error) {
+      throw error;
     }
   }
 }

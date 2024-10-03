@@ -4,6 +4,7 @@ import iAdminRepository from "../../../domain/entites/irepositories/IadminReposi
 import IAdminInteractor from "../../../domain/entites/iuseCase/iadmin";
 import { iJwtService } from "../../../domain/services/ijwtService";
 import { config } from "../../../frameWorks/config/envConfig";
+import { S3Service } from "../../../frameWorks/config/s3Setup";
 import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 import { hashPassword } from "../../../frameWorks/utils/helpers/passwordHelper";
 import { validatePassword } from "../../../frameWorks/utils/validatePassword";
@@ -11,7 +12,8 @@ import { validatePassword } from "../../../frameWorks/utils/validatePassword";
 class AdminInteractor implements IAdminInteractor {
   constructor(
     private readonly Repository: iAdminRepository,
-    private readonly jwt: iJwtService
+    private readonly jwt: iJwtService,
+    private s3Service: S3Service
   ) {}
 
   async adminLogin(
@@ -83,6 +85,36 @@ class AdminInteractor implements IAdminInteractor {
       console.log(allUser, "is the useCase");
 
       return {
+        status: true,
+        message: "message fetched SuccessFully",
+        result: allUser,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getPendingApprovalLawyers(): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: [];
+  }> {
+    try {
+      const allUser = await this.Repository.getPendingApprovalLawyers();
+
+      if (!allUser) {
+        console.log("hi in here");
+        return {
+          statusCode: 500,
+          status: false,
+          message: "Failed to Get Users",
+          result: [],
+        };
+      }
+      console.log(allUser, "is the useCase");
+
+      return {
+        statusCode: 200,
         status: true,
         message: "message fetched SuccessFully",
         result: allUser,

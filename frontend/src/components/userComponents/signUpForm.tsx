@@ -33,10 +33,10 @@ const SignUpForm: React.FC = () => {
     }, [error])
     const formik = useFormik({
         initialValues: {
-            userName: 'ajmal',
-            email: 'ajmalchundappuram@gmail.com',
-            password: '@Ajmal111',
-            confirmPassword: '@Ajmal111',
+            userName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
             userInfo: null,
             loading: false,
             error: null
