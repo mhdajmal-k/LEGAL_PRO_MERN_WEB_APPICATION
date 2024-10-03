@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { lawyerInfo } from "../../../utils/type/userType";
-import { getUsers } from "./adminServices";
+import { getPendingApprovalLawyers, getUsers } from "./adminServices";
 
 interface adminState {
   adminInfo: lawyerInfo | null;
@@ -20,6 +20,7 @@ const adminSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.adminInfo = null;
+      (state.loading = false), (state.error = "");
     },
     clearError: (state) => {
       (state.error = ""), (state.loading = false);
@@ -38,7 +39,22 @@ const adminSlice = createSlice({
       .addCase(getUsers.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload.message;
-      });
+      })
+      .addCase(getPendingApprovalLawyers.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getPendingApprovalLawyers.fulfilled, (state) => {
+        // state.adminInfo = action.payload;
+        state.error = "";
+        state.loading = false;
+      })
+      .addCase(
+        getPendingApprovalLawyers.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error = action.payload.message;
+        }
+      );
   },
 });
 

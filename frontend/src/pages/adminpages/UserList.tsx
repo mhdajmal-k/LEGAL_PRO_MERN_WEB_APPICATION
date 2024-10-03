@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../services/store/store';
 import { getUsers } from '../../services/store/features/adminServices';
 import CommonTable from '../../components/AdminComponents.tsx/UserTable';
-import { userColumns } from '../../utils/constants/userColums';
+import { userColumns } from '../../utils/constants/Colums';
 
 const UsersList: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();

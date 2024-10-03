@@ -10,6 +10,12 @@ interface IAdminInteractor {
     message: string;
     result: [];
   }>;
+  getPendingApprovalLawyers(): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: [];
+  }>;
 }
 
 export default IAdminInteractor;

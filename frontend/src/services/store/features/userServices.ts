@@ -4,6 +4,7 @@ import axiosInstance from "../../api/axiosConfigue";
 import {
   RESENDOTP,
   USERLOGIN,
+  USERLOGOUT,
   USERSIGNUP,
   VERIFYINGOTP,
 } from "../../api/userApi";
@@ -80,6 +81,26 @@ export const resendOtp = createAsyncThunk(
     try {
       console.log("hi");
       const response = await axiosInstance.post(RESENDOTP);
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const logOutUser = createAsyncThunk(
+  "user/resenedOtp",
+  async (_, { rejectWithValue }) => {
+    try {
+      console.log("hi");
+      const response = await axiosInstance.post(USERLOGOUT);
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";
