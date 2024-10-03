@@ -70,6 +70,27 @@ class AdminInteractor implements IAdminInteractor {
       throw error;
     }
   }
+  async getUsers(): Promise<{ status: boolean; message: string; result: [] }> {
+    try {
+      const allUser = await this.Repository.getUser();
+      if (!allUser) {
+        return {
+          status: false,
+          message: "Failed to Get Users",
+          result: [],
+        };
+      }
+      console.log(allUser, "is the useCase");
+
+      return {
+        status: true,
+        message: "message fetched SuccessFully",
+        result: allUser,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default AdminInteractor;

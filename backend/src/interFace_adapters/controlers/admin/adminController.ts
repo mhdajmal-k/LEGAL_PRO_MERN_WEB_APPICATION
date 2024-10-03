@@ -18,7 +18,8 @@ class AdminController {
         return;
       }
       const response = await this.adminInteractor.adminLogin(data);
-      if (response.status) {
+      console.log(response, "is the repsonse");
+      if (response) {
         res.cookie("AdminAuth_token", response.result, {
           httpOnly: true,
           sameSite: "strict",
@@ -35,6 +36,24 @@ class AdminController {
       next(error);
     }
   }
+  async getUsers(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const response = await this.adminInteractor.getUsers();
+      console.log(response, "is the responces");
+      if (response.result) {
+        res.status(200).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
-
 export default AdminController;

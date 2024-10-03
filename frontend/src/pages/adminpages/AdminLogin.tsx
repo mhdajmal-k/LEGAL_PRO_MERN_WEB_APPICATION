@@ -2,34 +2,27 @@ import { useFormik } from 'formik'
 import React, { useState } from 'react'
 // import CustomToast from '../userComponents/CustomToast'
 // import { toast } from 'sonner'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Button, Input } from '@nextui-org/react'
 import { FaEyeSlash, FaRegEye } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../../services/store/store'
-import { lawyerValidationSchema } from '../../utils/validator/lawyerValidate'
 import { toast } from 'sonner'
 import CustomToast from '../../components/userComponents/CustomToast'
 import axiosInstance from '../../services/api/axiosConfigue'
 import { ADMINLOGIN } from '../../services/api/lawyerApi'
 import { adminValidationSchema } from '../../utils/validator/validateAdmin'
-import { LawyerSignUpResponse, response } from '../../utils/type/lawyerType'
+import { response } from '../../utils/type/lawyerType'
+import { AxiosError } from 'axios'
 
 const AdminLoginForm: React.FC = () => {
     const navigate = useNavigate();
-    const dispatch: AppDispatch = useDispatch();
     const { loading, error } = useSelector((state: RootState) => state.lawyer);
     const [showPassword, setShowPassword] = useState<Boolean>(false);
     const formik = useFormik({
         initialValues: {
-            userName: 'ajmal',
             email: 'ajmalchundappuram@gmail.com',
             password: '@Ajmal111',
-            confirmPassword: '@Ajmal111',
-            gender: '',
-            city: 'calicut',
-            state: 'kerala',
-            zipCode: '789878',
         },
         validationSchema: adminValidationSchema,
         validateOnChange: true,
@@ -38,12 +31,20 @@ const AdminLoginForm: React.FC = () => {
             try {
                 const response = await axiosInstance.post(ADMINLOGIN, values) as response;
                 console.log(response, "checking.....")
-                if (response.status) {
-                    toast(<CustomToast message={response.message} type="success" />);
-                    navigate('/');
-                }
+
+                toast(<CustomToast message={response.message} type="success" />);
+                navigate('/admin/');
+
             } catch (error: any) {
-                toast(<CustomToast message={error} type="error" />);
+                let errorMessage = "An unknown error occurred";
+                if (error instanceof AxiosError) {
+                    if (error.response) {
+                        errorMessage = error.response.data.message || "Server error";
+                    } else if (error.request) {
+                        errorMessage = "Network error. Please check your connection.";
+                    }
+                }
+                toast(<CustomToast message={errorMessage} type="error" />);
             }
         },
     })
