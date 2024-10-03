@@ -3,7 +3,7 @@ import { lawyerInfo } from "../../../utils/type/userType";
 import { getPendingApprovalLawyers, getUsers } from "./adminServices";
 
 interface adminState {
-  adminInfo: lawyerInfo | null;
+  adminInfo: any | null;
   loading: boolean;
   error: string | null;
 }
@@ -31,8 +31,8 @@ const adminSlice = createSlice({
       .addCase(getUsers.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getUsers.fulfilled, (state) => {
-        // state.adminInfo = action.payload;
+      .addCase(getUsers.fulfilled, (state, actions) => {
+        state.adminInfo = actions.payload.result;
         state.error = "";
         state.loading = false;
       })
