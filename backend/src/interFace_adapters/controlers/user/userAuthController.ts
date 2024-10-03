@@ -156,6 +156,12 @@ class UserAuthController {
       next(error);
     }
   }
+
+  async logOut(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {}
 }
 
 export default UserAuthController;
