@@ -12,7 +12,7 @@ import { Tooltip, Avatar } from "@nextui-org/react";
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch()
-  const { loading, userInfo, error } = useSelector((state: RootState) => state.user)
+  const { userInfo, } = useSelector((state: RootState) => state.user)
   return (
     <nav className="bg-primary p-2 ">
       <div className="max-w-7xl mx-auto flex justify-between items-center ">

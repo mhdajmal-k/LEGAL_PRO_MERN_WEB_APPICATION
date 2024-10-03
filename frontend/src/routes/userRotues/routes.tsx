@@ -4,6 +4,7 @@ import SignUp from '../../pages/userPages/SignUp'
 import OtpVerify from '../../pages/userPages/OtpVerify'
 import Home from '../../pages/userPages/Home'
 import LoginPage from '../../pages/userPages/LoginPage'
+import PublicRoute from '../publicRoute'
 
 
 
@@ -12,10 +13,14 @@ const UserRouters: React.FC = () => {
 
     <div>
       <Routes>
-        <Route path='/signup' element={<SignUp />} />
-        <Route path='/otpVerify' element={<OtpVerify />} />
+        <Route element={<PublicRoute />}>
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/otpVerify' element={<OtpVerify />} />
+          <Route path='/login' element={<LoginPage />} />
+        </Route>
         <Route path='/' element={<Home />} />
-        <Route path='/login' element={<LoginPage />} />
+
+        <Route path='*' element={<div>404 Not Found</div>} />
       </Routes>
     </div>
   )

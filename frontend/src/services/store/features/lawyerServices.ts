@@ -11,7 +11,7 @@ import { AxiosError } from "axios";
 import { LawyerSignUpResponse } from "../../../utils/type/lawyerType";
 
 export const signUpLawyer = createAsyncThunk(
-  "user/singUpUser",
+  "lawyer/singUpUser",
   async (LawyerData: LawyerSignUpData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post<LawyerSignUpResponse>(
