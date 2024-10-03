@@ -75,7 +75,7 @@ const ProfessionalData: React.FC = () => {
     const formik = useFormik({
         initialValues: {
             practiceArea: [] as string[],
-            yearsOfExperience: "",
+            yearsOfExperience: '',
             barCouncilNumber: '',
             stateBarCouncilNumber: '',
             designation: '',
@@ -111,6 +111,7 @@ const ProfessionalData: React.FC = () => {
     });
 
     useEffect(() => {
+        console.log("hi")
         if (error) {
             setTimeout(() => {
                 dispatch(clearError());

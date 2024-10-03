@@ -20,7 +20,7 @@ const UserRouters: React.FC = () => {
         </Route>
         <Route path='/' element={<Home />} />
 
-        <Route path='*' element={<div>404 Not Found</div>} />
+        <Route path='*' element={<div className='text-center'>404 Not Found</div>} />
       </Routes>
     </div>
   )

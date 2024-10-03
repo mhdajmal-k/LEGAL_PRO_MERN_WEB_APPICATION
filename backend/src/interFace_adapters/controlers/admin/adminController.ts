@@ -55,5 +55,24 @@ class AdminController {
       next(error);
     }
   }
+  async getLawyer(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const response = await this.adminInteractor.getPendingApprovalLawyers();
+      console.log(response, "is the response ");
+      if (response.result) {
+        res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 export default AdminController;

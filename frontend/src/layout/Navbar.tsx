@@ -7,12 +7,24 @@ import { RootState, AppDispatch } from '../services/store/store';
 import { IoIosNotifications } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
 import { Tooltip, Avatar } from "@nextui-org/react";
+import { userLogout } from '../services/store/features/userSlice';
 
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch()
   const { userInfo, } = useSelector((state: RootState) => state.user)
+  const handleLogout = () => {
+    try {
+      dispatch(userLogout())
+      // const response = dispatch(logOutUser());
+      // if (response) {
+      //   navigate("/");
+      // }
+    } catch (error) {
+
+    }
+  }
   return (
     <nav className="bg-primary p-2 ">
       <div className="max-w-7xl mx-auto flex justify-between items-center ">
@@ -60,7 +72,7 @@ const Navbar: React.FC = () => {
                       <div className="text-sm font-normal">Profile</div>
                     </Button>
                     <Button className="w-full justify-start" variant="light">
-                      <div className="text-sm font-normal">LogOut</div>
+                      <div className="text-sm font-normal" onClick={handleLogout}>LogOut</div>
                     </Button>
                   </div>
                 }
@@ -85,7 +97,7 @@ const Navbar: React.FC = () => {
                 </Link>
               </Button>
               <Button size="sm" className="bg-secondary text-black font-bold hover:bg-secondary-50">
-                <Link to="/become-lawyer" className='uppercase'>
+                <Link to="/lawyer/signup" className='uppercase'>
                   Become a Lawyer
                 </Link>
               </Button>
@@ -94,8 +106,6 @@ const Navbar: React.FC = () => {
         </div>
 
 
-
-        {/* Hamburger menu for mobile */}
         <div className="md:hidden">
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -119,7 +129,7 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
+
       {isOpen && (
         <div className="md:hidden mt-4 space-y-2 text-white">
           <Link to="/" className="block ">
