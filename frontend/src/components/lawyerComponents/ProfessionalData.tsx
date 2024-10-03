@@ -156,7 +156,7 @@ const ProfessionalData: React.FC = () => {
                                     styles={{
                                         control: (provided) => ({
                                             ...provided,
-                                            borderRadius: '8px', // Adds rounded corners to the input
+                                            borderRadius: '8px',
                                         }),
                                         menu: (provided) => ({
                                             ...provided,

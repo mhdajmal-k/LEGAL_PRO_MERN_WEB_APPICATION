@@ -90,7 +90,7 @@ const LawyerOtpFrom: React.FC = () => {
 
 
 
-    // Check if all OTP fields are filled
+
     const isOtpComplete = otp.every((digit) => digit !== "");
 
     return (
@@ -121,8 +121,8 @@ const LawyerOtpFrom: React.FC = () => {
                     <CustomButton
                         text='Verify'
 
-                        isLoading={loading} // Pass loading state to CustomButton
-                        disabled={!isOtpComplete || loading} // Disable button if OTP is incomplete or loading
+                        isLoading={loading}
+                        disabled={!isOtpComplete || loading}
                     />
                 </form>
 

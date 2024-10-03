@@ -16,9 +16,9 @@ const CustomButton: React.FC<CustomButtonProps> = ({ text, isLoading = false, di
                 color="primary"
                 type="submit"
                 className="w-full text-white font-semibold"
-                isLoading={isLoading} // Dynamically pass isLoading state
-                disabled={disabled} // Dynamically pass disabled state
-            // Attach an optional click handler
+                isLoading={isLoading}
+                disabled={disabled}
+
             >
                 {text}
             </Button>
