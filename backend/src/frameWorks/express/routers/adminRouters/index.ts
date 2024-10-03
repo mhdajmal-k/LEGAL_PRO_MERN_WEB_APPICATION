@@ -13,3 +13,4 @@ const interactor = new adminInteractor(repository, jwtToken);
 const adminController = new AdminController(interactor);
 
 adminRouter.post("/login", adminController.adminLogin.bind(adminController));
+adminRouter.get("/users", adminController.getUsers.bind(adminController));

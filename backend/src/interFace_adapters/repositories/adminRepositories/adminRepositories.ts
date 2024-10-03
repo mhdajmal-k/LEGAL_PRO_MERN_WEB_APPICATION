@@ -26,6 +26,20 @@ class AdminRepository implements iAdminRepository {
       console.log(error);
     }
   }
+  async getUser(): Promise<any> {
+    try {
+      const users = await User.find({ role: { $ne: "admin" } })
+        .select("-password")
+        .sort({ createdAt: -1 })
+        .lean();
+
+      console.log(users, "is th eusesrs");
+
+      return users;
+    } catch (error) {
+      throw new Error("Could not fetch users");
+    }
+  }
 }
 
 export default AdminRepository;

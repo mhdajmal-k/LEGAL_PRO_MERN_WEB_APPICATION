@@ -11,9 +11,9 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   console.log("Middleware Error Hadnling");
-  console.log(err);
-  const errStatus = res.statusCode || 500;
-  const errMsg = res.statusMessage || "Something went wrong";
+  const errStatus = err.statusCode || res.statusCode || 500;
+  console.log(errStatus, "is the status code ddddddddddddddddddddddddd");
+  const errMsg = res.statusMessage || err.message || "Something went wrong";
   res.status(errStatus).json({
     success: false,
     status: errStatus,
