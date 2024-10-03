@@ -4,7 +4,7 @@ import SignUp from '../../pages/userPages/SignUp'
 import OtpVerify from '../../pages/userPages/OtpVerify'
 import Home from '../../pages/userPages/Home'
 import LoginPage from '../../pages/userPages/LoginPage'
-import PublicRoute from '../publicRoute'
+import PublicRoute from '../UserpublicRoute'
 
 
 
