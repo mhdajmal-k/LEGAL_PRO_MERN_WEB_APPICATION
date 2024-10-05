@@ -1,7 +1,9 @@
+import { error } from "console";
 import {
   ILawyer,
   IProfessionalData,
 } from "../../../domain/entites/imodels/iLawyer";
+import IUserResult from "../../../domain/entites/imodels/IUserResult";
 import iLawyerRepository from "../../../domain/entites/irepositories/ilawyerRepositories";
 import ILawyerAuthInteractor from "../../../domain/entites/iuseCase/iLawyerAuth";
 import { iEmailService } from "../../../domain/services/IEmailService";
@@ -13,6 +15,7 @@ import {
   decodeSingUpToken,
   generatingSignUpToken,
 } from "../../../frameWorks/utils/jwt";
+import { validatePassword } from "../../../frameWorks/utils/validatePassword";
 class LawyerAuthInteractor implements ILawyerAuthInteractor {
   constructor(
     private readonly Repository: iLawyerRepository,
@@ -161,6 +164,53 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         statusCode: 201,
         message: "From submitted SuccessFully",
         result: {},
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async lawyerLogin(user: { email: string; password: string }): Promise<{
+    status: boolean;
+    message: string;
+    result: IUserResult | null;
+    statusCode: number;
+  }> {
+    try {
+      const { email, password } = user;
+      const validLawyer = await this.Repository.validLawyer(email);
+      console.log(validLawyer);
+      if (!validLawyer) {
+        const error: CustomError = new Error();
+        error.message = "invalid Email ";
+        error.statusCode = 400;
+        throw error;
+      }
+      console.log(validLawyer.verified, "is the status of the verify");
+      if (validLawyer.verified === "not_verified") {
+        const error: CustomError = new Error();
+        error.message =
+          "Your account is pending approval. Please wait for the admin to verify your account.";
+        error.statusCode = 401;
+        throw error;
+      }
+
+      const validPassword = validatePassword(password, validLawyer.password);
+      if (!validPassword) {
+        const error: CustomError = new Error();
+        error.message = "Incorrect Password";
+        error.statusCode = 400;
+        throw error;
+      }
+
+      const jwtToken = this.jwt.generateToken(validLawyer._id, "lawyer");
+      const { password: userPassword, ...userDataWithoutPassword } =
+        validLawyer;
+
+      return {
+        statusCode: 200,
+        status: true,
+        message: "logged SuccessFully",
+        result: { user: validLawyer, tokenJwt: jwtToken },
       };
     } catch (error) {
       throw error;

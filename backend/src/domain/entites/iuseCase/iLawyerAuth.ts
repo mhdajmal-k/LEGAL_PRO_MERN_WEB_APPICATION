@@ -1,4 +1,5 @@
 import { ILawyer, IProfessionalData } from "../imodels/iLawyer";
+import { IUser } from "../imodels/Iuser";
 import IUserResult from "../imodels/IUserResult";
 
 interface ILawyerAuthInteractor {
@@ -19,9 +20,15 @@ interface ILawyerAuthInteractor {
     files?: { [fieldname: string]: Express.Multer.File[] },
     id?: string
   ): Promise<{ statusCode: number; message: string; result: string | {} }>;
-  //   laLogin(
-  //     user: IUser
-  //   ): Promise<{ status: boolean; message: string; result: IUserResult | null }>;
+  lawyerLogin(user: {
+    email: string;
+    password: string;
+  }): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IUserResult | null;
+  }>;
   //   resendOtp(
   //     token: string
   //   ): Promise<{ status: boolean; message: string; result: string | null }>;
