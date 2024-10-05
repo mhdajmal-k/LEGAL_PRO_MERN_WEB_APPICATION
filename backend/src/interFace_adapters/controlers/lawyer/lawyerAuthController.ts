@@ -6,6 +6,7 @@ import {
   ILawyer,
 } from "../../../domain/entites/imodels/iLawyer";
 import { validateProfessionalDataInput } from "../../../frameWorks/utils/helpers/validateProffesionalData";
+import IUserResult from "../../../domain/entites/imodels/IUserResult";
 class LawyerAuthController {
   constructor(private lawyerAuthInteractor: ILawyerAuthInteractor) {}
   async lawyerSignUp(
@@ -129,6 +130,7 @@ class LawyerAuthController {
         id
       );
       console.log("success");
+      res.clearCookie("auth_lawyerAccessToken");
       res.status(response.statusCode).json({
         status: true,
         message: response.message,
@@ -136,6 +138,42 @@ class LawyerAuthController {
       });
     } catch (error) {
       console.log(error, "is the error ");
+      next(error);
+    }
+  }
+  async loginLawyer(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { email, password } = req.body;
+      if (!email || email.trim() == "" || !password || password.trim() == "") {
+        return res.status(400).json({
+          status: false,
+          message: "Email and password are required",
+          result: {},
+        });
+      }
+      const response = await this.lawyerAuthInteractor.lawyerLogin(req.body);
+      const { status, message, result, statusCode } = response;
+      if (response.status == true) {
+        const data = result as IUserResult;
+        res.cookie("auth_lawyerAccessToken", data.tokenJwt, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 5 * 60 * 1000,
+        });
+        res.clearCookie("auth_token");
+        res.status(statusCode).json({
+          status: status,
+          message: message,
+          result: data.user,
+        });
+      }
+      return res.status;
+    } catch (error) {
+      console.log(error);
       next(error);
     }
   }

@@ -5,6 +5,7 @@
         "FETCHPENDINGAPPROVALLAWYERS",
         "GETLAWYER",
         "getusers",
+        "LAWYERLOGIN",
         "LAWYERVERIFYPROFESSIONALDATA",
         "PHONENUMBER",
         "RESENDOTP",

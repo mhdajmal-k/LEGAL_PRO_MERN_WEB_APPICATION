@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { lawyerVerifyOtp, signUpLawyer } from "./lawyerServices";
+import { lawyerVerifyOtp, loginLawyer, signUpLawyer } from "./lawyerServices";
 import { lawyerInfo } from "../../../utils/type/userType";
 
 interface lawyerState {
@@ -55,7 +55,17 @@ const lawyerSlice = createSlice({
           state.loading = false;
           state.error = action.payload;
         }
-      );
+      )
+      .addCase(loginLawyer.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loginLawyer.fulfilled, (state, actions: PayloadAction<any>) => {
+        state.loading = false;
+      })
+      .addCase(loginLawyer.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
