@@ -98,6 +98,7 @@ export const verifyProfessionalData = createAsyncThunk(
           },
         }
       );
+      console.log("heppen here");
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
