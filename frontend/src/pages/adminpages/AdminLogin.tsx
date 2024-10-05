@@ -9,13 +9,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../../services/store/store'
 import { toast } from 'sonner'
 import CustomToast from '../../components/userComponents/CustomToast'
-import axiosInstance from '../../services/api/axiosConfigue'
-import { ADMINLOGIN } from '../../services/api/lawyerApi'
 import { adminValidationSchema } from '../../utils/validator/validateAdmin'
-import { response } from '../../utils/type/lawyerType'
-import { AxiosError } from 'axios'
+import { adminLogin } from '../../services/store/features/adminServices'
+
 
 const AdminLoginForm: React.FC = () => {
+    const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
     const { loading, error } = useSelector((state: RootState) => state.lawyer);
     const [showPassword, setShowPassword] = useState<Boolean>(false);
@@ -29,22 +28,14 @@ const AdminLoginForm: React.FC = () => {
         validateOnBlur: true,
         onSubmit: async (values) => {
             try {
-                const response = await axiosInstance.post(ADMINLOGIN, values) as response;
-                console.log(response, "checking.....")
+                const response = await dispatch(adminLogin(values)).unwrap()
+                if (response.status) {
+                    navigate('/admin/dashboard');
+                }
 
-
-                navigate('/admin/dashboard');
 
             } catch (error: any) {
-                let errorMessage = "An unknown error occurred";
-                if (error instanceof AxiosError) {
-                    if (error.response) {
-                        errorMessage = error.response.data.message || "Server error";
-                    } else if (error.request) {
-                        errorMessage = "Network error. Please check your connection.";
-                    }
-                }
-                toast(<CustomToast message={errorMessage} type="error" />);
+                toast(<CustomToast message={error} type="error" />);
             }
         },
     })

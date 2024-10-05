@@ -16,6 +16,12 @@ interface IAdminInteractor {
     message: string;
     result: [];
   }>;
+  getLawyer(id: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: [];
+  }>;
 }
 
 export default IAdminInteractor;

@@ -17,3 +17,4 @@ const adminController = new AdminController(interactor);
 adminRouter.post("/login", adminController.adminLogin.bind(adminController));
 adminRouter.get("/users", adminController.getUsers.bind(adminController));
 adminRouter.get("/lawyers", adminController.getLawyer.bind(adminController));
+adminRouter.get("/lawyer/:id", adminController.lawyer.bind(adminController));

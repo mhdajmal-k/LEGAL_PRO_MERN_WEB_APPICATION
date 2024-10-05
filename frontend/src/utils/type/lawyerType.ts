@@ -13,3 +13,8 @@ export interface response {
   message: string;
   result: null | string | any;
 }
+
+export interface LoginType {
+  email: string;
+  password: string;
+}

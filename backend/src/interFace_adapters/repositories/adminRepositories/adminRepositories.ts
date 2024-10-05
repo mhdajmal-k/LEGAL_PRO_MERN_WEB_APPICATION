@@ -52,6 +52,15 @@ class AdminRepository implements iAdminRepository {
       throw error;
     }
   }
+  async getLawyer(id: string): Promise<any> {
+    try {
+      const lawyer = await Lawyer.findById(id);
+
+      return lawyer;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default AdminRepository;

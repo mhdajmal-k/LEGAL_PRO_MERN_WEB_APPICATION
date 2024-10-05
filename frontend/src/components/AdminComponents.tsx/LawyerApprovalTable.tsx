@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RootState } from '../../services/store/store';
 import { useSelector } from 'react-redux';
 import CustomSkelton from '../skeltton';
@@ -23,10 +23,13 @@ interface CommonTableProps {
 }
 
 const LawyerTable: React.FC<CommonTableProps> = ({ columns, data }) => {
-    const handleBlock = (id: string) => {
+    const [selectedLawyer, SetSelectedLaywer] = useState<null>(null)
+    const [isViewModalOpen, setViewModalOpen] = useState(false);
+    const { loading } = useSelector((state: RootState) => state.admin);
+
+    const handleView = (id: string) => {
         alert(id)
     }
-    const { loading, } = useSelector((state: RootState) => state.admin);
     return (
         <div className="overflow-x-auto mx-auto sm:max-w-6xl shadow-md rounded-lg ">
             <table className="min-w-full border border-gray-200 divide-y divide-gray-200 bg-white">
@@ -88,7 +91,7 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data }) => {
                                 <div className="text-sm text-gray-800">{user?.years_of_experience + " years" || 'N/A'}</div>
                             </td>
                             <td className="px-6 py-4">
-                                <Button className='' onClick={() => handleBlock(user._id)}
+                                <Button className='' onClick={() => handleView(user._id)}
                                     color='primary'
                                 >
                                     VERIFY
@@ -96,7 +99,7 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data }) => {
 
                             </td>
                             <td>
-                                <Button className='' onClick={() => handleBlock(user._id)}
+                                <Button className='' onClick={() => handleView(user._id)}
                                     color='primary'
                                 >
                                     view

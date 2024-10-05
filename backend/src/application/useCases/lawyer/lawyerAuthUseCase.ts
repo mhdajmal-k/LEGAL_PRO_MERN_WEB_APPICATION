@@ -114,19 +114,19 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         const filesArray = files[fieldname];
         if (fieldname === "imageIndia") {
           for (const file of filesArray) {
-            const key = `lawyer-barCouncilIndia/${Date.now()}-${
+            const key = `legalProBarCouncilIndiaCertificate/${Date.now()}-${
               file.originalname
             }`;
             const uploadedUrl = await this.s3Service.uploadFile(file, key);
-            data.barCouncilCertificate = uploadedUrl || "";
+            data.barCouncilCertificate = key || "";
           }
         } else if (fieldname === "imageKerala") {
           for (const file of filesArray) {
-            const key = `lawyer-barCouncilIndiaKerala/${Date.now()}-${
+            const key = `legalProBarCouncilKeralaCertificate/${Date.now()}-${
               file.originalname
             }`;
             const uploadedUrl = await this.s3Service.uploadFile(file, key);
-            data.stateBarCouncilCertificate = uploadedUrl || "";
+            data.stateBarCouncilCertificate = key || "";
           }
         }
       }
