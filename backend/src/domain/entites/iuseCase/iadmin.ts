@@ -37,6 +37,15 @@ interface IAdminInteractor {
     message: string;
     result: [];
   }>;
+  blockandUnblock(
+    id: string,
+    state: boolean
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: [];
+  }>;
 }
 
 export default IAdminInteractor;

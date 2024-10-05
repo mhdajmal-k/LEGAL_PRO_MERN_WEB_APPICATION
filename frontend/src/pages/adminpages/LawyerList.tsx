@@ -29,7 +29,6 @@ const LawyerList: React.FC = () => {
     fetchUsers();
   };
 
-  console.log(lawyers, "is the lawyers");
 
   return (
     <div>

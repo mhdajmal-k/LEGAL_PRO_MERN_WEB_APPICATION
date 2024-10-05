@@ -119,10 +119,30 @@ class AdminController {
       const { reason } = req.body;
       const response = await this.adminInteractor.unverifyLawyer(id, reason);
       if (response.result) {
-        res.status(200).json({
+        res.status(response.statusCode).json({
           status: response.status,
           message: response.message,
           result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async blockOrUnblock(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const id: string = req.params.id;
+      const { state } = req.body;
+      const response = await this.adminInteractor.blockandUnblock(id, state);
+      if (response.result) {
+        res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: {},
         });
       }
     } catch (error) {

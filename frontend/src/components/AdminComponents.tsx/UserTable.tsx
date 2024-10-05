@@ -1,9 +1,12 @@
 import React from 'react';
-import { RootState } from '../../services/store/store';
-import { useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../services/store/store';
+import { useDispatch, useSelector } from 'react-redux';
 import CustomSkelton from '../skeltton';
 import { CgProfile } from "react-icons/cg";
 import { Button } from '@nextui-org/react';
+import { blockandUnblock } from '../../services/store/features/adminServices';
+import { toast } from 'sonner';
+import CustomToast from '../userComponents/CustomToast';
 
 interface User {
     _id: string;
@@ -17,13 +20,29 @@ interface User {
 interface CommonTableProps {
     columns: string[];
     data: User[];
+    onRefresh: () => void
 }
 
-const CommonTable: React.FC<CommonTableProps> = ({ columns, data }) => {
-    const handleBlock = (id: string) => {
-        alert(id)
-    }
+const CommonTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) => {
+    const dispatch: AppDispatch = useDispatch();
     const { loading, } = useSelector((state: RootState) => state.admin);
+    async function handleBlockorUBlock(id: string, block: boolean): Promise<void> {
+        try {
+            const response = await dispatch(blockandUnblock({ id, state: !block })).unwrap();
+            if (response.status) {
+                toast(<CustomToast message={response.message} type="success" />);
+                onRefresh()
+            }
+            // setViewModalOpen(false);
+
+        } catch (error: any) {
+            console.error("Verification failed:", error);
+            toast(<CustomToast message={error} type="error" />)
+        }
+
+
+    }
+
     return (
         <div className="overflow-x-auto mx-auto sm:max-w-6xl shadow-md rounded-lg ">
             <table className="min-w-full border border-gray-200 divide-y divide-gray-200 bg-white">
@@ -91,7 +110,7 @@ const CommonTable: React.FC<CommonTableProps> = ({ columns, data }) => {
                                     {user.block ? 'Blocked' : 'Active'}
                                 </span>
                             </td>
-                            <Button className='mt-3' onClick={() => handleBlock(user._id)}
+                            <Button className='mt-3' onClick={() => handleBlockorUBlock(user._id, user.block)}
                                 color={user?.block ? 'danger' : "success"}
                             >
                                 {user?.block ? 'UnBlock' : "Block"}
