@@ -109,6 +109,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
     id?: string
   ): Promise<{ statusCode: number; message: string; result: string | {} }> {
     try {
+      console.log("hi in the authcase");
       const { barCouncilNumber, stateBarCouncilNumber } = data;
       for (const fieldname in files) {
         const filesArray = files[fieldname];
@@ -117,7 +118,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
             const key = `legalProBarCouncilIndiaCertificate/${Date.now()}-${
               file.originalname
             }`;
-            const uploadedUrl = await this.s3Service.uploadFile(file, key);
+            const uploadedUrl = this.s3Service.uploadFile(file, key);
             data.barCouncilCertificate = key || "";
           }
         } else if (fieldname === "imageKerala") {
@@ -125,11 +126,12 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
             const key = `legalProBarCouncilKeralaCertificate/${Date.now()}-${
               file.originalname
             }`;
-            const uploadedUrl = await this.s3Service.uploadFile(file, key);
+            const uploadedUrl = this.s3Service.uploadFile(file, key);
             data.stateBarCouncilCertificate = key || "";
           }
         }
       }
+      console.log("wating in the upload file ");
       const certificates = [
         {
           certificateType: "Bar Council of India",

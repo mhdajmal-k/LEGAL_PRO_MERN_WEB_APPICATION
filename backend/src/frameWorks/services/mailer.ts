@@ -72,6 +72,59 @@ class EmailService implements iEmailService {
       return false;
     }
   }
+  async sendStatusNotification(
+    email: string,
+    reason: string,
+    userName: string,
+    status: "Verified" | "Unverified" | string
+  ): Promise<boolean> {
+    console.log(`Attempting to send ${status} status email to: ${email}`);
+    try {
+      const info = await this.transporter.sendMail({
+        from: this.EMAIL_ID,
+        to: email,
+        subject: `Registration Form  verification with Legal_Pro: ${status}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+              <h2 style="color: #333; text-align: center;">Registration Form : ${status}"successFully"</h2>
+              <p style="font-size: 16px; color: #555;">
+                Dear ${userName},
+              </p>
+              <p style="font-size: 16px; color: #555;">
+                We would like to inform you that your  Registration Form status has been verify to: <strong>${status}</strong>.
+              </p>
+              <p style="font-size: 16px; color: #555;">
+                Reason: ${reason}
+              </p>
+              <p style="font-size: 16px; color: #555;">
+                If you have any questions or concerns, feel free to reach out to our support team.
+              </p>
+              <p style="font-size: 16px; color: #555;">
+                Best regards,<br>
+                The Legal_Pro Team
+              </p>
+            </div>
+            <footer style="text-align: center; padding: 10px 0; color: #888; font-size: 12px;">
+              <p>&copy; ${new Date().getFullYear()} Legal_Pro | Legal Services</p>
+              <p>
+                Legal_Pro, 123 Legal St, Kochi, Kerala
+                <br>
+                <a href="https://Legal_Pro.com" style="color: #0044cc; text-decoration: none;">Visit our website</a>
+              </p>
+            </footer>
+          </div>
+        `,
+      });
+      console.log(
+        `Status notification sent successfully to ${email}. Message ID: ${info.messageId}`
+      );
+      return true;
+    } catch (error: any) {
+      console.error(`Failed to send status notification to ${email}:`, error);
+      return false;
+    }
+  }
 }
 
 export default EmailService;

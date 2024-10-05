@@ -101,7 +101,7 @@ class LawyerAuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("hi");
+      console.log("hifdfdd");
       const data = req.body;
       const id = req.user?.id;
       const files = req.files as
@@ -135,6 +135,7 @@ class LawyerAuthController {
         result: {},
       });
     } catch (error) {
+      console.log(error, "is the error ");
       next(error);
     }
   }
