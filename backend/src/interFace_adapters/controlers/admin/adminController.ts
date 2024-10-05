@@ -20,16 +20,16 @@ class AdminController {
       const response = await this.adminInteractor.adminLogin(data);
       console.log(response, "is the repsonse");
       if (response) {
-        res.cookie("AdminAuth_token", response.result, {
+        res.cookie("auth_adminAccessToken", response.result?.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
-          maxAge: 5 * 60 * 1000,
+          maxAge: 10 * 60 * 1000,
         });
 
         res.status(200).json({
           status: response.status,
           message: response.message,
-          result: {},
+          result: response.result,
         });
       }
     } catch (error) {

@@ -43,7 +43,7 @@ export const adminLogin = createAsyncThunk(
   async (data: LoginType, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post<response>(ADMINLOGIN, data);
-      console.log(response, "//////////////////////////////////");
+      console.log(response, "is the response in service");
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
