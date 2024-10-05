@@ -5,6 +5,7 @@ interface iAdminRepository {
   getUser(): Promise<any>;
   getPendingApprovalLawyers(): Promise<any>;
   getLawyer(id: string): Promise<any>;
+  getAdmin(id: string): Promise<any>;
   verifyLawyer(id: string): Promise<any>;
   unverifyLawyer(id: string): Promise<any>;
   blockorUnblock(id: string, blockState: boolean): Promise<any>;

@@ -4,19 +4,22 @@ import { config } from "../config/envConfig";
 import UserAuthRepository from "../../interFace_adapters/repositories/userRepositories/userAuthRepository";
 import LawyerAuthRepository from "../../interFace_adapters/repositories/lawyerRepositories/lawyerAuthRepository";
 import { AuthenticatedRequest } from "../../domain/entites/imodels/iLawyer";
+import AdminRepository from "../../interFace_adapters/repositories/adminRepositories/adminRepositories";
 
 export const authorization =
   (allowedRoles: string) =>
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const userToken = req.cookies.auth_accessToken;
     const lawyerToken = req.cookies.auth_lawyerAccessToken;
-    if (!userToken && !lawyerToken) {
-      return res.status(401).json({
-        message: "Authorization denied. Please login.",
-        result: {},
-        status: false,
-      });
-    }
+    const adminToken = req.cookies.auth_adminAccessToken;
+    console.log(adminToken, "is the parse admintoken");
+    // if (!userToken && !lawyerToken) {
+    //   return res.status(401).json({
+    //     message: "Authorization denied. Please login. fuck in here",
+    //     result: {},
+    //     status: false,
+    //   });
+    // }
 
     const jwt = new JwtToken(config.JWT_SECRET);
     let decodeToken;
@@ -26,9 +29,15 @@ export const authorization =
         decodeToken = jwt.verifyToken(userToken);
       } else if (lawyerToken && allowedRoles === "lawyer") {
         decodeToken = jwt.verifyToken(lawyerToken);
+      } else if (adminToken && allowedRoles === "admin") {
+        console.log("in here");
+        decodeToken = jwt.verifyToken(adminToken);
       }
 
       if (!decodeToken || decodeToken.role !== allowedRoles) {
+        console.log(decodeToken, "is the decoded Token");
+        console.log(allowedRoles, "this is the allowed Role");
+        console.log(decodeToken?.role, "is the role");
         return res.status(401).json({
           message: "Authorization denied. Invalid token or role mismatch.",
           result: {},
@@ -56,10 +65,19 @@ export const authorization =
             status: false,
           });
         }
+      } else if (decodeToken.role === "admin") {
+        const adminRepo = new AdminRepository();
+        const existLawyer = await adminRepo.getAdmin(decodeToken.id);
+        if (!existLawyer) {
+          return res.status(401).json({
+            message: "Authorization denied,admin does not exist.",
+            result: {},
+            status: false,
+          });
+        }
       }
 
       req.user = { id: decodeToken.id };
-      console.log(req.user, "i sht req.user");
       next();
     } catch (error) {
       console.error("Authorization Error:", error);

@@ -4,6 +4,8 @@ import { AppDispatch } from '../../services/store/store';
 import { getUsers } from '../../services/store/features/adminServices';
 import CommonTable from '../../components/AdminComponents.tsx/UserTable';
 import { userColumns } from '../../utils/constants/Colums';
+import CustomToast from '../../components/userComponents/CustomToast';
+import { toast } from 'sonner';
 
 const UsersList: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
@@ -17,8 +19,9 @@ const UsersList: React.FC = () => {
             const response = await dispatch(getUsers()).unwrap();
             setUsers(response.result);
 
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
+            toast(<CustomToast message={error} type="error" />);
         }
 
 
