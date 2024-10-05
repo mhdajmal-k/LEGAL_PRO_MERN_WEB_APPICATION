@@ -74,5 +74,21 @@ class AdminController {
       next(error);
     }
   }
+  async lawyer(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const id: string = req.params.id;
+      const response = await this.adminInteractor.getLawyer(id);
+
+      if (response.result) {
+        res.status(200).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 export default AdminController;

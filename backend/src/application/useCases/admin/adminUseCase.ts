@@ -1,3 +1,4 @@
+import { Certificate } from "crypto";
 import { IUser } from "../../../domain/entites/imodels/Iuser";
 import IUserResult from "../../../domain/entites/imodels/IUserResult";
 import iAdminRepository from "../../../domain/entites/irepositories/IadminRepositries";
@@ -5,6 +6,7 @@ import IAdminInteractor from "../../../domain/entites/iuseCase/iadmin";
 import { iJwtService } from "../../../domain/services/ijwtService";
 import { config } from "../../../frameWorks/config/envConfig";
 import { S3Service } from "../../../frameWorks/config/s3Setup";
+import Lawyer from "../../../frameWorks/database/models/lawyerModel";
 import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 import { hashPassword } from "../../../frameWorks/utils/helpers/passwordHelper";
 import { validatePassword } from "../../../frameWorks/utils/validatePassword";
@@ -51,11 +53,9 @@ class AdminInteractor implements IAdminInteractor {
 
       const validPassword = validatePassword(password, adminUser.password);
       if (!validPassword) {
-        return {
-          status: false,
-          message: "Incorrect Password",
-          result: null,
-        };
+        const error: CustomError = new Error("Invalid Credentials");
+        error.statusCode = 401;
+        throw error;
       }
       const jwtToken = this.jwt.generateToken(adminUser._id, "admin");
       const { password: userPassword, ...userDataWithoutPassword } = adminUser;
@@ -118,6 +118,47 @@ class AdminInteractor implements IAdminInteractor {
         status: true,
         message: "message fetched SuccessFully",
         result: allUser,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getLawyer(id: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: [];
+  }> {
+    try {
+      const lawyer = await this.Repository.getLawyer(id);
+      if (!lawyer) {
+        const error: CustomError = new Error("Lawyer not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      const profile_picture = lawyer.profile_picture;
+
+      const getProfile = await this.s3Service.fetchFile(profile_picture);
+
+      const certificates = await Promise.all(
+        lawyer.certifications.map((certificate: any) => {
+          return certificate.certificate
+            ? this.s3Service.fetchFile(certificate.certificate)
+            : Promise.resolve(null);
+        })
+      );
+      console.log(getProfile);
+      console.log(certificates);
+      // lawyer.certifications=lawyer.certifications.map((certificat:any,index:number)=>{
+      //   ...certificat,
+      //   certificates:certificates[index]
+      // })
+      return {
+        statusCode: 200,
+        status: true,
+        message: "lawyer Got successFully",
+        result: [],
       };
     } catch (error) {
       throw error;

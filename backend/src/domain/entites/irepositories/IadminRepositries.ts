@@ -4,6 +4,7 @@ interface iAdminRepository {
   createAdmin(data: any, role: string): Promise<any>;
   getUser(): Promise<any>;
   getPendingApprovalLawyers(): Promise<any>;
+  getLawyer(id: string): Promise<any>;
 }
 
 export default iAdminRepository;
