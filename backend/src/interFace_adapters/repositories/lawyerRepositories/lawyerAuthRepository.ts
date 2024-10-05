@@ -29,14 +29,12 @@ class LawyerAuthRepository implements iLawyerRepository {
       throw error;
     }
   }
-  async validLayer(email: string): Promise<any> {
+  async validLawyer(email: string): Promise<any> {
     try {
-      const user = await Lawyer.findOne({ email: email }).lean();
-      if (user) {
-        return user;
-      } else {
-        return null;
-      }
+      console.log(email, "is the repo email");
+      const lawyer = await Lawyer.findOne({ email: email }).lean();
+      console.log(lawyer);
+      return lawyer;
     } catch (error) {
       console.log(error);
       throw error;

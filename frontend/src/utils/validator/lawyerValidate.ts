@@ -62,3 +62,11 @@ export const lawyerProfessionalValidate = Yup.object({
     .min(1, "Please select at least one language"),
   courtPracticeArea: Yup.string().required("Court Practice Area is required"),
 });
+export const lawyerLoginValidationSchema = Yup.object({
+  email: Yup.string()
+    .trim()
+    .email("Invalid email format")
+    .required("Email is required"),
+
+  password: Yup.string().trim().required("Password is required"),
+});

@@ -1,13 +1,15 @@
 import { useFormik } from 'formik'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomToast from '../userComponents/CustomToast'
 import { toast } from 'sonner'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { Button, Input } from '@nextui-org/react'
 import { FaEyeSlash, FaRegEye } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../../services/store/store'
-import { lawyerValidationSchema } from '../../utils/validator/lawyerValidate'
+import { loginLawyer } from '../../services/store/features/lawyerServices'
+import { lawyerLoginValidationSchema } from '../../utils/validator/lawyerValidate'
+import { clearError } from '../../services/store/features/lawyerSlilce'
 
 const LoginForm: React.FC = () => {
     const navigate = useNavigate();
@@ -16,38 +18,35 @@ const LoginForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState<Boolean>(false);
     const formik = useFormik({
         initialValues: {
-            userName: '',
             email: '',
             password: '',
-            confirmPassword: '',
-            gender: '',
-            city: '',
-            state: '',
-            zipCode: '',
         },
-        validationSchema: lawyerValidationSchema,
+        validationSchema: lawyerLoginValidationSchema,
         validateOnChange: true,
         validateOnBlur: true,
         onSubmit: async (values) => {
-            const formData = new FormData()
-            Object.keys(values).forEach(Key => {
-                formData.append(Key, values[Key as keyof typeof values])
-            })
 
+            try {
 
-            // try {
-
-            //     const response = await dispatch(signUpLawyer(lawyerSignUpData)).unwrap();
-            //     console.log(response, "checking.....")
-            //     if (response.status) {
-            //         toast(<CustomToast message={response.message} type="success" />);
-            //         Navigate('/lawyer/verify-otp');
-            //     }console.log(lawyerSignUpData)
-            // } catch (error: any) {
-            //     toast(<CustomToast message={error} type="error" />);
-            // }
+                const response = await dispatch(loginLawyer(values)).unwrap();
+                console.log(response, "checking.....")
+                if (response.status) {
+                    toast(<CustomToast message={response.message} type="success" />);
+                    navigate('/lawyer/');
+                }
+            } catch (error: any) {
+                toast(<CustomToast message={error} type="error" />);
+            }
         },
     })
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                dispatch(clearError())
+            }, 2000);
+        }
+    }, [error])
+
     return (
         <div className=" h-screen container flex items-center justify-center bg-gray-100">
             <div className="bg-white rounded-lg shadow-md mx-auto flex w-full max-w-2xl">
@@ -56,7 +55,7 @@ const LoginForm: React.FC = () => {
                     <div className='mx-3'>
 
 
-                        <form>
+                        <form onSubmit={formik.handleSubmit}>
                             <div className="my-6">
                                 <Input
                                     type="email"
@@ -109,10 +108,9 @@ const LoginForm: React.FC = () => {
                         </form>
                     </div>
                     <p className="mt-4 text-center text-sm text-gray-600">
-                        Don't have an Account?{' '}
-                        <a href="#" className="text-blue-600 hover:underline">
-                            Sign Up
-                        </a>
+                        Don't have an Account?
+
+                        <h1> <Link to={"/lawyer/signup"} className='text-blue-900' >Sign Up </Link></h1>
                     </p>
                 </div>
                 <div className="w-1/5 bg-primary rounded-r-lg"></div>

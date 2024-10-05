@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosConfigue";
 import { LawyerSignUpData } from "../../../utils/type/userType";
 import {
+  LAWYERLOGIN,
   LAWYERRESENDOTP,
   LAWYERSIGNUP,
   LAWYERVERIFYINGOTP,
@@ -102,6 +103,27 @@ export const verifyProfessionalData = createAsyncThunk(
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const loginLawyer = createAsyncThunk(
+  "lawyer/login",
+  async (data: { email: string; password: string }, { rejectWithValue }) => {
+    console.log("hi in here");
+    try {
+      console.log(data, "from the userLogin thunk");
+      const response = await axiosInstance.post(LAWYERLOGIN, data);
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
       if (error instanceof AxiosError) {
         if (error.response) {
           errorMessage = error.response.data.message || "Server error";

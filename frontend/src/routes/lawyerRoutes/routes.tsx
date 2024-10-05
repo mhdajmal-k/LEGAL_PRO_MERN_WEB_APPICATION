@@ -12,6 +12,7 @@ const LawyerRoutes: React.FC = () => {
             <Route path='/verify-otp' element={<LawyerVerifyOtp />} />
             <Route path='/ProfessionalData' element={<ProfessionalDetails />} />
             <Route path='/login' element={<LawyerLogin />} />
+            <Route path='/' element={<h1>heLLO HOME LAYWER</h1>} />
         </Routes>
     )
 }
