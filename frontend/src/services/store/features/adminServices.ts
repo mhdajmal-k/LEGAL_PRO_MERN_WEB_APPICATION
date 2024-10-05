@@ -7,6 +7,7 @@ import {
 } from "../../../utils/type/lawyerType";
 import { AxiosError } from "axios";
 import {
+  BLOCKANDUNBLOCK,
   FETCHLAWYER,
   FETCHPENDINGAPPROVALLAWYERS,
   FETCHUSER,
@@ -14,6 +15,7 @@ import {
   VERIFYLAWYER,
 } from "../../api/adminApi";
 import { ADMINLOGIN } from "../../api/lawyerApi";
+import { stat } from "fs";
 
 export const getUsers = createAsyncThunk(
   "admin/getUsers",
@@ -138,6 +140,32 @@ export const undVerifyLawyer = createAsyncThunk(
         { reason }
       );
       console.log(response.data, "//////////////////////////////////");
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const blockandUnblock = createAsyncThunk(
+  "admin/verifyLawyer",
+  async (
+    { id, state }: { id: string; state: boolean },
+    { rejectWithValue }
+  ) => {
+    try {
+      console.log(state, "is the state");
+      const response = await axiosInstance.put<response>(
+        `${BLOCKANDUNBLOCK}/${id}`,
+        { state }
+      );
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";

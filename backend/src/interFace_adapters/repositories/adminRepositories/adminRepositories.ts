@@ -86,6 +86,18 @@ class AdminRepository implements iAdminRepository {
       throw error;
     }
   }
+  async blockorUnblock(id: string, blockState: boolean): Promise<any> {
+    try {
+      const updateUser = await User.findByIdAndUpdate(
+        id,
+        { block: blockState },
+        { new: true }
+      );
+      if (updateUser) return updateUser;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default AdminRepository;

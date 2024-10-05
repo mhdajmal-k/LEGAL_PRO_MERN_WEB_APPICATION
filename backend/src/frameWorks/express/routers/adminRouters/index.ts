@@ -36,3 +36,7 @@ adminRouter.put(
   "/unverifylawyer/:id",
   adminController.unVerifyLawyer.bind(adminController)
 );
+adminRouter.put(
+  "/blockandunblock/:id",
+  adminController.blockOrUnblock.bind(adminController)
+);

@@ -11,6 +11,7 @@ import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 import { hashPassword } from "../../../frameWorks/utils/helpers/passwordHelper";
 import { validatePassword } from "../../../frameWorks/utils/validatePassword";
 import EmailService from "../../../frameWorks/services/mailer";
+import e from "express";
 
 class AdminInteractor implements IAdminInteractor {
   constructor(
@@ -238,6 +239,44 @@ class AdminInteractor implements IAdminInteractor {
         statusCode: 200,
         status: true,
         message: "Lawyer unVerified SuccessFully",
+        result: [],
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async blockandUnblock(
+    id: string,
+    blockState: boolean
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: [];
+  }> {
+    try {
+      console.log(blockState, "is the block state");
+      const updateUserData = await this.Repository.blockorUnblock(
+        id,
+        blockState
+      );
+      if (!updateUserData) {
+        const error: CustomError = new Error("Failed to verify Lawyer");
+        error.statusCode = 404;
+        throw error;
+      }
+      if (blockState == true) {
+        return {
+          statusCode: 200,
+          status: true,
+          message: `user blocked successFully`,
+          result: [],
+        };
+      }
+      return {
+        statusCode: 200,
+        status: true,
+        message: `user UnBlocked successFully`,
         result: [],
       };
     } catch (error) {

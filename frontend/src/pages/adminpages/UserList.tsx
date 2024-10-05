@@ -10,19 +10,25 @@ const UsersList: React.FC = () => {
 
     const [users, setUsers] = useState<[] | any>([]);
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await dispatch(getUsers()).unwrap();
-                setUsers(response.result);
-
-            } catch (error) {
-                console.log(error)
-            }
 
 
+    const fetchUsers = async () => {
+        try {
+            const response = await dispatch(getUsers()).unwrap();
+            setUsers(response.result);
+
+        } catch (error) {
+            console.log(error)
         }
 
+
+    }
+
+    const refreshUsers = () => {
+        fetchUsers();
+    };
+
+    useEffect(() => {
         fetchUsers();
     }, [dispatch]);
     console.log(users)
@@ -30,7 +36,7 @@ const UsersList: React.FC = () => {
         <div className='w-auto mt-16 bg-white'>
             <h1 className='text-center mb-5 font-semibold'>User List</h1>
 
-            <CommonTable columns={userColumns} data={users} />
+            <CommonTable columns={userColumns} data={users} onRefresh={refreshUsers} />
         </div>
     );
 };
