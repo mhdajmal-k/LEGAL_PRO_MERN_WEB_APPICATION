@@ -10,12 +10,14 @@ import Lawyer from "../../../frameWorks/database/models/lawyerModel";
 import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 import { hashPassword } from "../../../frameWorks/utils/helpers/passwordHelper";
 import { validatePassword } from "../../../frameWorks/utils/validatePassword";
+import EmailService from "../../../frameWorks/services/mailer";
 
 class AdminInteractor implements IAdminInteractor {
   constructor(
     private readonly Repository: iAdminRepository,
     private readonly jwt: iJwtService,
-    private s3Service: S3Service
+    private s3Service: S3Service,
+    private emailService: EmailService
   ) {}
 
   async adminLogin(
@@ -148,16 +150,94 @@ class AdminInteractor implements IAdminInteractor {
             : Promise.resolve(null);
         })
       );
-      console.log(getProfile);
-      console.log(certificates);
-      // lawyer.certifications=lawyer.certifications.map((certificat:any,index:number)=>{
-      //   ...certificat,
-      //   certificates:certificates[index]
-      // })
+
+      lawyer.profile_picture = getProfile;
+      lawyer.certifications = lawyer.certifications.map(
+        (certification: any, index: number) => ({
+          ...certification,
+          certificate: certificates[index],
+        })
+      );
       return {
         statusCode: 200,
         status: true,
         message: "lawyer Got successFully",
+        result: lawyer,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async verifyLawyer(id: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: [];
+  }> {
+    try {
+      const lawyer = await this.Repository.getLawyer(id);
+      if (!lawyer) {
+        const error: CustomError = new Error("Lawyer not found");
+        error.statusCode = 404;
+        throw error;
+      }
+      const verifyLawyer = await this.Repository.verifyLawyer(id);
+      if (!verifyLawyer) {
+        const error: CustomError = new Error("Failed to verify Lawyer");
+        error.statusCode = 404;
+        throw error;
+      }
+      const sendEmail = this.emailService.sendStatusNotification(
+        verifyLawyer.email,
+        "",
+        verifyLawyer.userName,
+        "Verified"
+      );
+
+      return {
+        statusCode: 200,
+        status: true,
+        message: "Lawyer Verified SuccessFully",
+        result: [],
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async unverifyLawyer(
+    id: string,
+    reason: string
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: [];
+  }> {
+    try {
+      const lawyer = await this.Repository.getLawyer(id);
+      if (!lawyer) {
+        const error: CustomError = new Error("Lawyer not found");
+        error.statusCode = 404;
+        throw error;
+      }
+      const verifyLawyer = await this.Repository.unverifyLawyer(id);
+      if (!verifyLawyer) {
+        const error: CustomError = new Error("Failed to verify Lawyer");
+        error.statusCode = 404;
+        throw error;
+      }
+      console.log(reason, "jnfdhfhfhfhffffffffff");
+      const sendEmail = this.emailService.sendStatusNotification(
+        verifyLawyer.email,
+        reason,
+        verifyLawyer.userName,
+        "Unverified"
+      );
+
+      return {
+        statusCode: 200,
+        status: true,
+        message: "Lawyer unVerified SuccessFully",
         result: [],
       };
     } catch (error) {
@@ -165,5 +245,4 @@ class AdminInteractor implements IAdminInteractor {
     }
   }
 }
-
 export default AdminInteractor;

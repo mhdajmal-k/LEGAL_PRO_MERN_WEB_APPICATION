@@ -59,6 +59,7 @@ export const authorization =
       }
 
       req.user = { id: decodeToken.id };
+      console.log(req.user, "i sht req.user");
       next();
     } catch (error) {
       console.error("Authorization Error:", error);

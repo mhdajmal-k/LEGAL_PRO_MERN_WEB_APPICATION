@@ -22,6 +22,21 @@ interface IAdminInteractor {
     message: string;
     result: [];
   }>;
+  verifyLawyer(id: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: [];
+  }>;
+  unverifyLawyer(
+    id: string,
+    reason: string
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: [];
+  }>;
 }
 
 export default IAdminInteractor;

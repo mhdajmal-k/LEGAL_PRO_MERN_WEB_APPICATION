@@ -43,7 +43,7 @@ class AdminRepository implements iAdminRepository {
   }
   async getPendingApprovalLawyers(): Promise<any> {
     try {
-      const lawyers = await Lawyer.find({ verified: { $ne: true } })
+      const lawyers = await Lawyer.find({ verified: "not_verified" })
         .select("-password")
         .sort({ createdAt: -1 })
         .lean();
@@ -57,6 +57,31 @@ class AdminRepository implements iAdminRepository {
       const lawyer = await Lawyer.findById(id);
 
       return lawyer;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async verifyLawyer(id: string): Promise<any> {
+    try {
+      const updatedLawyer = await Lawyer.findByIdAndUpdate(
+        id,
+        { verified: "verified" },
+        { new: true }
+      );
+      return updatedLawyer;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async unverifyLawyer(id: string): Promise<any> {
+    try {
+      const updatedLawyer = await Lawyer.findByIdAndUpdate(
+        id,
+        { verified: "rejected" },
+        { new: true }
+      );
+      console.log(updatedLawyer);
+      return updatedLawyer;
     } catch (error) {
       throw error;
     }

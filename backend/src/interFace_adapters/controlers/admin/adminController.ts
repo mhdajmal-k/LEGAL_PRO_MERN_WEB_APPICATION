@@ -78,7 +78,46 @@ class AdminController {
     try {
       const id: string = req.params.id;
       const response = await this.adminInteractor.getLawyer(id);
-
+      console.log(response.result);
+      if (response.result) {
+        res.status(200).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async updateLawyer(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const id: string = req.params.id;
+      const response = await this.adminInteractor.verifyLawyer(id);
+      if (response.result) {
+        res.status(200).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async unVerifyLawyer(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const id: string = req.params.id;
+      const { reason } = req.body;
+      const response = await this.adminInteractor.unverifyLawyer(id, reason);
       if (response.result) {
         res.status(200).json({
           status: response.status,
