@@ -52,3 +52,8 @@ lawyerAuthRouter.post(
   ]),
   lawyerAuthController.verifyProfessionalData.bind(lawyerAuthController)
 );
+
+lawyerAuthRouter.post(
+  "/login",
+  lawyerAuthController.loginLawyer.bind(lawyerAuthController)
+);

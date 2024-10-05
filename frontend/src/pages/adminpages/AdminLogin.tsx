@@ -1,5 +1,5 @@
 import { useFormik } from 'formik'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // import CustomToast from '../userComponents/CustomToast'
 // import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
@@ -11,6 +11,7 @@ import { toast } from 'sonner'
 import CustomToast from '../../components/userComponents/CustomToast'
 import { adminValidationSchema } from '../../utils/validator/validateAdmin'
 import { adminLogin } from '../../services/store/features/adminServices'
+import { clearError } from '../../services/store/features/lawyerSlilce'
 
 
 const AdminLoginForm: React.FC = () => {
@@ -39,6 +40,13 @@ const AdminLoginForm: React.FC = () => {
             }
         },
     })
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                dispatch(clearError())
+            }, 2000);
+        }
+    }, [error])
     return (
         <div className=" h-screen  flex items-center justify-center bg-gray-100">
             <div className="bg-white rounded-lg shadow-md mx-auto flex w-full max-w-xl">
@@ -85,9 +93,10 @@ const AdminLoginForm: React.FC = () => {
                                         {showPassword ? <FaRegEye className="h-5 w-5" /> : <FaEyeSlash className="h-5 w-5" />}
                                     </button>
                                 </div>
+
                                 <div className='mt-8 flex justify-center items-center'>
                                     <Button type="submit" className="w-2/3 font-semibold text-base bg-blue-800">
-                                        {loading ? "Signing Up..." : "Sign Up"}
+                                        {loading ? "Signing In..." : "Sign In"}
                                     </Button>
                                     {error && <div className="text-red-500 mt-2 text-center">{error}</div>}
                                 </div>
