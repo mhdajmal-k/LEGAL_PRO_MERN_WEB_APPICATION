@@ -76,12 +76,12 @@ const ProfessionalData: React.FC = () => {
         initialValues: {
             practiceArea: [] as string[],
             yearsOfExperience: '',
-            barCouncilNumber: '',
+            barCouncilNumber: 'KL/90/2024',
             stateBarCouncilNumber: '',
             designation: '',
             courtPracticeArea: '',
-            languages: [],
-            aboutMe: '',
+            languages: ["English", "Hindi"],
+            aboutMe: 'i am passionate Lawyer',
 
         }, validationSchema: lawyerProfessionalValidate,
         validateOnChange: true,

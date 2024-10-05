@@ -53,14 +53,14 @@ const LawyerSignUp: React.FC = () => {
 
     const formik = useFormik({
         initialValues: {
-            userName: '',
+            userName: 'Muhammed Ajmal k',
             email: '',
-            password: '',
-            confirmPassword: '',
-            gender: '',
-            city: '',
-            state: '',
-            zipCode: '',
+            password: '@Ajmal111',
+            confirmPassword: '@Ajmal111',
+            gender: 'male',
+            city: 'calicut',
+            state: 'kerala',
+            zipCode: '679589',
         },
         validationSchema: lawyerValidationSchema,
         validateOnChange: true,

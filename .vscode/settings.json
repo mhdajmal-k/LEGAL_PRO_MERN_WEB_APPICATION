@@ -1,15 +1,20 @@
 {
     "cSpell.words": [
         "ADMINLOGIN",
+        "FETCHLAWYER",
         "FETCHPENDINGAPPROVALLAWYERS",
+        "GETLAWYER",
         "getusers",
         "LAWYERVERIFYPROFESSIONALDATA",
         "PHONENUMBER",
         "RESENDOTP",
         "resened",
+        "UNVERIFY",
+        "unverifylawyer",
         "USERLOGOUT",
         "USERSIGNUP",
         "VERIFYINGOTP",
+        "VERIFYLAWYER",
         "zipcode"
     ]
 }
