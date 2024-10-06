@@ -7,6 +7,7 @@ import {
 } from "../../../utils/type/lawyerType";
 import { AxiosError } from "axios";
 import {
+  ADMINLOGOUT,
   BLOCKANDUNBLOCK,
   FETCHLAWYER,
   FETCHPENDINGAPPROVALLAWYERS,
@@ -15,7 +16,6 @@ import {
   VERIFYLAWYER,
 } from "../../api/adminApi";
 import { ADMINLOGIN } from "../../api/lawyerApi";
-import { stat } from "fs";
 
 export const getUsers = createAsyncThunk(
   "admin/getUsers",
@@ -127,7 +127,7 @@ export const verifyLawyer = createAsyncThunk(
   }
 );
 export const undVerifyLawyer = createAsyncThunk(
-  "admin/verifyLawyer",
+  "admin/undVerifyLawyer",
   async (
     { id, reason }: { id: string; reason: string },
     { rejectWithValue }
@@ -155,7 +155,7 @@ export const undVerifyLawyer = createAsyncThunk(
   }
 );
 export const blockandUnblock = createAsyncThunk(
-  "admin/verifyLawyer",
+  "admin/blockandUnblock",
   async (
     { id, state }: { id: string; state: boolean },
     { rejectWithValue }
@@ -169,6 +169,26 @@ export const blockandUnblock = createAsyncThunk(
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const adminLogOut = createAsyncThunk(
+  "user/adminLogOut",
+  async (_, { rejectWithValue }) => {
+    try {
+      console.log("hi");
+      const response = await axiosInstance.post<response>(ADMINLOGOUT);
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
       if (error instanceof AxiosError) {
         if (error.response) {
           errorMessage = error.response.data.message || "Server error";

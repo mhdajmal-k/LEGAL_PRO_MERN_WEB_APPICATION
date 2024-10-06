@@ -1,4 +1,4 @@
-// AdminLayout.tsx
+
 import React from 'react';
 import DefaultSidebar from './DefaultSidebar'; // Adjust the import path based on your folder structure
 import { Outlet } from 'react-router-dom';

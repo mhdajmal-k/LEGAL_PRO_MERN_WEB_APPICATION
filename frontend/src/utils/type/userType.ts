@@ -2,6 +2,7 @@ export interface UserState {
   userInfo: {
     userName: string;
     email: string;
+    phoneNumber?: string | "";
   } | null;
   loading: boolean;
   error: string | null;

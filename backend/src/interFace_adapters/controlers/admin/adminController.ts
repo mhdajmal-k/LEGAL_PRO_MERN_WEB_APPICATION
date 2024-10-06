@@ -149,5 +149,18 @@ class AdminController {
       next(error);
     }
   }
+  async adminLogOut(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      console.log("in logout");
+      res.clearCookie("auth_adminAccessToken");
+      res.status(200).json({ message: "Logout successful", status: true });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 export default AdminController;

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { lawyerInfo } from "../../../utils/type/userType";
+
 import {
   adminLogin,
   getPendingApprovalLawyers,
@@ -24,7 +24,7 @@ const adminSlice = createSlice({
   name: "adminAuth",
   initialState,
   reducers: {
-    logout: (state) => {
+    adminLogout: (state) => {
       state.adminInfo = null;
       (state.loading = false), (state.error = "");
     },
@@ -81,5 +81,5 @@ const adminSlice = createSlice({
   },
 });
 
-export const { logout, clearError } = adminSlice.actions;
+export const { adminLogout, clearError } = adminSlice.actions;
 export default adminSlice.reducer;

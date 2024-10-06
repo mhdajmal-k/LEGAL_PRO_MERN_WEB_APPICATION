@@ -8,21 +8,25 @@ import { IoIosNotifications } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
 import { Tooltip, Avatar } from "@nextui-org/react";
 import { userLogout } from '../services/store/features/userSlice';
+import { logOut } from '../services/store/features/userServices';
+import CustomToast from '../components/userComponents/CustomToast';
+import { toast } from 'sonner';
 
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch()
   const { userInfo, } = useSelector((state: RootState) => state.user)
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
       dispatch(userLogout())
-      // const response = dispatch(logOutUser());
-      // if (response) {
-      //   navigate("/");
-      // }
-    } catch (error) {
+      const response = await dispatch(logOut()).unwrap();
+      if (response) {
+        toast(<CustomToast message={response.message} type="success" />);
 
+      }
+    } catch (error: any) {
+      toast(<CustomToast message={error} type="error" />);
     }
   }
   return (
@@ -69,7 +73,9 @@ const Navbar: React.FC = () => {
                 content={
                   <div className="py-2">
                     <Button className="w-full mb-2 justify-start" variant="light">
-                      <div className="text-sm font-normal">Profile</div>
+                      <Link to="/profile"> <div className="text-sm font-normal">Profile</div>
+                      </Link>
+
                     </Button>
                     <Button className="w-full justify-start" variant="light">
                       <div className="text-sm font-normal" onClick={handleLogout}>LogOut</div>
