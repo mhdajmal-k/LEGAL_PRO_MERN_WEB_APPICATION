@@ -10,6 +10,7 @@ import {
 } from "../../api/userApi";
 import { AxiosError } from "axios";
 import { userLoginData, userSignUp } from "../../../utils/type/userType";
+import { response } from "../../../utils/type/lawyerType";
 
 export const signUpUser = createAsyncThunk(
   "user/singUpUser",
@@ -95,12 +96,13 @@ export const resendOtp = createAsyncThunk(
     }
   }
 );
-export const logOutUser = createAsyncThunk(
-  "user/resenedOtp",
+export const logOut = createAsyncThunk(
+  "user/logOut",
   async (_, { rejectWithValue }) => {
     try {
       console.log("hi");
       const response = await axiosInstance.post(USERLOGOUT);
+      console.log(response, "this is the response");
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";

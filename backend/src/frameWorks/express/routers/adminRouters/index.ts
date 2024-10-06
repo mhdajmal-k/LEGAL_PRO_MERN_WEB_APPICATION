@@ -56,3 +56,4 @@ adminRouter.put(
   authorization("admin"),
   adminController.blockOrUnblock.bind(adminController)
 );
+adminRouter.post("/logout", adminController.adminLogOut.bind(adminController));

@@ -8,6 +8,8 @@ import LawyerList from '../../pages/adminpages/LawyerList';
 import AdminLayout from '../../components/AdminComponents.tsx/AdminLayout';
 import { AdminDashBoard } from '../../pages/adminpages/adminDashBoard';
 import LawyerPublicRoute from '../AdminPublicRoute';
+import AdminProtectRoute from '../AdminProtectRoute';
+
 
 
 const AdminRoutes: React.FC = () => {
@@ -16,11 +18,14 @@ const AdminRoutes: React.FC = () => {
             <Route element={<LawyerPublicRoute />}>
                 <Route path='/login' element={<AdminLoginForm />} />
             </Route>
-            <Route path='/' element={<AdminLayout />}>
-                <Route path='dashBoard' element={<AdminDashBoard />} />
-                <Route path='users' element={<UsersList />} />
-                <Route path='lawyers' element={<LawyerList />} />
+            <Route element={<AdminProtectRoute />}>
+                <Route path='/' element={<AdminLayout />}>
+                    <Route path='dashBoard' element={<AdminDashBoard />} />
+                    <Route path='users' element={<UsersList />} />
+                    <Route path='lawyers' element={<LawyerList />} />
+                </Route>
             </Route>
+
         </Routes>
     );
 }
