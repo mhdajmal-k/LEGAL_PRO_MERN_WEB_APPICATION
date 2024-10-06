@@ -77,7 +77,7 @@ const LoginForm: React.FC = () => {
                             size="sm"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            isInvalid={!!formik.errors.email && formik.touched.email}
+                            isInvalid={!!formik.errors.email && !!formik.touched.email}
                             value={formik.values.email}
                             variant="bordered"
                         />
@@ -90,7 +90,7 @@ const LoginForm: React.FC = () => {
                                 size="sm"
                                 name='password'
                                 variant="bordered"
-                                isInvalid={!!formik.errors.password && formik.touched.password}
+                                isInvalid={!!formik.errors.password && !!formik.touched.password}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.password}

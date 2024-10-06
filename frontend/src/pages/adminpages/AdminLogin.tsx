@@ -48,7 +48,7 @@ const AdminLoginForm: React.FC = () => {
         }
     }, [error])
     return (
-        <div className=" h-screen  flex items-center justify-center bg-gray-100">
+        <div className=" h-screen container  flex items-center justify-center bg-gray-100">
             <div className="bg-white rounded-lg shadow-md mx-auto flex w-full max-w-xl">
                 <div className="flex-auto  p-8">
                     <h2 className="text-2xl font-bold mb-3 text-center">Welcome Back Admin</h2>

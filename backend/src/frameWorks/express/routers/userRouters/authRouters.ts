@@ -38,4 +38,4 @@ authRouter.post(
   "/resend-otp",
   userAuthController.resendOtp.bind(userAuthController)
 );
-authRouter.get("/logout", userAuthController.logOut.bind(userAuthController));
+authRouter.post("/logout", userAuthController.logOut.bind(userAuthController));

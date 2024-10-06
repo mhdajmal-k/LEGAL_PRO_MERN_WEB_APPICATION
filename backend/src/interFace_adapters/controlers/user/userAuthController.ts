@@ -95,7 +95,7 @@ class UserAuthController {
         });
       }
       const response = await this.userAuthInteractor.userLogin(req.body);
-      console.log(response, "is she pormise");
+
       const { status, message, result } = response;
       if (status) {
         const data = result as IUserResult;
@@ -157,11 +157,15 @@ class UserAuthController {
     }
   }
 
-  async logOut(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {}
+  async logOut(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log("in logout");
+      res.clearCookie("auth_accessToken");
+      res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default UserAuthController;

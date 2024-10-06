@@ -19,3 +19,25 @@ export const loginValidator = Yup.object({
     )
     .required("Password is required"),
 });
+
+export const userDataUpdateValidator = Yup.object({
+  email: Yup.string()
+    .trim()
+    .email("Invalid email format")
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "Invalid email format"
+    )
+    .required("Email is required"),
+
+  userName: Yup.string()
+    .trim()
+    .min(3, "Username is too short")
+    .required("Username is required"),
+
+  phoneNumber: Yup.string()
+    .trim()
+    .matches(/^\d+$/, "Phone number must be numeric")
+    .min(10, "Phone number is too short")
+    .nullable(),
+});

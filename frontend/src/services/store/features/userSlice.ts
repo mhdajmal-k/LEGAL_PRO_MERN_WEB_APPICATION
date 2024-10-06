@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { UserState } from "../../../utils/type/userType";
 import {
   loginUser,
-  logOutUser,
+  logOut,
   resendOtp,
   signUpUser,
   verifyOtp,
