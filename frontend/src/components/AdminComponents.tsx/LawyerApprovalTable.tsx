@@ -8,31 +8,32 @@ import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input
 import { getLawyer, undVerifyLawyer, verifyLawyer } from '../../services/store/features/adminServices'; // Update this path to where your actions are defined
 import CustomToast from '../userComponents/CustomToast';
 import { toast } from 'sonner';
+import { Lawyer } from '../../utils/type/lawyerType';
 
 
 
-interface Lawyer {
-    _id: string;
-    userName: string;
-    email: string;
-    phoneNumber?: string;
-    block: boolean;
-    profile_picture: string;
-    designation: string;
-    years_of_experience: string;
-    verified: boolean;
-    city: string;
-    state: string;
-    languages_spoken: string[];
-    practice_area: string[];
-    certifications: Certification[];
-}
+// interface Lawyer {
+//     _id: string;
+//     userName: string;
+//     email: string;
+//     phoneNumber?: string;
+//     block: boolean;
+//     profile_picture: string;
+//     designation: string;
+//     years_of_experience: string;
+//     verified: boolean;
+//     city: string;
+//     state: string;
+//     languages_spoken: string[];
+//     practice_area: string[];
+//     certifications: Certification[];
+// }
 
-interface Certification {
-    certificateType: string;
-    enrolmentNumber: string;
-    certificate: string;
-}
+// interface Certification {
+//     certificateType: string;
+//     enrolmentNumber: string;
+//     certificate: string;
+// }
 
 interface CommonTableProps {
     columns: string[];
@@ -161,7 +162,7 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
                 </tbody>
             </table>
 
-            {/* Modal for Viewing Lawyer Details */}
+
             <Modal isOpen={isViewModalOpen} onOpenChange={setViewModalOpen} placement="top-center" className='container'>
                 <ModalContent className='max-w-xl flex items-center justify-center gap-2'>
                     {(onClose) => (

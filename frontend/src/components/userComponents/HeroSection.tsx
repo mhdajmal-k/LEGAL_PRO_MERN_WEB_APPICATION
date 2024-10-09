@@ -5,38 +5,33 @@ import { Button } from '@nextui-org/react';
 const HeroSection: React.FC = () => {
     return (
         <div className="bg-primary min-h-screen relative w-full overflow-hidden ">
-            <section className="pt-12  pb-12 sm:pb-16 lg:pt-8 sm:pl-20">
+            <section className=" container pt-12  pb-12 sm:pb-16 lg:pt-8 sm:pl-20">
                 <div className=" sm:m-5 max-w-7xl sm:px-2 lg:px-4">
                     <div className="pt-4 ">
-                        {/* Left Section */}
+
                         <div className='w-full sm:pl-10 sm:pt-10' >
                             <div className="text-center lg:text-left leading-normal">
                                 <h1 className=" md:text-4xl text-xl sm:font-bold font-semibold   sm:leading-3 text-white sm:text-xl ">
                                     PROTECT YOUR RULE
                                     <br />
-                                    <span className="mt-2  block ml-20">SECURE YOUR FUTURE</span>
+                                    <span className="sm:mt-2  block ml-20">SECURE YOUR FUTURE</span>
                                 </h1>
 
-                                <div className="mt-4 text-white flex gap-5">
+                                <div className="mt-4 text-base font-light text-white flex gap-5 container">
                                     <p>
                                         Expert legal solutions combining
                                         <br /> professionalism with modern technology
 
                                     </p>
                                     <button
-                                        className=' w-20 sm:w-32 sm:h-10 rounded-md bg-secondary   text-white'
+                                        className=' w-20 sm:w-32 h-auto sm:h-10 rounded-md bg-secondary   text-white'
                                     >Book Now</button>
                                 </div>
-
-
-                                {/* Larger Input Box */}
 
                             </div>
 
                         </div>
 
-
-                        {/* Right Section - Image */}
                         <div className="relative lg:absolute lg:bottom-0 lg:right-0 w-full sm:pr-14 lg:w-auto -z-1">
                             <img className="w-full p-5  lg:w-auto  lg:p-0" src={hero} alt="Hero Section Image" />
                         </div>

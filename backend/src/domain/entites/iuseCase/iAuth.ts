@@ -16,6 +16,9 @@ interface IUserAuthInteractor {
   userLogin(
     user: IUser
   ): Promise<{ status: boolean; message: string; result: IUserResult | null }>;
+  googleSignUP(
+    user: IUser
+  ): Promise<{ status: boolean; message: string; result: IUserResult | null }>;
   resendOtp(
     token: string
   ): Promise<{ status: boolean; message: string; result: string | null }>;

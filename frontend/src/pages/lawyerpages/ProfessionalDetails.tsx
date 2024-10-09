@@ -1,11 +1,11 @@
 import React from "react";
-import Navbar from "../../layout/Navbar";
 import LegalFooter from "../../layout/footer";
 import ProfessionalData from "../../components/lawyerComponents/ProfessionalData";
+import AdminNavbar from '../../layout/AdminNavbar'
 
 const ProfessionalDetails: React.FC = () => {
     return <>
-        <Navbar />
+        <AdminNavbar />
         <ProfessionalData />
         <LegalFooter />
     </>

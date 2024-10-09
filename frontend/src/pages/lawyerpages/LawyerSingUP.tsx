@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../../layout/Navbar';
 import LegalFooter from '../../layout/footer';
 import { Button, Input } from '@nextui-org/react';
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
@@ -14,6 +13,7 @@ import { signUpLawyer } from '../../services/store/features/lawyerServices';
 import CustomToast from '../../components/userComponents/CustomToast';
 import { IoMdClose } from "react-icons/io";
 import { LawyerSignUpData } from '../../utils/type/userType';
+import AdminNavbar from '../../layout/AdminNavbar';
 
 
 const LawyerSignUp: React.FC = () => {
@@ -79,7 +79,6 @@ const LawyerSignUp: React.FC = () => {
                 const lawyerSignUpData: LawyerSignUpData = Object.fromEntries(formData) as LawyerSignUpData;
                 console.log(lawyerSignUpData)
                 const response = await dispatch(signUpLawyer(lawyerSignUpData)).unwrap();
-                console.log(response, "checking.....")
                 if (response.status) {
                     toast(<CustomToast message={response.message} type="success" />);
                     navigate('/lawyer/verify-otp');
@@ -102,7 +101,7 @@ const LawyerSignUp: React.FC = () => {
 
     return (
         <>
-            <Navbar />
+            <AdminNavbar />
             <div className='container'>
                 <div className='flex-grow sm:mx-auto min-h-screen'>
                     <h1 className="text-2xl font-bold p-4 text-center">Sign up as Lawyer</h1>

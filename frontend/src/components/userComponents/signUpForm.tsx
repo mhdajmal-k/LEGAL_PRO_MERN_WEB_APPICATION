@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { validationSchema } from "../../utils/validator/validationSchema";
 import { useDispatch, useSelector } from 'react-redux';
 // import { useNavigate } from 'react-router-dom';
-import { signUpUser } from '../../services/store/features/userServices';
+import { googleSignup, signUpUser } from '../../services/store/features/userServices';
 import { AppDispatch, RootState } from '../../services/store/store';
 // import userSignUp from "../../utils/type/userType"
 import { toast } from 'sonner'; // Import Sonner
@@ -14,6 +14,8 @@ import CustomToast from './CustomToast';
 import { Link, useNavigate } from 'react-router-dom';
 import { clearError } from '../../services/store/features/userSlice';
 import { userSignUp } from '../../utils/type/userType';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../config/firbase';
 
 
 const SignUpForm: React.FC = () => {
@@ -63,6 +65,27 @@ const SignUpForm: React.FC = () => {
         },
     });
 
+    const handleGoogle = async (e: any) => {
+        const provider = await new GoogleAuthProvider()
+
+        const result = await signInWithPopup(auth, provider)
+
+        const data = { email: result.user.email, userName: result.user.displayName }
+        if (data) {
+            try {
+                const response = await dispatch(googleSignup(data)).unwrap();
+                if (response) {
+                    toast(<CustomToast message={response.message || 'An error occurred during login'} type="success" />);
+                    navigate('/');
+                }
+            } catch (error: any) {
+                console.error("Login error:", error);
+                toast(<CustomToast message={error.message || 'An error occurred during login'} type="error" />);
+            }
+        }
+
+
+    }
 
     return (
         <div className='container flex justify-center items-center min-h-screen bg-white'>
@@ -166,7 +189,7 @@ const SignUpForm: React.FC = () => {
                         )}
                         {error && <div className="text-red-500 mt-2 text-center">{error}</div>}
 
-                        <Button
+                        <Button onClick={handleGoogle}
                             variant="bordered"
                             className="w-full mt-2"
                             startContent={<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" className="w-5 h-5" />}

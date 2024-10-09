@@ -1,12 +1,12 @@
 import React from 'react'
-import Navbar from '../../layout/Navbar'
 import LegalFooter from '../../layout/footer'
 import LawyerLoginForm from '../../components/lawyerComponents/LoginForm'
+import AdminNavbar from '../../layout/AdminNavbar'
 
 const LawyerLogin: React.FC = () => {
     return (
         <div>
-            <Navbar />
+            <AdminNavbar />
             <LawyerLoginForm />
             <LegalFooter />
         </div>

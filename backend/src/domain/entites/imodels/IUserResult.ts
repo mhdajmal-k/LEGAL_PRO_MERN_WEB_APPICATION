@@ -8,4 +8,5 @@ export default interface IUserResult {
     updatedAt: Date;
   };
   tokenJwt: string | "";
+  jwtRefreshToken: string | null;
 }

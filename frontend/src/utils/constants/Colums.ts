@@ -14,5 +14,6 @@ export const lawyerColumns: string[] = [
   "DESIGNATION",
   "EXPERIENCE",
   "VERIFY",
+  "BLOCK",
   "VIEW",
 ];

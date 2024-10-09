@@ -3,9 +3,9 @@ import { RootState } from '../services/store/store';
 import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 
-const LawyerPublicRoute: React.FC = () => {
+const AdminPublicRoute: React.FC = () => {
     const { adminInfo } = useSelector((state: RootState) => state.admin);
     return adminInfo ? <Navigate to="/admin/dashboard" /> : <Outlet />;
 };
 
-export default LawyerPublicRoute;
+export default AdminPublicRoute;

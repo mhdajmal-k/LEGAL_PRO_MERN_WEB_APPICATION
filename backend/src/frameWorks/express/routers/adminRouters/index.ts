@@ -9,7 +9,7 @@ import EmailService from "../../../services/mailer";
 import { authorization } from "../../../middleware/authMilddlewere";
 
 export const adminRouter = Router();
-const jwtToken = new JwtToken(config.JWT_SECRET);
+const jwtToken = new JwtToken(config.JWT_SECRET, config.JWT_REFRESH_SECRET);
 const repository = new AdminRepository();
 const IS3Services = new S3Service();
 const emailService = new EmailService(
@@ -32,9 +32,14 @@ adminRouter.get(
   adminController.getUsers.bind(adminController)
 );
 adminRouter.get(
+  "/pendinglawyers",
+  authorization("admin"),
+  adminController.getPendingApprovalLawyer.bind(adminController)
+);
+adminRouter.get(
   "/lawyers",
   authorization("admin"),
-  adminController.getLawyer.bind(adminController)
+  adminController.getLawyers.bind(adminController)
 );
 adminRouter.get(
   "/lawyer/:id",

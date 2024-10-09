@@ -123,6 +123,50 @@ class UserAuthController {
       next(error);
     }
   }
+  async googleSignUp(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      console.log(req.body);
+      const { email, userName } = req.body;
+      if (!email || email.trim() == "" || !userName || userName.trim() == "") {
+        return res.status(400).json({
+          status: false,
+          message: "Error accrued need to Login",
+          result: {},
+        });
+      }
+      const response = await this.userAuthInteractor.googleSignUP(req.body);
+
+      const { status, message, result } = response;
+      if (status) {
+        const data = result as IUserResult;
+        res.cookie("auth_accessToken", data.tokenJwt, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 5 * 60 * 1000,
+        });
+        res.clearCookie("auth_token");
+        res.status(200).json({
+          status: status,
+          message: response.message,
+          result: data.user,
+        });
+      } else {
+        res.status(400).json({
+          status: status,
+          message: response.message,
+          result: {},
+        });
+      }
+      return res.status;
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
   async resendOtp(
     req: Request,
     res: Response,
@@ -133,7 +177,7 @@ class UserAuthController {
       console.log(token, "is the token");
       if (!token) {
         return res.status(400).json({
-          status: status,
+          status: false,
           message: "Session is expired, please try again",
           result: {},
         });

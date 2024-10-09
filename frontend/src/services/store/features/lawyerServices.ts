@@ -3,13 +3,14 @@ import axiosInstance from "../../api/axiosConfigue";
 import { LawyerSignUpData } from "../../../utils/type/userType";
 import {
   LAWYERLOGIN,
+  LAWYERLOGOUT,
   LAWYERRESENDOTP,
   LAWYERSIGNUP,
   LAWYERVERIFYINGOTP,
   LAWYERVERIFYPROFESSIONALDATA,
 } from "../../api/lawerApi";
 import { AxiosError } from "axios";
-import { LawyerSignUpResponse } from "../../../utils/type/lawyerType";
+import { LawyerSignUpResponse, response } from "../../../utils/type/lawyerType";
 
 export const signUpLawyer = createAsyncThunk(
   "lawyer/singUpUser",
@@ -121,6 +122,26 @@ export const loginLawyer = createAsyncThunk(
     try {
       console.log(data, "from the userLogin thunk");
       const response = await axiosInstance.post(LAWYERLOGIN, data);
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const lawyerLogOut = createAsyncThunk(
+  "user/adminLogOut",
+  async (_, { rejectWithValue }) => {
+    try {
+      console.log("hi");
+      const response = await axiosInstance.post<response>(LAWYERLOGOUT);
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";

@@ -1,3 +1,4 @@
+import { error } from "console";
 import iAdminRepository from "../../../domain/entites/irepositories/IadminRepositries";
 import Lawyer from "../../../frameWorks/database/models/lawyerModel";
 import User from "../../../frameWorks/database/models/userModel";
@@ -52,6 +53,18 @@ class AdminRepository implements iAdminRepository {
       throw error;
     }
   }
+  async getLawyers(): Promise<any> {
+    try {
+      const lawyers = await Lawyer.find({ verified: "verified" })
+        .select("-password")
+        .sort({ createdAt: -1 })
+        .lean();
+      console.log(lawyers, "in thee db ");
+      return lawyers;
+    } catch (error) {
+      throw error;
+    }
+  }
   async getLawyer(id: string): Promise<any> {
     try {
       const lawyer = await Lawyer.findById({ _id: id });
@@ -96,14 +109,30 @@ class AdminRepository implements iAdminRepository {
       throw error;
     }
   }
-  async blockorUnblock(id: string, blockState: boolean): Promise<any> {
+  async blockorUnblock(
+    id: string,
+    blockState: boolean,
+    action: string
+  ): Promise<any> {
     try {
-      const updateUser = await User.findByIdAndUpdate(
-        id,
-        { block: blockState },
-        { new: true }
-      );
-      if (updateUser) return updateUser;
+      let updated;
+      if (action == "user") {
+        updated = await User.findByIdAndUpdate(
+          id,
+          { block: blockState },
+          { new: true }
+        );
+      } else if (action == "lawyer") {
+        updated = await Lawyer.findByIdAndUpdate(
+          id,
+          { block: blockState },
+          { new: true }
+        );
+      } else {
+        throw error("failed to block and unblock");
+      }
+
+      if (updated) return updated;
     } catch (error) {
       throw error;
     }

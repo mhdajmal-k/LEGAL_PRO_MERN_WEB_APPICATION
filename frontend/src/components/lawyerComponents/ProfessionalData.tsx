@@ -8,7 +8,7 @@ import Select, { ActionMeta, MultiValue } from "react-select"
 import { IoMdClose } from 'react-icons/io';
 import { clearError } from '../../services/store/features/lawyerSlilce';
 import { lawyerProfessionalValidate } from '../../utils/validator/lawyerValidate';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@nextui-org/react';
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 
 import { verifyProfessionalData } from '../../services/store/features/lawyerServices';
 import CustomToast from '../userComponents/CustomToast';
@@ -49,8 +49,8 @@ const ProfessionalData: React.FC = () => {
             setPreviewImageKerala(URL.createObjectURL(file));
         }
     };
-
-    const handleSelectChange = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
+    //changes in the metaaction
+    const handleSelectChange = (newValue: MultiValue<OptionType>, _actionMeta: ActionMeta<OptionType>) => {
         const selectedValues = newValue.map(option => option.value);
         formik.setFieldValue('practiceArea', selectedValues);
     };
@@ -76,12 +76,12 @@ const ProfessionalData: React.FC = () => {
         initialValues: {
             practiceArea: [] as string[],
             yearsOfExperience: '',
-            barCouncilNumber: 'KL/90/2024',
+            barCouncilNumber: '',
             stateBarCouncilNumber: '',
             designation: '',
             courtPracticeArea: '',
-            languages: ["English", "Hindi"],
-            aboutMe: 'i am passionate Lawyer',
+            languages: [],
+            aboutMe: '',
 
         }, validationSchema: lawyerProfessionalValidate,
         validateOnChange: true,
@@ -99,8 +99,9 @@ const ProfessionalData: React.FC = () => {
             if (selectedImageIndia) formData.append('imageIndia', selectedImageIndia);
             if (selectedImageKerala) formData.append('imageKerala', selectedImageKerala);
             try {
+                console.log(formData, "is the form data in the professionalData")
                 const response = await dispatch(verifyProfessionalData(formData)).unwrap();
-                console.log(response, "checking.....")
+
                 if (response.status) {
                     setModalOpen(true);
                 }
@@ -137,7 +138,6 @@ const ProfessionalData: React.FC = () => {
                             </div>
                             <form className="space-y-4 container" onSubmit={formik.handleSubmit}>
 
-                                {/* Replace standard <select> with CustomSelect */}
                                 <Select
                                     placeholder="Practice Area"
                                     options={options}
@@ -203,7 +203,6 @@ const ProfessionalData: React.FC = () => {
 
                                         </div>
 
-                                        {/* Image Upload for Bar Council of India */}
                                         <div className='sm:py-2'>
                                             <input
                                                 type='file'
@@ -228,9 +227,7 @@ const ProfessionalData: React.FC = () => {
                                         )}
                                     </div>
 
-                                    {/* State Bar Council Section */}
                                     <div className="md:flex items-end space-x-4">
-                                        {/* Input for State Bar Council Number */}
                                         <div className="md:w-1/2 w-full">
                                             <Input
                                                 type="text"
@@ -245,7 +242,6 @@ const ProfessionalData: React.FC = () => {
                                         </div>
 
 
-                                        {/* Image Upload for State Bar Council */}
                                         <div className='py-2'>
                                             <input
                                                 type='file'
@@ -282,7 +278,6 @@ const ProfessionalData: React.FC = () => {
                                         <option value="">Designation</option>
                                         <option value="junior Advocate">Junior Advocate</option>
                                         <option value="senior Advocate">Senior Advocate</option>
-                                        {/* Add more designation options */}
                                     </select>
                                     {formik.errors.designation && formik.touched.designation ? <div className='text-red-500 text-sm'>{formik.errors.designation}</div> : null}
 
@@ -369,7 +364,7 @@ const ProfessionalData: React.FC = () => {
                                 </p>
                             </ModalBody>
                             <ModalFooter>
-                                <Button className="bg-primary shadow-lg shadow-indigo-500/20 text-white" onClick={() => Navigate("/")}>
+                                <Button className="bg-primary shadow-lg shadow-indigo-500/20 text-white" onClick={() => Navigate("/lawyer/login")}>
                                     Back to Login Page
                                 </Button>
                             </ModalFooter>

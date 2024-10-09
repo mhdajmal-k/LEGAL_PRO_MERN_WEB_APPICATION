@@ -6,15 +6,15 @@ import { useFormik } from 'formik';
 import { loginValidator } from "../../utils/validator/loginValidaotr"
 import { useDispatch, useSelector } from 'react-redux';
 // import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../../services/store/features/userServices';
+import { googleSignup, loginUser } from '../../services/store/features/userServices';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { userLoginData } from "../../utils/type/userType"
 import { toast } from 'sonner'; // Import Sonner
 import CustomToast from './CustomToast';
 import { Link, useNavigate } from 'react-router-dom';
 import { clearError } from '../../services/store/features/userSlice';
-
-
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from "../../config/firbase"
 const LoginForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState<Boolean>(false);
 
@@ -53,7 +53,27 @@ const LoginForm: React.FC = () => {
         }
     }, [error])
 
+    const handleGoogle = async (e: any) => {
+        const provider = await new GoogleAuthProvider()
 
+        const result = await signInWithPopup(auth, provider)
+
+        const data = { email: result.user.email, userName: result.user.displayName }
+        if (data) {
+            try {
+                const response = await dispatch(googleSignup(data)).unwrap();
+                if (response) {
+                    toast(<CustomToast message={response.message || 'An error occurred during login'} type="success" />);
+                    navigate('/');
+                }
+            } catch (error: any) {
+                console.error("Login error:", error);
+                toast(<CustomToast message={error.message || 'An error occurred during login'} type="error" />);
+            }
+        }
+
+
+    }
     return (
         <div className='container flex justify-center items-center min-h-screen bg-white'>
             <div className="bg-white p-8 m-4 rounded-lg shadow-custom border-medium max-w-max">
@@ -121,7 +141,7 @@ const LoginForm: React.FC = () => {
                             <Button
                                 variant="bordered"
                                 className="w-full mt-2"
-                                startContent={<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" className="w-5 h-5" />}
+                                startContent={<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" onClick={handleGoogle} className="w-5 h-5" />}
                             >
                                 Sign In with Google
                             </Button>

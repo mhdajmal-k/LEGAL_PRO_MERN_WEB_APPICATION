@@ -3,6 +3,7 @@ export interface UserState {
     userName: string;
     email: string;
     phoneNumber?: string | "";
+    block: boolean;
   } | null;
   loading: boolean;
   error: string | null;
@@ -23,11 +24,9 @@ export interface userLoginData {
   password: string;
 }
 
-export interface lawyerInfo {
-  id: string;
-  name: string;
-  email?: string;
-}
+// export interface lawyerInfo  {
+//   email?: string;
+// }
 
 export interface LawyerSignUpData {
   userName?: string;
@@ -52,3 +51,6 @@ export interface LawyerProfessionalData {
   selectedImageIndia?: File;
   selectedImageKerala?: File;
 }
+// export interface UserFormData extends LawyerSignUpData||LawyerProfessionalData{
+
+// }

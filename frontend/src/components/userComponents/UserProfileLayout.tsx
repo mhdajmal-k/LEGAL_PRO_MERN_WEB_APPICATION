@@ -8,14 +8,34 @@ import { FiLock } from "react-icons/fi";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { AiOutlineWallet } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../services/store/store';
+import { userLogout } from '../../services/store/features/userSlice';
+import { logOut } from '../../services/store/features/userServices';
+import CustomToast from './CustomToast';
+import { toast } from 'sonner';
+import { RootState } from '../../services/store/store';
+
+
 
 const UserProfileLayout = () => {
     const navigate = useNavigate();
+    const dispatch: AppDispatch = useDispatch()
+    const { userInfo } = useSelector((state: RootState) => state.user)
     const location = useLocation();
-
-    // Function to check if the current route matches a button path
     const isActive = (path: string) => location.pathname === path;
+    const handleLogout = async () => {
+        try {
+            dispatch(userLogout())
+            const response = await dispatch(logOut()).unwrap();
+            if (response) {
+                toast(<CustomToast message={response.message} type="success" />);
 
+            }
+        } catch (error: any) {
+            toast(<CustomToast message={error} type="error" />);
+        }
+    }
     return (
         <React.Fragment>
             <Navbar />
@@ -25,15 +45,15 @@ const UserProfileLayout = () => {
                         <div className="mb-4">
                             <div className="w-24 h-24 rounded-full border-4 border-white overflow-hidden">
                                 <img
-                                    src="https://via.placeholder.com/150"
+                                    src="https://via.placeholder.com/"
                                     alt="User Avatar"
                                     className="w-full h-full object-cover"
                                 />
                             </div>
                         </div>
 
-                        <h2 className="text-2xl font-bold mb-2">Ajmal</h2>
-                        <p className="text-sm mb-4 opacity-75">ajmal@example.com</p>
+                        <h2 className="text-2xl font-bold mb-2">{userInfo?.userName}</h2>
+                        <p className="text-sm mb-4 opacity-75">{userInfo?.email}</p>
 
                         <div className="w-full ">
                             <Button
@@ -60,8 +80,8 @@ const UserProfileLayout = () => {
                             >
                                 <AiOutlineWallet className="mr-2 text-base" /> Wallet
                             </Button>
-                            <Button className="w-full mt-11 text-black" color="danger">
-                                <FiLogOut className="mr-2 text-base" /> Log Out
+                            <Button className="w-full mt-11 text-black" onClick={handleLogout} color="danger">
+                                <FiLogOut className="mr-2 text-base" />Log Out
                             </Button>
                         </div>
                     </div>

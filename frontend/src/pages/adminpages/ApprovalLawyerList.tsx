@@ -7,7 +7,7 @@ import CustomToast from '../../components/userComponents/CustomToast';
 import { lawyerColumns } from '../../utils/constants/Colums';
 import LawyerTable from '../../components/AdminComponents.tsx/LawyerApprovalTable';
 
-const LawyerList: React.FC = () => {
+const ApprovalLawyerList: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const [lawyers, setLawyer] = useState<[] | any>([]);
 
@@ -40,4 +40,4 @@ const LawyerList: React.FC = () => {
   );
 };
 
-export default LawyerList;
+export default ApprovalLawyerList;

@@ -55,7 +55,7 @@ class AdminController {
       next(error);
     }
   }
-  async getLawyer(
+  async getPendingApprovalLawyer(
     req: Request,
     res: Response,
     next: NextFunction
@@ -63,6 +63,25 @@ class AdminController {
     try {
       const response = await this.adminInteractor.getPendingApprovalLawyers();
       console.log(response, "is the response ");
+      if (response.result) {
+        res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getLawyers(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      console.log("in the controller");
+      const response = await this.adminInteractor.getLawyersList();
       if (response.result) {
         res.status(response.statusCode).json({
           status: response.status,
@@ -136,8 +155,12 @@ class AdminController {
   ): Promise<void> {
     try {
       const id: string = req.params.id;
-      const { state } = req.body;
-      const response = await this.adminInteractor.blockandUnblock(id, state);
+      const { state, action } = req.body;
+      const response = await this.adminInteractor.blockandUnblock(
+        id,
+        state,
+        action
+      );
       if (response.result) {
         res.status(response.statusCode).json({
           status: response.status,

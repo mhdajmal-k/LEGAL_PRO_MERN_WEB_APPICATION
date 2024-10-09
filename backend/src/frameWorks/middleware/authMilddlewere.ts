@@ -21,7 +21,7 @@ export const authorization =
     //   });
     // }
 
-    const jwt = new JwtToken(config.JWT_SECRET);
+    const jwt = new JwtToken(config.JWT_SECRET, config.JWT_REFRESH_SECRET);
     let decodeToken;
 
     try {
@@ -55,6 +55,20 @@ export const authorization =
             status: false,
           });
         }
+        if (!existUser.block) {
+          return res.status(401).json({
+            message: "Authorization denied. User does not exist.",
+            result: {},
+            status: false,
+          });
+        }
+        if (!existUser.block) {
+          return res.status(401).json({
+            message: "OOPS YOU HAVE BEEN BLOCKED BY ADMIN",
+            result: {},
+            status: false,
+          });
+        }
       } else if (decodeToken.role === "lawyer") {
         const lawyerRepository = new LawyerAuthRepository();
         const existLawyer = await lawyerRepository.getId(decodeToken.id);
@@ -65,10 +79,21 @@ export const authorization =
             status: false,
           });
         }
+        if (!existLawyer.block) {
+          return res.status(401).json({
+            message: "OOPS YOU HAVE BEEN BLOCKED BY ADMIN",
+            result: {},
+            status: false,
+          });
+        }
       } else if (decodeToken.role === "admin") {
         const adminRepo = new AdminRepository();
-        const existLawyer = await adminRepo.getAdmin(decodeToken.id);
-        if (!existLawyer) {
+        const existAdmin = await adminRepo.getAdmin(decodeToken.id);
+        console.log(
+          existAdmin,
+          "is hteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        );
+        if (!existAdmin) {
           return res.status(401).json({
             message: "Authorization denied,admin does not exist.",
             result: {},

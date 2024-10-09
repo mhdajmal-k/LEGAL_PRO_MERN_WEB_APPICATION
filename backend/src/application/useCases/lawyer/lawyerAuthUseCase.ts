@@ -134,7 +134,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
           }
         }
       }
-      console.log("wating in the upload file ");
+
       const certificates = [
         {
           certificateType: "Bar Council of India",
@@ -148,7 +148,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         },
       ];
       data.certificate = certificates;
-
+      console.log(data, "is the data in the backend ");
       const updateLawyer = await this.Repository.updateLawyerProfessionalData(
         data,
         id as string
@@ -178,14 +178,19 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
     try {
       const { email, password } = user;
       const validLawyer = await this.Repository.validLawyer(email);
-      console.log(validLawyer);
       if (!validLawyer) {
         const error: CustomError = new Error();
         error.message = "invalid Email ";
         error.statusCode = 400;
         throw error;
       }
-      console.log(validLawyer.verified, "is the status of the verify");
+      if (validLawyer.block) {
+        const error: CustomError = new Error(
+          "oops you have been blocked By Admin"
+        );
+        error.statusCode = 401;
+        throw error;
+      }
       if (validLawyer.verified === "not_verified") {
         const error: CustomError = new Error();
         error.message =
@@ -202,15 +207,60 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         throw error;
       }
 
+      const profile_picture = validLawyer.profile_picture;
+
+      const getProfile = await this.s3Service.fetchFile(profile_picture);
+
+      validLawyer.profile_picture = getProfile;
       const jwtToken = this.jwt.generateToken(validLawyer._id, "lawyer");
-      const { password: userPassword, ...userDataWithoutPassword } =
-        validLawyer;
+      const jwtRefreshToken = this.jwt.generateRefreshToken(
+        validLawyer._id,
+        "lawyer"
+      );
+      const { password: userPassword, ...DataWithoutPassword } = validLawyer;
 
       return {
         statusCode: 200,
         status: true,
         message: "logged SuccessFully",
-        result: { user: validLawyer, tokenJwt: jwtToken },
+        result: {
+          user: DataWithoutPassword,
+          tokenJwt: jwtToken,
+          jwtRefreshToken: jwtRefreshToken,
+        },
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async resendOtp(token: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | null;
+  }> {
+    try {
+      const OTP = this.optGenerator.generateOTP();
+      const decodeToken = decodeSingUpToken(token);
+      console.log(decodeToken);
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (decodeToken.otpExpiresAt < currentTime) {
+        console.log("hi");
+        const error: CustomError = new Error("Session is expired, try again");
+        error.statusCode = 400;
+        throw error;
+      }
+      this.nodeMailer.sendOTP(
+        decodeToken.user.email,
+        OTP,
+        decodeToken.user.userName
+      );
+      const newSignUpToken = generatingSignUpToken(decodeToken.user, OTP);
+      return {
+        statusCode: 200,
+        status: true,
+        message: "New OTP has been sent successfully",
+        result: newSignUpToken,
       };
     } catch (error) {
       throw error;

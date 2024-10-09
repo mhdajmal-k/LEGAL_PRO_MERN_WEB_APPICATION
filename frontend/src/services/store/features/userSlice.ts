@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserState } from "../../../utils/type/userType";
 import {
+  googleSignup,
   loginUser,
   logOut,
   resendOtp,
@@ -68,6 +69,17 @@ const userSlice = createSlice({
         state.loading = false;
       })
       .addCase(resendOtp.rejected, (state, actions) => {
+        state.loading = false;
+        state.error = actions.payload as string;
+      })
+      .addCase(googleSignup.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(googleSignup.fulfilled, (state, actions) => {
+        state.loading = false;
+        state.userInfo = actions.payload.result;
+      })
+      .addCase(googleSignup.rejected, (state, actions) => {
         state.loading = false;
         state.error = actions.payload as string;
       });

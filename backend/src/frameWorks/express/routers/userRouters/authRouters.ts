@@ -14,7 +14,7 @@ const emailService = new EmailService(
   process.env.EMAIL_PASS as string
 );
 const optGenerator = new OTPService();
-const jwtToken = new JwtToken(config.JWT_SECRET);
+const jwtToken = new JwtToken(config.JWT_SECRET, config.JWT_REFRESH_SECRET);
 const repository = new UserAuthRepository();
 const interactor = new userAuthInteractor(
   repository,
@@ -37,5 +37,9 @@ authRouter.post(
 authRouter.post(
   "/resend-otp",
   userAuthController.resendOtp.bind(userAuthController)
+);
+authRouter.post(
+  "/googlesignup",
+  userAuthController.googleSignUp.bind(userAuthController)
 );
 authRouter.post("/logout", userAuthController.logOut.bind(userAuthController));

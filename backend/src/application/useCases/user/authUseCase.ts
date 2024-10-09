@@ -112,6 +112,13 @@ class userAuthInteractor implements IUserAuthInteractor {
           result: null,
         };
       }
+      if (validUser.block) {
+        const error: CustomError = new Error(
+          "oops you have been blocked By Admin"
+        );
+        error.statusCode = 401;
+        throw error;
+      }
       const validPassword = validatePassword(password, validUser.password);
       if (!validPassword) {
         return {
@@ -120,7 +127,11 @@ class userAuthInteractor implements IUserAuthInteractor {
           result: null,
         };
       }
-      const jwtToken = this.jwt.generateToken(validUser._id, "user");
+      const jwtAccessToken = this.jwt.generateToken(validUser._id, "user");
+      const jwtRefreshToken = this.jwt.generateRefreshToken(
+        validUser._id,
+        "user"
+      );
       const { password: userPassword, ...userDataWithoutPassword } = validUser;
 
       return {
@@ -128,7 +139,39 @@ class userAuthInteractor implements IUserAuthInteractor {
         message: "logged SuccessFully",
         result: {
           user: userDataWithoutPassword,
+          tokenJwt: jwtAccessToken,
+          jwtRefreshToken: jwtRefreshToken,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  async googleSignUP(
+    user: IUser
+  ): Promise<{ status: boolean; message: string; result: IUserResult | null }> {
+    try {
+      const { email, userName } = user;
+      let validUser = await this.Repository.validUser(email);
+      if (!validUser) {
+        console.log(validUser, "is the auth");
+        validUser = await this.Repository.createUserFromGoogle(user);
+      }
+      const jwtToken = this.jwt.generateToken(validUser._id, "user");
+      const jwtRefreshToken = this.jwt.generateRefreshToken(
+        validUser._id,
+        "user"
+      );
+      const { ...userDataWithoutPassword } = validUser;
+
+      return {
+        status: true,
+        message: "logged SuccessFully",
+        result: {
+          user: userDataWithoutPassword,
           tokenJwt: jwtToken,
+          jwtRefreshToken: jwtRefreshToken,
         },
       };
     } catch (error) {

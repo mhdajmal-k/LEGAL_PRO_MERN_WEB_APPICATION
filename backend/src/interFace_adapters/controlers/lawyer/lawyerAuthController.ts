@@ -96,6 +96,40 @@ class LawyerAuthController {
     }
   }
 
+  async resendOtp(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const token = req.cookies.lawyerAuth_token;
+      console.log(token, "is the token");
+      if (!token) {
+        return res.status(400).json({
+          status: false,
+          message: "Session is expired, please try again",
+          result: {},
+        });
+      }
+      const response = await this.lawyerAuthInteractor.resendOtp(token);
+      if (response.status) {
+        res.clearCookie("lawyerAuth_token");
+        res.cookie("lawyerAuth_token", response.result, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 60 * 60 * 1000,
+        });
+        return res.status(200).json({
+          status: response.status,
+          message: response.message,
+          result: {},
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async verifyProfessionalData(
     req: AuthenticatedRequest,
     res: Response,
@@ -174,6 +208,19 @@ class LawyerAuthController {
       return res.status;
     } catch (error) {
       console.log(error);
+      next(error);
+    }
+  }
+  async LawyerLogOut(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      console.log("in logout");
+      res.clearCookie("auth_lawyerAccessToken");
+      res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
       next(error);
     }
   }

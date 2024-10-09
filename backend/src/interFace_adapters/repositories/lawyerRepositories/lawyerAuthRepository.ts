@@ -42,10 +42,12 @@ class LawyerAuthRepository implements iLawyerRepository {
   }
 
   async lawyerAlreadyExist(email: string): Promise<boolean> {
-    const lawyer = await Lawyer.findOne({ email: email }).lean();
+    const lawyer = await Lawyer.findOne({
+      $and: [{ email: email }, { verified: "verified" }],
+    }).lean();
     return !!lawyer;
   }
-  async getId(id: string): Promise<Types.ObjectId | null> {
+  async getId(id: string): Promise<Types.ObjectId | null | any> {
     try {
       console.log(id, "is the id");
       const userId = await Lawyer.findById({ _id: id });
@@ -58,6 +60,8 @@ class LawyerAuthRepository implements iLawyerRepository {
 
   async updateLawyerProfessionalData(data: any, id: string): Promise<boolean> {
     try {
+      data.practiceArea = JSON.parse(data.practiceArea);
+      data.languages = JSON.parse(data.languages);
       const updateLawyer = await Lawyer.findByIdAndUpdate(
         { _id: id },
         {
@@ -67,7 +71,7 @@ class LawyerAuthRepository implements iLawyerRepository {
             years_of_experience: data.yearsOfExperience,
             languages_spoken: data.languages,
             designation: data.designation,
-            aboutMe: data.aboutMe,
+            about: data.aboutMe,
           },
         },
         { new: true }

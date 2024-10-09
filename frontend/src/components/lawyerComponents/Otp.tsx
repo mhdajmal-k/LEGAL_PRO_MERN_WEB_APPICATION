@@ -14,8 +14,8 @@ import { lawyerResendOtp, lawyerVerifyOtp } from '../../services/store/features/
 const LawyerOtpFrom: React.FC = () => {
 
     const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
-    const [timer, setTimer] = useState<number>(60);
-    const [otpError, setOtpError] = useState<string>("");
+    const [timer, setTimer] = useState<number>(1);
+    const [, setOtpError] = useState<string>("");
     const [resendEnabled, setResendEnabled] = useState<boolean>(false);
 
     const navigate = useNavigate();
@@ -49,6 +49,7 @@ const LawyerOtpFrom: React.FC = () => {
             setOtp(newOtp);
             setOtpError("");
 
+
             const nextInput = document.getElementById(`otp-${index + 1}`);
             if (nextInput) {
                 (nextInput as HTMLInputElement).focus();
@@ -63,7 +64,7 @@ const LawyerOtpFrom: React.FC = () => {
                 toast(<CustomToast message={response.message} type="success" />);
             }
         } catch (error: any) {
-            console.log("error ")
+
             toast(<CustomToast message={error} type="error" />);
         }
 

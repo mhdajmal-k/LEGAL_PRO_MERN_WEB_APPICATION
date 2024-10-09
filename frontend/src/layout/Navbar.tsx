@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch()
-  const { userInfo, } = useSelector((state: RootState) => state.user)
+  const { userInfo } = useSelector((state: RootState) => state.user)
   const handleLogout = async () => {
     try {
       dispatch(userLogout())
@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-primary p-2 ">
       <div className="max-w-7xl mx-auto flex justify-between items-center ">
-        {/* Logo and Title */}
+
         <div className="flex items-center mx-2.5  m:items-center m:space-x-2  ">
           <img src={Logo} className='w-10' alt="logo" />
 
@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
 
         </div>
 
-        {/* Menu for larger screens */}
+
         <div className="hidden md:flex space-x-6 text-white">
           <Link to="/">
             HOME
@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
 
-        {/* SignUp and Become a Lawyer Buttons */}
+
         <div>
           {userInfo?.userName ? (
             <div className='flex items-center space-x-4'>
@@ -96,14 +96,14 @@ const Navbar: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="flex space-x-4">
+            <div className="sm:flex sm:space-x-4 hidden">
               <Button size="sm" className="bg-secondary text-black font-bold hover:bg-secondary-50">
                 <Link to="/signup">
                   SIGN UP
                 </Link>
               </Button>
               <Button size="sm" className="bg-secondary text-black font-bold hover:bg-secondary-50">
-                <Link to="/lawyer/signup" className='uppercase'>
+                <Link to="/lawyer/" className='uppercase'>
                   Become a Lawyer
                 </Link>
               </Button>

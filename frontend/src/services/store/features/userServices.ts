@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 // import {userSignData,userLoginData } from "../../../utils/type/userType";
 import axiosInstance from "../../api/axiosConfigue";
 import {
+  GOOGLESIGNUP,
   RESENDOTP,
   USERLOGIN,
   USERLOGOUT,
@@ -61,6 +62,30 @@ export const loginUser = createAsyncThunk(
     try {
       console.log(data, "from the userLogin thunk");
       const response = await axiosInstance.post(USERLOGIN, data);
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const googleSignup = createAsyncThunk(
+  "user/googleSignup",
+  async (
+    data: { email: string | null; userName: string | null },
+    { rejectWithValue }
+  ) => {
+    try {
+      console.log(data, "from the userLogin thunk");
+      const response = await axiosInstance.post(GOOGLESIGNUP, data);
+      console.log(response.data);
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";
