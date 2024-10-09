@@ -46,7 +46,7 @@ const lawyerSlice = createSlice({
       .addCase(
         lawyerVerifyOtp.fulfilled,
         (state, actions: PayloadAction<any>) => {
-          state.lawyerInfo = actions.payload;
+          state.lawyerInfo = actions.payload.result;
           state.loading = false;
         }
       )

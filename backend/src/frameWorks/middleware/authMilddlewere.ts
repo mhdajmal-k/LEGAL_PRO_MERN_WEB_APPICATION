@@ -55,14 +55,8 @@ export const authorization =
             status: false,
           });
         }
-        if (!existUser.block) {
-          return res.status(401).json({
-            message: "Authorization denied. User does not exist.",
-            result: {},
-            status: false,
-          });
-        }
-        if (!existUser.block) {
+
+        if (existUser.block) {
           return res.status(401).json({
             message: "OOPS YOU HAVE BEEN BLOCKED BY ADMIN",
             result: {},
@@ -79,7 +73,7 @@ export const authorization =
             status: false,
           });
         }
-        if (!existLawyer.block) {
+        if (existLawyer.block) {
           return res.status(401).json({
             message: "OOPS YOU HAVE BEEN BLOCKED BY ADMIN",
             result: {},

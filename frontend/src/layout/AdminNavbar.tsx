@@ -17,18 +17,18 @@ const AdminNavbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const dispatch: AppDispatch = useDispatch()
     const { lawyerInfo } = useSelector((state: RootState) => state.lawyer)
-    const handleLogout = async () => {
-        try {
-            dispatch(userLogout())
-            const response = await dispatch(logOut()).unwrap();
-            if (response) {
-                toast(<CustomToast message={response.message} type="success" />);
+    // const handleLogout = async () => {
+    //     try {
+    //         dispatch(userLogout())
+    //         const response = await dispatch(logOut()).unwrap();
+    //         if (response) {
+    //             toast(<CustomToast message={response.message} type="success" />);
 
-            }
-        } catch (error: any) {
-            toast(<CustomToast message={error} type="error" />);
-        }
-    }
+    //         }
+    //     } catch (error: any) {
+    //         toast(<CustomToast message={error} type="error" />);
+    //     }
+    // }
     return (
         <nav className="bg-primary p-2 ">
             <div className="max-w-7xl mx-auto flex justify-between items-center ">
@@ -62,7 +62,7 @@ const AdminNavbar: React.FC = () => {
                             <div className='flex items-center'>
                                 <FaHeart className="text-xl" />
                             </div>
-                            <Tooltip
+                            {/* <Tooltip
                                 content={
                                     <div className="py-2">
                                         <Button className="w-full mb-2 justify-start" variant="light">
@@ -83,7 +83,7 @@ const AdminNavbar: React.FC = () => {
                                     alt={lawyerInfo.userName}
                                     className="cursor-pointer"
                                 />
-                            </Tooltip>
+                            </Tooltip> */}
                             <div>
                                 <span className="text-sm font-medium">{lawyerInfo.userName}</span>
                             </div>

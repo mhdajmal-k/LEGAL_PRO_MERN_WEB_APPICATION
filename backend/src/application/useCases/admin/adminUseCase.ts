@@ -119,7 +119,17 @@ class AdminInteractor implements IAdminInteractor {
           result: [],
         };
       }
-      console.log(allUser, "is the useCase");
+      const updatedLawyer = await Promise.all(
+        allUser.map(async (lawyer: any) => {
+          console.log(lawyer, "is the map ");
+          if (lawyer.profile_picture) {
+            lawyer.profile_picture = await this.s3Service.fetchFile(
+              lawyer.profile_picture
+            );
+          }
+          return lawyer;
+        })
+      );
 
       return {
         statusCode: 200,
@@ -149,7 +159,7 @@ class AdminInteractor implements IAdminInteractor {
       const profile_picture = lawyer.profile_picture;
 
       const getProfile = await this.s3Service.fetchFile(profile_picture);
-
+      console.log(getProfile, "is the profile");
       const certificates = await Promise.all(
         lawyer.certifications.map((certificate: any) => {
           return certificate.certificate

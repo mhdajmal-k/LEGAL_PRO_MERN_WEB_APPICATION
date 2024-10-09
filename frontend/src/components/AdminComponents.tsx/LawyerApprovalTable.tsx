@@ -12,28 +12,6 @@ import { Lawyer } from '../../utils/type/lawyerType';
 
 
 
-// interface Lawyer {
-//     _id: string;
-//     userName: string;
-//     email: string;
-//     phoneNumber?: string;
-//     block: boolean;
-//     profile_picture: string;
-//     designation: string;
-//     years_of_experience: string;
-//     verified: boolean;
-//     city: string;
-//     state: string;
-//     languages_spoken: string[];
-//     practice_area: string[];
-//     certifications: Certification[];
-// }
-
-// interface Certification {
-//     certificateType: string;
-//     enrolmentNumber: string;
-//     certificate: string;
-// }
 
 interface CommonTableProps {
     columns: string[];
@@ -63,7 +41,7 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
     const handleVerify = async () => {
         if (selectedLawyer) {
             try {
-                alert(selectedLawyer._id)
+
                 const response = await dispatch(verifyLawyer(selectedLawyer._id)).unwrap();
                 if (response.status) {
                     onRefresh()

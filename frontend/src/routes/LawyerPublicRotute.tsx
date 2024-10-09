@@ -5,7 +5,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 const LawyerPublicRoute: React.FC = () => {
     const { lawyerInfo } = useSelector((state: RootState) => state.lawyer);
-    return lawyerInfo ? <Navigate to="/lawyer" /> : <Outlet />;
+    return lawyerInfo?.userName ? <Navigate to="/lawyer" /> : <Outlet />;
 };
 
 export default LawyerPublicRoute;

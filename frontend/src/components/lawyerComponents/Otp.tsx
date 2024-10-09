@@ -14,7 +14,7 @@ import { lawyerResendOtp, lawyerVerifyOtp } from '../../services/store/features/
 const LawyerOtpFrom: React.FC = () => {
 
     const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
-    const [timer, setTimer] = useState<number>(1);
+    const [timer, setTimer] = useState<number>(60);
     const [, setOtpError] = useState<string>("");
     const [resendEnabled, setResendEnabled] = useState<boolean>(false);
 
