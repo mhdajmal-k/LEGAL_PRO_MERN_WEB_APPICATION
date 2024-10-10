@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD3gTk1RyH0pgu52o_DJGMV-ZRDWAUkyLg",
-  authDomain: "legalpro-e248e.firebaseapp.com",
-  projectId: "legalpro-e248e",
-  storageBucket: "legalpro-e248e.appspot.com",
-  messagingSenderId: "615886116974",
-  appId: "1:615886116974:web:dd3520a8b9900458886e7f",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
