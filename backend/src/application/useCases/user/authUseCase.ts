@@ -191,7 +191,7 @@ class userAuthInteractor implements IUserAuthInteractor {
       const decodeToken = decodeSingUpToken(token);
       console.log(decodeToken);
       const currentTime = Math.floor(Date.now() / 1000);
-      if (decodeToken.otpExpiresAt < currentTime) {
+      if (decodeToken.exp < currentTime) {
         console.log("hi");
         const error: CustomError = new Error("Session is expired, try again");
         error.statusCode = 400;

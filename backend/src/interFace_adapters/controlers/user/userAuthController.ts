@@ -104,6 +104,12 @@ class UserAuthController {
           sameSite: "strict",
           maxAge: 5 * 60 * 1000,
         });
+        res.cookie("User_refreshToken", data.jwtRefreshToken, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
         res.clearCookie("auth_token");
         res.status(200).json({
           status: status,

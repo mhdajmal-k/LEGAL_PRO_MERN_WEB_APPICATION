@@ -23,9 +23,9 @@ const HeroSection: React.FC = () => {
                                         <br /> professionalism with modern technology
 
                                     </p>
-                                    <button
+                                    {/* <button
                                         className=' w-20 sm:w-32 h-auto sm:h-10 rounded-md bg-secondary   text-white'
-                                    >Book Now</button>
+                                    >Book Now</button> */}
                                 </div>
 
                             </div>

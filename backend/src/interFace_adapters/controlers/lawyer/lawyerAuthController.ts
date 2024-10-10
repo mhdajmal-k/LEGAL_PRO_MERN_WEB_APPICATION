@@ -79,6 +79,12 @@ class LawyerAuthController {
           sameSite: "strict",
           maxAge: 60 * 60 * 1000,
         });
+        res.cookie("Lawyer_refreshToken", data.refreshToken, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
         res.status(statusCode).json({
           status: true,
           message: message,
@@ -197,6 +203,11 @@ class LawyerAuthController {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 5 * 60 * 1000,
+        });
+        res.cookie("Lawyer_refreshToken", data.jwtRefreshToken, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         res.clearCookie("auth_token");
         res.status(statusCode).json({

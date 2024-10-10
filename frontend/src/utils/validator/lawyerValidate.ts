@@ -1,4 +1,3 @@
-// src/validation/SignupValidation.js
 import * as Yup from "yup";
 
 export const lawyerValidationSchema = Yup.object({

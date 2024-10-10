@@ -177,7 +177,7 @@ const LawyerProfile: React.FC = () => {
                                 value={formik.values.barCouncilNumber}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                readOnly={!editMode}
+                                readOnly
                                 isInvalid={editMode && !!formik.errors.barCouncilNumber && !!formik.touched.barCouncilNumber}
                                 errorMessage={editMode && formik.touched.barCouncilNumber && formik.errors.barCouncilNumber}
                             />
@@ -190,7 +190,7 @@ const LawyerProfile: React.FC = () => {
                                 value={formik.values.stateBarCouncilNumber}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                readOnly={!editMode}
+                                readOnly
                                 isInvalid={editMode && !!formik.errors.stateBarCouncilNumber && !!formik.touched.stateBarCouncilNumber}
                                 errorMessage={editMode && formik.touched.stateBarCouncilNumber && formik.errors.stateBarCouncilNumber}
                             />

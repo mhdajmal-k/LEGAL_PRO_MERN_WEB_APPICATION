@@ -51,7 +51,6 @@ class ErrorBoundary extends React.Component<
             );
         }
 
-        // If no error, render the children components
         return this.props.children;
     }
 }

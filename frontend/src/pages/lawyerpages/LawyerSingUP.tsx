@@ -5,7 +5,7 @@ import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from 'formik';
 import { clearError } from '../../services/store/features/lawyerSlilce';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { lawyerValidationSchema } from '../../utils/validator/lawyerValidate';
@@ -46,21 +46,21 @@ const LawyerSignUp: React.FC = () => {
         }
         return () => {
             if (previewAImage) {
-                URL.revokeObjectURL(previewAImage); // Cleanup memory when component unmounts or on re-render
+                URL.revokeObjectURL(previewAImage);
             }
         };
     }, [error, dispatch, previewAImage]);
 
     const formik = useFormik({
         initialValues: {
-            userName: 'Muhammed Ajmal k',
+            userName: '',
             email: '',
-            password: '@Ajmal111',
-            confirmPassword: '@Ajmal111',
-            gender: 'male',
-            city: 'calicut',
-            state: 'kerala',
-            zipCode: '679589',
+            password: '',
+            confirmPassword: '',
+            gender: '',
+            city: '',
+            state: '',
+            zipCode: '',
         },
         validationSchema: lawyerValidationSchema,
         validateOnChange: true,
@@ -277,9 +277,12 @@ const LawyerSignUp: React.FC = () => {
                             </div>
                             <div className=" bg-primary rounded-md w-full"></div>
                         </div>
+                        <p className="my-4 text-center text-sm text-gray-600">
+                            Already have an account? <Link to={"/lawyer/login"} className='text-blue-900' >Sign In </Link>
+                        </p>
                     </div>
                 </div>
-            </div>
+            </div >
             <LegalFooter />
         </>
     );

@@ -6,11 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../services/store/store';
 import { IoIosNotifications } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
-import { Tooltip, Avatar } from "@nextui-org/react";
-import { userLogout } from '../services/store/features/userSlice';
-import { logOut } from '../services/store/features/userServices';
-import CustomToast from '../components/userComponents/CustomToast';
-import { toast } from 'sonner';
+// import { Tooltip, Avatar } from "@nextui-org/react";
+// import { userLogout } from '../services/store/features/userSlice';
+// import { logOut } from '../services/store/features/userServices';
+// import CustomToast from '../components/userComponents/CustomToast';
+// import { toast } from 'sonner';
 
 
 const AdminNavbar: React.FC = () => {

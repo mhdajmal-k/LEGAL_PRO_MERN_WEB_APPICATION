@@ -24,10 +24,6 @@ export interface userLoginData {
   password: string;
 }
 
-// export interface lawyerInfo  {
-//   email?: string;
-// }
-
 export interface LawyerSignUpData {
   userName?: string;
   email?: string;
@@ -51,6 +47,3 @@ export interface LawyerProfessionalData {
   selectedImageIndia?: File;
   selectedImageKerala?: File;
 }
-// export interface UserFormData extends LawyerSignUpData||LawyerProfessionalData{
-
-// }
