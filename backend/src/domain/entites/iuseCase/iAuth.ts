@@ -22,6 +22,13 @@ interface IUserAuthInteractor {
   resendOtp(
     token: string
   ): Promise<{ status: boolean; message: string; result: string | null }>;
+  sendForgotPasswordLink(
+    email: string
+  ): Promise<{ status: boolean; message: string; result: string | null }>;
+  resetforgotpassword(
+    password: string,
+    token: string | any
+  ): Promise<{ status: boolean; message: string; result: string | null }>;
 }
 
 export default IUserAuthInteractor;

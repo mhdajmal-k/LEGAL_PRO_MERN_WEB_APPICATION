@@ -169,7 +169,7 @@ class LawyerAuthController {
         files,
         id
       );
-      console.log("success");
+
       res.clearCookie("auth_lawyerAccessToken");
       res.status(response.statusCode).json({
         status: true,
@@ -219,6 +219,74 @@ class LawyerAuthController {
       return res.status;
     } catch (error) {
       console.log(error);
+      next(error);
+    }
+  }
+
+  async forgotpassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { email } = req.body;
+
+      if (email.trim() == "") {
+        return res.status(400).json({
+          status: false,
+          message: "email is Required",
+          result: {},
+        });
+      }
+      const response = await this.lawyerAuthInteractor.sendForgotPasswordLink(
+        email
+      );
+      if (response.status) {
+        res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: {},
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async resetforgotpassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const token = req.params.token as string | undefined;
+      if (!token) {
+        return res.status(401).json({
+          status: false,
+          message: "Invalid token",
+          result: {},
+        });
+      }
+      const { password } = req.body;
+
+      if (!password || password.trim() === "") {
+        return res.status(400).json({
+          status: false,
+          message: "Password is required",
+          result: {},
+        });
+      }
+      const response = await this.lawyerAuthInteractor.resetforgotpassword(
+        password,
+        token
+      );
+      if (response.status) {
+        res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: {},
+        });
+      }
+    } catch (error) {
       next(error);
     }
   }

@@ -62,6 +62,14 @@ lawyerAuthRouter.post(
   lawyerAuthController.loginLawyer.bind(lawyerAuthController)
 );
 lawyerAuthRouter.post(
+  "/forgotpassword",
+  lawyerAuthController.forgotpassword.bind(lawyerAuthController)
+);
+lawyerAuthRouter.post(
+  "/resetforgotpassword/:token",
+  lawyerAuthController.resetforgotpassword.bind(lawyerAuthController)
+);
+lawyerAuthRouter.post(
   "/logout",
   lawyerAuthController.LawyerLogOut.bind(lawyerAuthController)
 );

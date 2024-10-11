@@ -67,5 +67,21 @@ class UserAuthRepository implements iUserRepository {
       throw error;
     }
   }
+  async updatePassword(password: string, id: string): Promise<any> {
+    try {
+      const hashedPassword = hashPassword(password);
+      const updatedPasswordUser = await User.findByIdAndUpdate(
+        { _id: id },
+        {
+          $set: { password: hashedPassword },
+        },
+        { new: true }
+      );
+      return updatedPasswordUser;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 export default UserAuthRepository;

@@ -42,4 +42,12 @@ authRouter.post(
   "/googlesignup",
   userAuthController.googleSignUp.bind(userAuthController)
 );
+authRouter.post(
+  "/forgotpassword",
+  userAuthController.forgotpassword.bind(userAuthController)
+);
+authRouter.post(
+  "/resetforgotpassword/:token",
+  userAuthController.resetforgotpassword.bind(userAuthController)
+);
 authRouter.post("/logout", userAuthController.logOut.bind(userAuthController));

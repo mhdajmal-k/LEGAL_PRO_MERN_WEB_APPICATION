@@ -31,7 +31,6 @@ class LawyerAuthRepository implements iLawyerRepository {
   }
   async validLawyer(email: string): Promise<any> {
     try {
-      console.log(email, "is the repo email");
       const lawyer = await Lawyer.findOne({ email: email }).lean();
       console.log(lawyer);
       return lawyer;
@@ -82,5 +81,22 @@ class LawyerAuthRepository implements iLawyerRepository {
       throw error;
     }
   }
+  async updatePassword(password: string, id: string): Promise<any> {
+    try {
+      const hashedPassword = hashPassword(password);
+      const updatedPasswordLawyer = await Lawyer.findByIdAndUpdate(
+        { _id: id },
+        {
+          $set: { password: hashedPassword },
+        },
+        { new: true }
+      );
+      return updatedPasswordLawyer;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
+
 export default LawyerAuthRepository;

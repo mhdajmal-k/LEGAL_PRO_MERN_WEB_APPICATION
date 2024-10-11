@@ -26,9 +26,22 @@ interface ILawyerAuthInteractor {
     message: string;
     result: IUserResult | null;
   }>;
-  resendOtp(
-    token: string
+  sendForgotPasswordLink(email: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | null;
+  }>;
+  resetforgotpassword(
+    password: string,
+    token: string | any
   ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | null;
+  }>;
+  resendOtp(token: string): Promise<{
     statusCode: number;
     status: boolean;
     message: string;

@@ -1,9 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-// import {userSignData,userLoginData } from "../../../utils/type/userType";
 import axiosInstance from "../../api/axiosConfigue";
 import {
+  FORGOTPASSWORD,
   GOOGLESIGNUP,
   RESENDOTP,
+  RESETFORGOTPASSWORD,
   USERLOGIN,
   USERLOGOUT,
   USERSIGNUP,
@@ -105,7 +106,6 @@ export const resendOtp = createAsyncThunk(
   "user/resenedOtp",
   async (_, { rejectWithValue }) => {
     try {
-      console.log("hi");
       const response = await axiosInstance.post(RESENDOTP);
       return response.data;
     } catch (error) {
@@ -125,9 +125,57 @@ export const logOut = createAsyncThunk(
   "user/logOut",
   async (_, { rejectWithValue }) => {
     try {
-      console.log("hi");
       const response = await axiosInstance.post(USERLOGOUT);
-      console.log(response, "this is the response");
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const forgotpassword = createAsyncThunk(
+  "user/forgotpassword",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post<response>(FORGOTPASSWORD, {
+        email,
+      });
+
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const resetForgotPassword = createAsyncThunk(
+  "user/resetForgotPassword",
+  async (
+    data: { password: string; token: string | undefined },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.post<response>(
+        `${RESETFORGOTPASSWORD}/${data.token}`,
+        {
+          password: data.password,
+        }
+      );
+
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";

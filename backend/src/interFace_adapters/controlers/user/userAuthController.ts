@@ -207,6 +207,79 @@ class UserAuthController {
     }
   }
 
+  async forgotpassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      console.log("hi in forgot");
+      const { email } = req.body;
+      console.log(email);
+      if (email.trim() == "") {
+        return res.status(400).json({
+          status: false,
+          message: "email is Required",
+          result: {},
+        });
+      }
+      const response = await this.userAuthInteractor.sendForgotPasswordLink(
+        email
+      );
+      if (response.status) {
+        res.status(200).json({
+          status: response.status,
+          message: response.message,
+          result: {},
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async resetforgotpassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const token = req.params.token as string | undefined;
+      console.log(token, "is the extracted");
+      if (!token) {
+        return res.status(401).json({
+          status: false,
+          message: "Invalid token",
+          result: {},
+        });
+      }
+
+      const { password } = req.body;
+
+      if (!password || password.trim() === "") {
+        return res.status(400).json({
+          status: false,
+          message: "Password is required",
+          result: {},
+        });
+      }
+      console.log("hi");
+      const response = await this.userAuthInteractor.resetforgotpassword(
+        password,
+        token
+      );
+
+      if (response.status) {
+        res.status(200).json({
+          status: response.status,
+          message: response.message,
+          result: {},
+        });
+      }
+    } catch (error) {
+      // Pass the error to the error handling middleware
+      next(error);
+    }
+  }
   async logOut(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       console.log("in logout");

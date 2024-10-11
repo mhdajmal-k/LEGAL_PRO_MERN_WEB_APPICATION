@@ -10,10 +10,13 @@ import { AppDispatch, RootState } from '../../services/store/store'
 import { loginLawyer } from '../../services/store/features/lawyerServices'
 import { lawyerLoginValidationSchema } from '../../utils/validator/lawyerValidate'
 import { clearError } from '../../services/store/features/lawyerSlilce'
+import ResetPasswordModal from '../ForgotPasswordModa'
 
 const LoginForm: React.FC = () => {
     const navigate = useNavigate();
     const dispatch: AppDispatch = useDispatch();
+    const [isModalOpen, setModalOpen] = useState<boolean>(false);
+
     const { loading, error } = useSelector((state: RootState) => state.lawyer);
     const [showPassword, setShowPassword] = useState<Boolean>(false);
     const formik = useFormik({
@@ -96,9 +99,12 @@ const LoginForm: React.FC = () => {
                                     </button>
                                 </div>
                                 <div className="text-right my-4">
-                                    <a href="#" className="text-sm text-blue-600 hover:underline">
+                                    <a className="text-sm text-blue-600 hover:underline  cursor-pointer" onClick={() => setModalOpen(true)}>
                                         Forgot Password?
                                     </a>
+                                    <div>
+                                        <ResetPasswordModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} role="lawyer" />
+                                    </div>
                                 </div>
                                 <Button color="primary" type="submit" className="w-full">
                                     {loading ? "Signing Up..." : "Sign Up"}

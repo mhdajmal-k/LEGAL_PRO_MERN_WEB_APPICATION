@@ -2,9 +2,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosConfigue";
 import { LawyerSignUpData } from "../../../utils/type/userType";
 import {
+  LAWYERFORGOTPASSWORD,
   LAWYERLOGIN,
   LAWYERLOGOUT,
   LAWYERRESENDOTP,
+  LAWYERRESETFORGOTPASSWORD,
   LAWYERSIGNUP,
   LAWYERVERIFYINGOTP,
   LAWYERVERIFYPROFESSIONALDATA,
@@ -122,6 +124,57 @@ export const loginLawyer = createAsyncThunk(
     try {
       console.log(data, "from the userLogin thunk");
       const response = await axiosInstance.post(LAWYERLOGIN, data);
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const lawyerForgotpassword = createAsyncThunk(
+  "lawyer/lawyerForgotpassword",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      alert("hi");
+      const response = await axiosInstance.post(LAWYERFORGOTPASSWORD, {
+        email,
+      });
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const lawyerResetForgotPassword = createAsyncThunk(
+  "lawyer/resetForgotPassword",
+  async (
+    data: { password: string; token: string | undefined },
+    { rejectWithValue }
+  ) => {
+    try {
+      alert("hi");
+      const response = await axiosInstance.post<response>(
+        `${LAWYERRESETFORGOTPASSWORD}/${data.token}`,
+        {
+          password: data.password,
+        }
+      );
+
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";
