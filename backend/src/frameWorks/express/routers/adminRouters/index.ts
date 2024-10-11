@@ -9,11 +9,11 @@ import EmailService from "../../../services/mailer";
 import { authorization } from "../../../middleware/authMilddlewere";
 
 export const adminRouter = Router();
-<<<<<<< HEAD
+
 const jwtToken = new JwtToken(config.JWT_SECRET, config.JWT_REFRESH_SECRET);
-=======
-const jwtToken = new JwtToken(config.JWT_SECRET);
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+
+// const jwtToken = new JwtToken(config.JWT_SECRET);
+// >>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 const repository = new AdminRepository();
 const IS3Services = new S3Service();
 const emailService = new EmailService(
@@ -36,7 +36,6 @@ adminRouter.get(
   adminController.getUsers.bind(adminController)
 );
 adminRouter.get(
-<<<<<<< HEAD
   "/pendinglawyers",
   authorization("admin"),
   adminController.getPendingApprovalLawyer.bind(adminController)
@@ -45,11 +44,10 @@ adminRouter.get(
   "/lawyers",
   authorization("admin"),
   adminController.getLawyers.bind(adminController)
-=======
-  "/lawyers",
-  authorization("admin"),
-  adminController.getLawyer.bind(adminController)
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+
+  // "/lawyers",
+  // authorization("admin"),
+  // adminController.getLawyer.bind(adminController)
 );
 adminRouter.get(
   "/lawyer/:id",

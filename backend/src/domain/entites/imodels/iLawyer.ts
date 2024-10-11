@@ -25,10 +25,7 @@ export interface ILawyer extends Document {
   practice_area?: string[];
   block?: boolean;
   tokenJwt?: string;
-<<<<<<< HEAD
   refreshToken?: string | null;
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 }
 
 export interface IProfessionalData {

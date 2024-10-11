@@ -10,10 +10,7 @@ import {
   ADMINLOGOUT,
   BLOCKANDUNBLOCK,
   FETCHLAWYER,
-<<<<<<< HEAD
   FETCHLAWYERS,
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
   FETCHPENDINGAPPROVALLAWYERS,
   FETCHUSER,
   UNVERIFYLAWYER,
@@ -106,7 +103,7 @@ export const getLawyer = createAsyncThunk(
     }
   }
 );
-<<<<<<< HEAD
+
 export const getLawyers = createAsyncThunk(
   "admin/getLawyers",
   async (_, { rejectWithValue }) => {
@@ -127,8 +124,7 @@ export const getLawyers = createAsyncThunk(
     }
   }
 );
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+1;
 export const verifyLawyer = createAsyncThunk(
   "admin/verifyLawyer",
   async (id: string, { rejectWithValue }) => {
@@ -184,22 +180,18 @@ export const undVerifyLawyer = createAsyncThunk(
 export const blockandUnblock = createAsyncThunk(
   "admin/blockandUnblock",
   async (
-<<<<<<< HEAD
     { id, state, action }: { id: string; state: boolean; action: string },
-=======
-    { id, state }: { id: string; state: boolean },
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+
+    //     { id, state }: { id: string; state: boolean },
+    // >>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
     { rejectWithValue }
   ) => {
     try {
       console.log(state, "is the state");
       const response = await axiosInstance.put<response>(
         `${BLOCKANDUNBLOCK}/${id}`,
-<<<<<<< HEAD
+
         { state, action }
-=======
-        { state }
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       );
       return response.data;
     } catch (error) {

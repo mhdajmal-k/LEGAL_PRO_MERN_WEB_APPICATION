@@ -9,10 +9,8 @@ import UserProfileLayout from '../../components/userComponents/UserProfileLayout
 import Appointment from '../../components/userComponents/Appoinement'
 import ProfileData from '../../components/userComponents/ProfileData'
 import ProtectRoute from '../UserProtectRoute'
-<<<<<<< HEAD
 import ForgotPasswordFrom from '../../components/ForgotPasswordFrom'
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+
 
 const UserRouters: React.FC = () => {
   return (
@@ -22,10 +20,7 @@ const UserRouters: React.FC = () => {
           <Route path='/signup' element={<SignUp />} />
           <Route path='/otpVerify' element={<OtpVerify />} />
           <Route path='/login' element={<LoginPage />} />
-<<<<<<< HEAD
           <Route path='/forgotpassword/:token' element={<ForgotPasswordFrom />} />
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
         </Route>
         <Route path='/' element={<Home />} />
         <Route element={<ProtectRoute />}>

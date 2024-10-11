@@ -1,7 +1,7 @@
-<<<<<<< HEAD
-=======
-// src/validation/SignupValidation.js
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+// <<<<<<< HEAD
+// =======
+// // src/validation/SignupValidation.js
+// >>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 import * as Yup from "yup";
 
 export const lawyerValidationSchema = Yup.object({

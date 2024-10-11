@@ -16,15 +16,14 @@ interface IAdminInteractor {
     message: string;
     result: [];
   }>;
-<<<<<<< HEAD
+
   getLawyersList(): Promise<{
     statusCode: number;
     status: boolean;
     message: string;
     result: any[];
   }>;
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+
   getLawyer(id: string): Promise<{
     statusCode: number;
     status: boolean;
@@ -48,12 +47,8 @@ interface IAdminInteractor {
   }>;
   blockandUnblock(
     id: string,
-<<<<<<< HEAD
-    state: boolean,
-    action: string
-=======
+    action: string,
     state: boolean
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
   ): Promise<{
     statusCode: number;
     status: boolean;

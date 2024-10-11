@@ -1,19 +1,12 @@
 import React, { useEffect, useState } from 'react';
-<<<<<<< HEAD
-=======
-import Navbar from '../../layout/Navbar';
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+
 import LegalFooter from '../../layout/footer';
 import { Button, Input } from '@nextui-org/react';
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from 'formik';
 import { clearError } from '../../services/store/features/lawyerSlilce';
 import { toast } from 'sonner';
-<<<<<<< HEAD
 import { Link, useNavigate } from 'react-router-dom';
-=======
-import { useNavigate } from 'react-router-dom';
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { lawyerValidationSchema } from '../../utils/validator/lawyerValidate';
@@ -21,10 +14,7 @@ import { signUpLawyer } from '../../services/store/features/lawyerServices';
 import CustomToast from '../../components/userComponents/CustomToast';
 import { IoMdClose } from "react-icons/io";
 import { LawyerSignUpData } from '../../utils/type/userType';
-<<<<<<< HEAD
 import AdminNavbar from '../../layout/AdminNavbar';
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
 
 const LawyerSignUp: React.FC = () => {
@@ -57,18 +47,15 @@ const LawyerSignUp: React.FC = () => {
         }
         return () => {
             if (previewAImage) {
-<<<<<<< HEAD
-                URL.revokeObjectURL(previewAImage);
-=======
+
+                // URL.revokeObjectURL(previewAImage);
                 URL.revokeObjectURL(previewAImage); // Cleanup memory when component unmounts or on re-render
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
             }
         };
     }, [error, dispatch, previewAImage]);
 
     const formik = useFormik({
         initialValues: {
-<<<<<<< HEAD
             userName: '',
             email: '',
             password: '',
@@ -77,16 +64,6 @@ const LawyerSignUp: React.FC = () => {
             city: '',
             state: '',
             zipCode: '',
-=======
-            userName: 'Muhammed Ajmal k',
-            email: '',
-            password: '@Ajmal111',
-            confirmPassword: '@Ajmal111',
-            gender: 'male',
-            city: 'calicut',
-            state: 'kerala',
-            zipCode: '679589',
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
         },
         validationSchema: lawyerValidationSchema,
         validateOnChange: true,
@@ -105,10 +82,7 @@ const LawyerSignUp: React.FC = () => {
                 const lawyerSignUpData: LawyerSignUpData = Object.fromEntries(formData) as LawyerSignUpData;
                 console.log(lawyerSignUpData)
                 const response = await dispatch(signUpLawyer(lawyerSignUpData)).unwrap();
-<<<<<<< HEAD
-=======
                 console.log(response, "checking.....")
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                 if (response.status) {
                     toast(<CustomToast message={response.message} type="success" />);
                     navigate('/lawyer/verify-otp');
@@ -131,11 +105,8 @@ const LawyerSignUp: React.FC = () => {
 
     return (
         <>
-<<<<<<< HEAD
+
             <AdminNavbar />
-=======
-            <Navbar />
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
             <div className='container'>
                 <div className='flex-grow sm:mx-auto min-h-screen'>
                     <h1 className="text-2xl font-bold p-4 text-center">Sign up as Lawyer</h1>
@@ -311,18 +282,12 @@ const LawyerSignUp: React.FC = () => {
                             </div>
                             <div className=" bg-primary rounded-md w-full"></div>
                         </div>
-<<<<<<< HEAD
                         <p className="my-4 text-center text-sm text-gray-600">
                             Already have an account? <Link to={"/lawyer/login"} className='text-blue-900' >Sign In </Link>
                         </p>
                     </div>
                 </div>
             </div >
-=======
-                    </div>
-                </div>
-            </div>
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
             <LegalFooter />
         </>
     );

@@ -2,26 +2,17 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosConfigue";
 import { LawyerSignUpData } from "../../../utils/type/userType";
 import {
-<<<<<<< HEAD
   LAWYERFORGOTPASSWORD,
   LAWYERLOGIN,
   LAWYERLOGOUT,
   LAWYERRESENDOTP,
   LAWYERRESETFORGOTPASSWORD,
-=======
-  LAWYERLOGIN,
-  LAWYERRESENDOTP,
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
   LAWYERSIGNUP,
   LAWYERVERIFYINGOTP,
   LAWYERVERIFYPROFESSIONALDATA,
 } from "../../api/lawerApi";
 import { AxiosError } from "axios";
-<<<<<<< HEAD
 import { LawyerSignUpResponse, response } from "../../../utils/type/lawyerType";
-=======
-import { LawyerSignUpResponse } from "../../../utils/type/lawyerType";
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
 export const signUpLawyer = createAsyncThunk(
   "lawyer/singUpUser",
@@ -147,7 +138,6 @@ export const loginLawyer = createAsyncThunk(
     }
   }
 );
-<<<<<<< HEAD
 export const lawyerForgotpassword = createAsyncThunk(
   "lawyer/lawyerForgotpassword",
   async (email: string, { rejectWithValue }) => {
@@ -177,14 +167,12 @@ export const lawyerResetForgotPassword = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      alert("hi");
       const response = await axiosInstance.post<response>(
         `${LAWYERRESETFORGOTPASSWORD}/${data.token}`,
         {
           password: data.password,
         }
       );
-
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";
@@ -219,5 +207,3 @@ export const lawyerLogOut = createAsyncThunk(
     }
   }
 );
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611

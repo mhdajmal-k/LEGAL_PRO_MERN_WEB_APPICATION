@@ -1,7 +1,5 @@
-<<<<<<< HEAD
 import { error } from "console";
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+
 import iAdminRepository from "../../../domain/entites/irepositories/IadminRepositries";
 import Lawyer from "../../../frameWorks/database/models/lawyerModel";
 import User from "../../../frameWorks/database/models/userModel";
@@ -56,7 +54,7 @@ class AdminRepository implements iAdminRepository {
       throw error;
     }
   }
-<<<<<<< HEAD
+
   async getLawyers(): Promise<any> {
     try {
       const lawyers = await Lawyer.find({ verified: "verified" })
@@ -69,8 +67,7 @@ class AdminRepository implements iAdminRepository {
       throw error;
     }
   }
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+
   async getLawyer(id: string): Promise<any> {
     try {
       const lawyer = await Lawyer.findById({ _id: id });
@@ -115,7 +112,6 @@ class AdminRepository implements iAdminRepository {
       throw error;
     }
   }
-<<<<<<< HEAD
   async blockorUnblock(
     id: string,
     blockState: boolean,
@@ -140,16 +136,15 @@ class AdminRepository implements iAdminRepository {
       }
 
       if (updated) return updated;
-=======
-  async blockorUnblock(id: string, blockState: boolean): Promise<any> {
-    try {
-      const updateUser = await User.findByIdAndUpdate(
-        id,
-        { block: blockState },
-        { new: true }
-      );
-      if (updateUser) return updateUser;
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+
+      // async blockorUnblock(id: string, blockState: boolean): Promise<any> {
+      //   try {
+      //     const updateUser = await User.findByIdAndUpdate(
+      //       id,
+      //       { block: blockState },
+      //       { new: true }
+      //     );
+      //     if (updateUser) return updateUser;
     } catch (error) {
       throw error;
     }

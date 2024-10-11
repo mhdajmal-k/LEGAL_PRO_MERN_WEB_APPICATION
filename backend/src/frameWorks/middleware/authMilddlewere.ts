@@ -21,11 +21,9 @@ export const authorization =
     //   });
     // }
 
-<<<<<<< HEAD
     const jwt = new JwtToken(config.JWT_SECRET, config.JWT_REFRESH_SECRET);
-=======
-    const jwt = new JwtToken(config.JWT_SECRET);
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+
+    // const jwt = new JwtToken(config.JWT_SECRET);
     let decodeToken;
 
     try {
@@ -59,7 +57,6 @@ export const authorization =
             status: false,
           });
         }
-<<<<<<< HEAD
 
         if (existUser.block) {
           return res.status(401).json({
@@ -68,8 +65,6 @@ export const authorization =
             status: false,
           });
         }
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       } else if (decodeToken.role === "lawyer") {
         const lawyerRepository = new LawyerAuthRepository();
         const existLawyer = await lawyerRepository.getId(decodeToken.id);
@@ -80,7 +75,6 @@ export const authorization =
             status: false,
           });
         }
-<<<<<<< HEAD
         if (existLawyer.block) {
           return res.status(401).json({
             message: "OOPS YOU HAVE BEEN BLOCKED BY ADMIN",
@@ -96,22 +90,21 @@ export const authorization =
           "is hteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
         );
         if (!existAdmin) {
-=======
-      } else if (decodeToken.role === "admin") {
-        const adminRepo = new AdminRepository();
-        const existLawyer = await adminRepo.getAdmin(decodeToken.id);
-        if (!existLawyer) {
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
-          return res.status(401).json({
-            message: "Authorization denied,admin does not exist.",
-            result: {},
-            status: false,
-          });
+        } else if (decodeToken.role === "admin") {
+          const adminRepo = new AdminRepository();
+          const existLawyer = await adminRepo.getAdmin(decodeToken.id);
+          if (!existLawyer) {
+            return res.status(401).json({
+              message: "Authorization denied,admin does not exist.",
+              result: {},
+              status: false,
+            });
+          }
         }
-      }
 
-      req.user = { id: decodeToken.id };
-      next();
+        req.user = { id: decodeToken.id };
+        next();
+      }
     } catch (error) {
       console.error("Authorization Error:", error);
       return res.status(500).json({

@@ -79,15 +79,12 @@ class LawyerAuthController {
           sameSite: "strict",
           maxAge: 60 * 60 * 1000,
         });
-<<<<<<< HEAD
         res.cookie("Lawyer_refreshToken", data.refreshToken, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
         res.status(statusCode).json({
           status: true,
           message: message,
@@ -105,7 +102,6 @@ class LawyerAuthController {
     }
   }
 
-<<<<<<< HEAD
   async resendOtp(
     req: Request,
     res: Response,
@@ -140,8 +136,6 @@ class LawyerAuthController {
     }
   }
 
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
   async verifyProfessionalData(
     req: AuthenticatedRequest,
     res: Response,
@@ -175,11 +169,7 @@ class LawyerAuthController {
         files,
         id
       );
-<<<<<<< HEAD
-
-=======
       console.log("success");
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       res.clearCookie("auth_lawyerAccessToken");
       res.status(response.statusCode).json({
         status: true,
@@ -214,14 +204,11 @@ class LawyerAuthController {
           sameSite: "strict",
           maxAge: 5 * 60 * 1000,
         });
-<<<<<<< HEAD
         res.cookie("Lawyer_refreshToken", data.jwtRefreshToken, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
         res.clearCookie("auth_token");
         res.status(statusCode).json({
           status: status,
@@ -235,7 +222,6 @@ class LawyerAuthController {
       next(error);
     }
   }
-<<<<<<< HEAD
 
   async forgotpassword(
     req: Request,
@@ -317,8 +303,6 @@ class LawyerAuthController {
       next(error);
     }
   }
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 }
 
 export default LawyerAuthController;

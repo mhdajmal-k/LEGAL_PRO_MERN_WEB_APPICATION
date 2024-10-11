@@ -8,7 +8,6 @@ import { FiLock } from "react-icons/fi";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { AiOutlineWallet } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
-<<<<<<< HEAD
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../services/store/store';
 import { userLogout } from '../../services/store/features/userSlice';
@@ -37,16 +36,8 @@ const UserProfileLayout = () => {
             toast(<CustomToast message={error} type="error" />);
         }
     }
-=======
 
-const UserProfileLayout = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
 
-    // Function to check if the current route matches a button path
-    const isActive = (path: string) => location.pathname === path;
-
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
     return (
         <React.Fragment>
             <Navbar />
@@ -56,24 +47,17 @@ const UserProfileLayout = () => {
                         <div className="mb-4">
                             <div className="w-24 h-24 rounded-full border-4 border-white overflow-hidden">
                                 <img
-<<<<<<< HEAD
                                     src="https://via.placeholder.com/"
-=======
-                                    src="https://via.placeholder.com/150"
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                                     alt="User Avatar"
                                     className="w-full h-full object-cover"
                                 />
                             </div>
                         </div>
 
-<<<<<<< HEAD
                         <h2 className="text-2xl font-bold mb-2">{userInfo?.userName}</h2>
                         <p className="text-sm mb-4 opacity-75">{userInfo?.email}</p>
-=======
                         <h2 className="text-2xl font-bold mb-2">Ajmal</h2>
                         <p className="text-sm mb-4 opacity-75">ajmal@example.com</p>
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
                         <div className="w-full ">
                             <Button
@@ -100,13 +84,12 @@ const UserProfileLayout = () => {
                             >
                                 <AiOutlineWallet className="mr-2 text-base" /> Wallet
                             </Button>
-<<<<<<< HEAD
+                            {/* <<<<<<< HEAD
                             <Button className="w-full mt-11 text-black" onClick={handleLogout} color="danger">
                                 <FiLogOut className="mr-2 text-base" />Log Out
-=======
+======= */}
                             <Button className="w-full mt-11 text-black" color="danger">
                                 <FiLogOut className="mr-2 text-base" /> Log Out
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                             </Button>
                         </div>
                     </div>

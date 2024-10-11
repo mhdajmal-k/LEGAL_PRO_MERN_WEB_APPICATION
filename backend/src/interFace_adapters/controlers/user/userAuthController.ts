@@ -96,7 +96,6 @@ class UserAuthController {
       }
       const response = await this.userAuthInteractor.userLogin(req.body);
 
-<<<<<<< HEAD
       const { status, message, result } = response;
       if (status) {
         const data = result as IUserResult;
@@ -147,8 +146,6 @@ class UserAuthController {
       }
       const response = await this.userAuthInteractor.googleSignUP(req.body);
 
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       const { status, message, result } = response;
       if (status) {
         const data = result as IUserResult;
@@ -186,11 +183,7 @@ class UserAuthController {
       console.log(token, "is the token");
       if (!token) {
         return res.status(400).json({
-<<<<<<< HEAD
           status: false,
-=======
-          status: status,
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
           message: "Session is expired, please try again",
           result: {},
         });
@@ -214,7 +207,6 @@ class UserAuthController {
     }
   }
 
-<<<<<<< HEAD
   async forgotpassword(
     req: Request,
     res: Response,
@@ -288,8 +280,6 @@ class UserAuthController {
       next(error);
     }
   }
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
   async logOut(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       console.log("in logout");
