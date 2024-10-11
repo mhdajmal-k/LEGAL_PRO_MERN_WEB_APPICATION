@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react';
 import about from "../../assets/images/aboutus.jpg";
 
@@ -61,3 +62,16 @@ const AboutUs: React.FC = () => {
 
 
 export default AboutUs;
+=======
+import React from 'react'
+
+const AboutUs: React.FC = () => {
+    return (
+        <div className='min-h-screen container'>
+
+        </div>
+    )
+}
+
+export default AboutUs
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611

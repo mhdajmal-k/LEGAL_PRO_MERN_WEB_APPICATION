@@ -61,10 +61,13 @@ class AdminInteractor implements IAdminInteractor {
         throw error;
       }
       const jwtToken = this.jwt.generateToken(adminUser._id, "admin");
+<<<<<<< HEAD
       const jwtRefreshToken = this.jwt.generateRefreshToken(
         adminUser._id,
         "admin"
       );
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       const { password: userPassword, ...userDataWithoutPassword } = adminUser;
 
       return {
@@ -73,7 +76,10 @@ class AdminInteractor implements IAdminInteractor {
         result: {
           user: userDataWithoutPassword,
           tokenJwt: jwtToken,
+<<<<<<< HEAD
           jwtRefreshToken: jwtRefreshToken,
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
         },
       };
     } catch (error) {
@@ -119,6 +125,7 @@ class AdminInteractor implements IAdminInteractor {
           result: [],
         };
       }
+<<<<<<< HEAD
       const updatedLawyer = await Promise.all(
         allUser.map(async (lawyer: any) => {
           console.log(lawyer, "is the map ");
@@ -130,6 +137,9 @@ class AdminInteractor implements IAdminInteractor {
           return lawyer;
         })
       );
+=======
+      console.log(allUser, "is the useCase");
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
       return {
         statusCode: 200,
@@ -148,7 +158,10 @@ class AdminInteractor implements IAdminInteractor {
     result: [];
   }> {
     try {
+<<<<<<< HEAD
       console.log("controller");
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       const lawyer = await this.Repository.getLawyer(id);
       if (!lawyer) {
         const error: CustomError = new Error("Lawyer not found");
@@ -159,7 +172,11 @@ class AdminInteractor implements IAdminInteractor {
       const profile_picture = lawyer.profile_picture;
 
       const getProfile = await this.s3Service.fetchFile(profile_picture);
+<<<<<<< HEAD
       console.log(getProfile, "is the profile");
+=======
+
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       const certificates = await Promise.all(
         lawyer.certifications.map((certificate: any) => {
           return certificate.certificate
@@ -185,6 +202,7 @@ class AdminInteractor implements IAdminInteractor {
       throw error;
     }
   }
+<<<<<<< HEAD
   async getLawyersList(): Promise<{
     statusCode: number;
     status: boolean;
@@ -220,6 +238,8 @@ class AdminInteractor implements IAdminInteractor {
       throw error;
     }
   }
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
   async verifyLawyer(id: string): Promise<{
     statusCode: number;
     status: boolean;
@@ -298,8 +318,12 @@ class AdminInteractor implements IAdminInteractor {
   }
   async blockandUnblock(
     id: string,
+<<<<<<< HEAD
     blockState: boolean,
     action: string
+=======
+    blockState: boolean
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
   ): Promise<{
     statusCode: number;
     status: boolean;
@@ -310,8 +334,12 @@ class AdminInteractor implements IAdminInteractor {
       console.log(blockState, "is the block state");
       const updateUserData = await this.Repository.blockorUnblock(
         id,
+<<<<<<< HEAD
         blockState,
         action
+=======
+        blockState
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       );
       if (!updateUserData) {
         const error: CustomError = new Error("Failed to verify Lawyer");

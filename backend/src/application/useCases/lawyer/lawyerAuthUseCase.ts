@@ -134,7 +134,11 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
           }
         }
       }
+<<<<<<< HEAD
 
+=======
+      console.log("wating in the upload file ");
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       const certificates = [
         {
           certificateType: "Bar Council of India",
@@ -148,7 +152,11 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         },
       ];
       data.certificate = certificates;
+<<<<<<< HEAD
       console.log(data, "is the data in the backend ");
+=======
+
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       const updateLawyer = await this.Repository.updateLawyerProfessionalData(
         data,
         id as string
@@ -178,12 +186,17 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
     try {
       const { email, password } = user;
       const validLawyer = await this.Repository.validLawyer(email);
+<<<<<<< HEAD
+=======
+      console.log(validLawyer);
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       if (!validLawyer) {
         const error: CustomError = new Error();
         error.message = "invalid Email ";
         error.statusCode = 400;
         throw error;
       }
+<<<<<<< HEAD
       if (validLawyer.block) {
         const error: CustomError = new Error(
           "oops you have been blocked By Admin"
@@ -191,6 +204,9 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         error.statusCode = 401;
         throw error;
       }
+=======
+      console.log(validLawyer.verified, "is the status of the verify");
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       if (validLawyer.verified === "not_verified") {
         const error: CustomError = new Error();
         error.message =
@@ -207,6 +223,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         throw error;
       }
 
+<<<<<<< HEAD
       const profile_picture = validLawyer.profile_picture;
 
       const getProfile = await this.s3Service.fetchFile(profile_picture);
@@ -218,11 +235,17 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         "lawyer"
       );
       const { password: userPassword, ...DataWithoutPassword } = validLawyer;
+=======
+      const jwtToken = this.jwt.generateToken(validLawyer._id, "lawyer");
+      const { password: userPassword, ...userDataWithoutPassword } =
+        validLawyer;
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
       return {
         statusCode: 200,
         status: true,
         message: "logged SuccessFully",
+<<<<<<< HEAD
         result: {
           user: DataWithoutPassword,
           tokenJwt: jwtToken,
@@ -262,6 +285,86 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         status: true,
         message: "New OTP has been sent successfully",
         result: newSignUpToken,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async sendForgotPasswordLink(email: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | null;
+  }> {
+    try {
+      const lawyerExists = await this.Repository.validLawyer(email);
+      if (!lawyerExists) {
+        const error: CustomError = new Error("lawyer not found");
+        error.statusCode = 400;
+        throw error;
+      }
+      const resetToken = this.jwt.generateToken(lawyerExists._id, "lawyer");
+      const resetUrl = `http://localhost:3000/lawyer/lawyerforgotpassword/${resetToken}`;
+
+      this.nodeMailer.sendResetLink(
+        lawyerExists.email,
+        resetUrl,
+        lawyerExists.userName
+      );
+
+      return {
+        statusCode: 200,
+        status: true,
+        message: "Reset Password Link sended to Email",
+        result: null,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async resetforgotpassword(
+    password: string,
+    token: string | any
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | null;
+  }> {
+    try {
+      const decoded = this.jwt.verifyToken(token);
+      console.log(decoded?.id, "is the decoded token");
+      console.log("in the lawyer auth");
+      if (!decoded) {
+        console.log("Hi");
+        const error: CustomError = new Error("invalid Token");
+        error.statusCode = 401;
+        throw error;
+      }
+      console.log(decoded.id, "is the id");
+      const validUser = await this.Repository.getId(decoded?.id);
+      if (!validUser) {
+        const error: CustomError = new Error("user not found");
+        error.statusCode = 401;
+        throw error;
+      }
+      const updatedPassword = await this.Repository.updatePassword(
+        password,
+        decoded.id
+      );
+      if (!updatedPassword) {
+        const error: CustomError = new Error("Failed to update password");
+        error.statusCode = 500;
+        throw error;
+      }
+      return {
+        status: true,
+        statusCode: 200,
+        message: "password Resetted successFully",
+        result: null,
+=======
+        result: { user: validLawyer, tokenJwt: jwtToken },
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       };
     } catch (error) {
       throw error;

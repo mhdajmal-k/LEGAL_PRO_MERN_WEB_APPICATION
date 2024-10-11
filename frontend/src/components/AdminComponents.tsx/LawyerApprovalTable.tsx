@@ -8,10 +8,38 @@ import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input
 import { getLawyer, undVerifyLawyer, verifyLawyer } from '../../services/store/features/adminServices'; // Update this path to where your actions are defined
 import CustomToast from '../userComponents/CustomToast';
 import { toast } from 'sonner';
+<<<<<<< HEAD
 import { Lawyer } from '../../utils/type/lawyerType';
 
 
 
+=======
+
+
+
+interface Lawyer {
+    _id: string;
+    userName: string;
+    email: string;
+    phoneNumber?: string;
+    block: boolean;
+    profile_picture: string;
+    designation: string;
+    years_of_experience: string;
+    verified: boolean;
+    city: string;
+    state: string;
+    languages_spoken: string[];
+    practice_area: string[];
+    certifications: Certification[];
+}
+
+interface Certification {
+    certificateType: string;
+    enrolmentNumber: string;
+    certificate: string;
+}
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
 interface CommonTableProps {
     columns: string[];
@@ -41,7 +69,11 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
     const handleVerify = async () => {
         if (selectedLawyer) {
             try {
+<<<<<<< HEAD
 
+=======
+                alert(selectedLawyer._id)
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                 const response = await dispatch(verifyLawyer(selectedLawyer._id)).unwrap();
                 if (response.status) {
                     onRefresh()
@@ -140,7 +172,11 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
                 </tbody>
             </table>
 
+<<<<<<< HEAD
 
+=======
+            {/* Modal for Viewing Lawyer Details */}
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
             <Modal isOpen={isViewModalOpen} onOpenChange={setViewModalOpen} placement="top-center" className='container'>
                 <ModalContent className='max-w-xl flex items-center justify-center gap-2'>
                     {(onClose) => (

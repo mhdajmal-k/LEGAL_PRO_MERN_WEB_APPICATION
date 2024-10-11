@@ -18,6 +18,7 @@ export interface LoginType {
   email: string;
   password: string;
 }
+<<<<<<< HEAD
 export interface LawyerInfo {
   _id: string;
   userName: string;
@@ -62,3 +63,5 @@ export interface Lawyer {
   practice_area: string[];
   certifications: Certification[];
 }
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611

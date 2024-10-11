@@ -5,21 +5,22 @@ import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from 'formik';
 import { loginValidator } from "../../utils/validator/loginValidaotr"
 import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
 import { googleSignup, loginUser } from '../../services/store/features/userServices';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { userLoginData } from "../../utils/type/userType"
-import { toast } from 'sonner'; // Import Sonner
+import { toast } from 'sonner';
 import CustomToast from './CustomToast';
 import { Link, useNavigate } from 'react-router-dom';
 import { clearError } from '../../services/store/features/userSlice';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from "../../config/firbase"
+import ResetPasswordModal from '../ForgotPasswordModa';
 const LoginForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState<Boolean>(false);
 
     const navigate = useNavigate()
     const dispatch: AppDispatch = useDispatch()
+    const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const { loading, error } = useSelector((state: RootState) => state.user)
     const formik = useFormik({
         initialValues: {
@@ -85,7 +86,7 @@ const LoginForm: React.FC = () => {
                             src={signUpImage}
                             alt="Sign up illustration"
                             className="w-full h-auto rounded-lg"
-                            style={{ width: '100%', maxWidth: '450px' }} // Adjust max-width for wider image
+                            style={{ width: '100%', maxWidth: '450px' }}
                         />
                     </div>
                     <form className='w-full md:w-2/3 pr-0 md:pr-4 md:ml-2 space-y-4 h-full' onSubmit={formik.handleSubmit}>
@@ -136,11 +137,19 @@ const LoginForm: React.FC = () => {
                         >
                             {loading ? 'Signing In...' : 'Sign In'}
                         </Button>
+                        <div className='text-end font-normal text-base cursor-pointer'>
+                            <span onClick={() => setModalOpen(true)} >
+                                ForgotPassword?
+                            </span>
+                        </div>
+                        <div>
+                            <ResetPasswordModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} role="user" />
+                        </div>
                         {error && <div className="text-red-500 mt-2 text-center">{error}</div>}
                         <div>
                             <Button
                                 variant="bordered"
-                                className="w-full mt-2"
+                                className="w-full mt-1"
                                 startContent={<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" onClick={handleGoogle} className="w-5 h-5" />}
                             >
                                 Sign In with Google

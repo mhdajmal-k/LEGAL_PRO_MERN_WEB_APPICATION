@@ -16,7 +16,11 @@ import { toast } from 'sonner';
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch()
+<<<<<<< HEAD
   const { userInfo } = useSelector((state: RootState) => state.user)
+=======
+  const { userInfo, } = useSelector((state: RootState) => state.user)
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
   const handleLogout = async () => {
     try {
       dispatch(userLogout())
@@ -32,7 +36,11 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-primary p-2 ">
       <div className="max-w-7xl mx-auto flex justify-between items-center ">
+<<<<<<< HEAD
 
+=======
+        {/* Logo and Title */}
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
         <div className="flex items-center mx-2.5  m:items-center m:space-x-2  ">
           <img src={Logo} className='w-10' alt="logo" />
 
@@ -59,6 +67,7 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
 
+<<<<<<< HEAD
 
         <div>
           {userInfo?.userName ? (
@@ -76,6 +85,25 @@ const Navbar: React.FC = () => {
                       <Link to="/profile"> <div className="text-sm font-normal">Profile</div>
                       </Link>
 
+=======
+        {/* SignUp and Become a Lawyer Buttons */}
+        <div>
+          {userInfo?.userName ? (
+            <div className='flex items-center space-x-4'>
+              <div className='flex items-center'>
+                <IoIosNotifications className="text-xl" />
+              </div>
+              <div className='flex items-center'>
+                <FaHeart className="text-xl" />
+              </div>
+              <Tooltip
+                content={
+                  <div className="py-2">
+                    <Button className="w-full mb-2 justify-start" variant="light">
+                      <Link to="/profile"> <div className="text-sm font-normal">Profile</div>
+                      </Link>
+
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                     </Button>
                     <Button className="w-full justify-start" variant="light">
                       <div className="text-sm font-normal" onClick={handleLogout}>LogOut</div>
@@ -96,14 +124,22 @@ const Navbar: React.FC = () => {
               </div>
             </div>
           ) : (
+<<<<<<< HEAD
             <div className="sm:flex sm:space-x-4 hidden">
+=======
+            <div className="flex space-x-4">
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
               <Button size="sm" className="bg-secondary text-black font-bold hover:bg-secondary-50">
                 <Link to="/signup">
                   SIGN UP
                 </Link>
               </Button>
               <Button size="sm" className="bg-secondary text-black font-bold hover:bg-secondary-50">
+<<<<<<< HEAD
                 <Link to="/lawyer/" className='uppercase'>
+=======
+                <Link to="/lawyer/signup" className='uppercase'>
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                   Become a Lawyer
                 </Link>
               </Button>

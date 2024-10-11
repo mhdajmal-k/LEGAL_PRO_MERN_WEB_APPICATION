@@ -8,7 +8,11 @@ import Select, { ActionMeta, MultiValue } from "react-select"
 import { IoMdClose } from 'react-icons/io';
 import { clearError } from '../../services/store/features/lawyerSlilce';
 import { lawyerProfessionalValidate } from '../../utils/validator/lawyerValidate';
+<<<<<<< HEAD
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
+=======
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@nextui-org/react';
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
 import { verifyProfessionalData } from '../../services/store/features/lawyerServices';
 import CustomToast from '../userComponents/CustomToast';
@@ -49,8 +53,13 @@ const ProfessionalData: React.FC = () => {
             setPreviewImageKerala(URL.createObjectURL(file));
         }
     };
+<<<<<<< HEAD
     //changes in the metaaction
     const handleSelectChange = (newValue: MultiValue<OptionType>, _actionMeta: ActionMeta<OptionType>) => {
+=======
+
+    const handleSelectChange = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
         const selectedValues = newValue.map(option => option.value);
         formik.setFieldValue('practiceArea', selectedValues);
     };
@@ -76,12 +85,21 @@ const ProfessionalData: React.FC = () => {
         initialValues: {
             practiceArea: [] as string[],
             yearsOfExperience: '',
+<<<<<<< HEAD
             barCouncilNumber: '',
             stateBarCouncilNumber: '',
             designation: '',
             courtPracticeArea: '',
             languages: [],
             aboutMe: '',
+=======
+            barCouncilNumber: 'KL/90/2024',
+            stateBarCouncilNumber: '',
+            designation: '',
+            courtPracticeArea: '',
+            languages: ["English", "Hindi"],
+            aboutMe: 'i am passionate Lawyer',
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
         }, validationSchema: lawyerProfessionalValidate,
         validateOnChange: true,
@@ -99,9 +117,14 @@ const ProfessionalData: React.FC = () => {
             if (selectedImageIndia) formData.append('imageIndia', selectedImageIndia);
             if (selectedImageKerala) formData.append('imageKerala', selectedImageKerala);
             try {
+<<<<<<< HEAD
                 console.log(formData, "is the form data in the professionalData")
                 const response = await dispatch(verifyProfessionalData(formData)).unwrap();
 
+=======
+                const response = await dispatch(verifyProfessionalData(formData)).unwrap();
+                console.log(response, "checking.....")
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                 if (response.status) {
                     setModalOpen(true);
                 }
@@ -138,6 +161,10 @@ const ProfessionalData: React.FC = () => {
                             </div>
                             <form className="space-y-4 container" onSubmit={formik.handleSubmit}>
 
+<<<<<<< HEAD
+=======
+                                {/* Replace standard <select> with CustomSelect */}
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                                 <Select
                                     placeholder="Practice Area"
                                     options={options}
@@ -203,6 +230,10 @@ const ProfessionalData: React.FC = () => {
 
                                         </div>
 
+<<<<<<< HEAD
+=======
+                                        {/* Image Upload for Bar Council of India */}
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                                         <div className='sm:py-2'>
                                             <input
                                                 type='file'
@@ -227,7 +258,13 @@ const ProfessionalData: React.FC = () => {
                                         )}
                                     </div>
 
+<<<<<<< HEAD
                                     <div className="md:flex items-end space-x-4">
+=======
+                                    {/* State Bar Council Section */}
+                                    <div className="md:flex items-end space-x-4">
+                                        {/* Input for State Bar Council Number */}
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                                         <div className="md:w-1/2 w-full">
                                             <Input
                                                 type="text"
@@ -242,6 +279,10 @@ const ProfessionalData: React.FC = () => {
                                         </div>
 
 
+<<<<<<< HEAD
+=======
+                                        {/* Image Upload for State Bar Council */}
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                                         <div className='py-2'>
                                             <input
                                                 type='file'
@@ -278,6 +319,10 @@ const ProfessionalData: React.FC = () => {
                                         <option value="">Designation</option>
                                         <option value="junior Advocate">Junior Advocate</option>
                                         <option value="senior Advocate">Senior Advocate</option>
+<<<<<<< HEAD
+=======
+                                        {/* Add more designation options */}
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                                     </select>
                                     {formik.errors.designation && formik.touched.designation ? <div className='text-red-500 text-sm'>{formik.errors.designation}</div> : null}
 
@@ -364,7 +409,11 @@ const ProfessionalData: React.FC = () => {
                                 </p>
                             </ModalBody>
                             <ModalFooter>
+<<<<<<< HEAD
                                 <Button className="bg-primary shadow-lg shadow-indigo-500/20 text-white" onClick={() => Navigate("/lawyer/login")}>
+=======
+                                <Button className="bg-primary shadow-lg shadow-indigo-500/20 text-white" onClick={() => Navigate("/")}>
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                                     Back to Login Page
                                 </Button>
                             </ModalFooter>

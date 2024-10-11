@@ -79,12 +79,15 @@ class LawyerAuthController {
           sameSite: "strict",
           maxAge: 60 * 60 * 1000,
         });
+<<<<<<< HEAD
         res.cookie("Lawyer_refreshToken", data.refreshToken, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
         res.status(statusCode).json({
           status: true,
           message: message,
@@ -102,6 +105,7 @@ class LawyerAuthController {
     }
   }
 
+<<<<<<< HEAD
   async resendOtp(
     req: Request,
     res: Response,
@@ -136,6 +140,8 @@ class LawyerAuthController {
     }
   }
 
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
   async verifyProfessionalData(
     req: AuthenticatedRequest,
     res: Response,
@@ -169,7 +175,11 @@ class LawyerAuthController {
         files,
         id
       );
+<<<<<<< HEAD
+
+=======
       console.log("success");
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       res.clearCookie("auth_lawyerAccessToken");
       res.status(response.statusCode).json({
         status: true,
@@ -204,11 +214,14 @@ class LawyerAuthController {
           sameSite: "strict",
           maxAge: 5 * 60 * 1000,
         });
+<<<<<<< HEAD
         res.cookie("Lawyer_refreshToken", data.jwtRefreshToken, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
         res.clearCookie("auth_token");
         res.status(statusCode).json({
           status: status,
@@ -219,6 +232,75 @@ class LawyerAuthController {
       return res.status;
     } catch (error) {
       console.log(error);
+      next(error);
+    }
+  }
+<<<<<<< HEAD
+
+  async forgotpassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { email } = req.body;
+
+      if (email.trim() == "") {
+        return res.status(400).json({
+          status: false,
+          message: "email is Required",
+          result: {},
+        });
+      }
+      const response = await this.lawyerAuthInteractor.sendForgotPasswordLink(
+        email
+      );
+      if (response.status) {
+        res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: {},
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async resetforgotpassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const token = req.params.token as string | undefined;
+      if (!token) {
+        return res.status(401).json({
+          status: false,
+          message: "Invalid token",
+          result: {},
+        });
+      }
+      const { password } = req.body;
+
+      if (!password || password.trim() === "") {
+        return res.status(400).json({
+          status: false,
+          message: "Password is required",
+          result: {},
+        });
+      }
+      const response = await this.lawyerAuthInteractor.resetforgotpassword(
+        password,
+        token
+      );
+      if (response.status) {
+        res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: {},
+        });
+      }
+    } catch (error) {
       next(error);
     }
   }
@@ -235,6 +317,8 @@ class LawyerAuthController {
       next(error);
     }
   }
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 }
 
 export default LawyerAuthController;

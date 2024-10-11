@@ -40,7 +40,11 @@ export const DefaultSidebar: React.FC = () => {
                 <SidebarItem icon={<MdGavel size={24} color='black' />} label="Lawyers" />
                 <SidebarItem icon={<MdCalendarToday size={24} color='black' />} label="Appointments" />
                 <SidebarItem icon={<MdArticle size={24} color='black' />} label="Blog" />
+<<<<<<< HEAD
                 <SidebarItem icon={<MdPendingActions size={24} color='black' />} label="PendingApproval" />
+=======
+                <SidebarItem icon={<MdPendingActions size={24} color='black' />} label="Pending Approval" />
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
             </nav>
             <div className="p-4">
                 <Button className="w-full mx-auto mt-11   text-black" color="danger" onClick={handleLogout}>

@@ -159,11 +159,15 @@ class userAuthInteractor implements IUserAuthInteractor {
         validUser = await this.Repository.createUserFromGoogle(user);
       }
       const jwtToken = this.jwt.generateToken(validUser._id, "user");
+<<<<<<< HEAD
       const jwtRefreshToken = this.jwt.generateRefreshToken(
         validUser._id,
         "user"
       );
       const { ...userDataWithoutPassword } = validUser;
+=======
+      const { password: userPassword, ...userDataWithoutPassword } = validUser;
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
       return {
         status: true,
@@ -207,6 +211,69 @@ class userAuthInteractor implements IUserAuthInteractor {
         status: true,
         message: "New OTP has been sent successfully",
         result: newSignUpToken,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async sendForgotPasswordLink(
+    email: string
+  ): Promise<{ status: boolean; message: string; result: string | null }> {
+    try {
+      const userExists = await this.Repository.validUser(email);
+      if (!userExists) {
+        const error: CustomError = new Error("User not found");
+        error.statusCode = 400;
+        throw error;
+      }
+      const resetToken = this.jwt.generateToken(userExists._id, "user");
+      const resetUrl = `http://localhost:3000/forgotpassword/${resetToken}`;
+      this.nodeMailer.sendResetLink(
+        userExists.email,
+        resetUrl,
+        userExists.userName
+      );
+
+      return {
+        status: true,
+        message: "Reset Password Link sended to Email",
+        result: null,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async resetforgotpassword(
+    password: string,
+    token: string | any
+  ): Promise<{ status: boolean; message: string; result: string | null }> {
+    try {
+      const decoded = this.jwt.verifyToken(token);
+      console.log(decoded?.id, "is the decoded token");
+      if (!decoded) {
+        const error: CustomError = new Error("invalid Token");
+        error.statusCode = 401;
+        throw error;
+      }
+      const validUser = await this.Repository.getId(decoded.id);
+      if (!validUser) {
+        const error: CustomError = new Error("user not found");
+        error.statusCode = 401;
+        throw error;
+      }
+      const updatedPassword = await this.Repository.updatePassword(
+        password,
+        decoded.id
+      );
+      if (!updatedPassword) {
+        const error: CustomError = new Error("Failed to update password");
+        error.statusCode = 500;
+        throw error;
+      }
+      return {
+        status: true,
+        message: "password Resetted successFully",
+        result: null,
       };
     } catch (error) {
       throw error;

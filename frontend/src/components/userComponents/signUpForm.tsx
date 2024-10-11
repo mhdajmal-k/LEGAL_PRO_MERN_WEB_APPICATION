@@ -14,8 +14,11 @@ import CustomToast from './CustomToast';
 import { Link, useNavigate } from 'react-router-dom';
 import { clearError } from '../../services/store/features/userSlice';
 import { userSignUp } from '../../utils/type/userType';
+<<<<<<< HEAD
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../config/firbase';
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
 
 const SignUpForm: React.FC = () => {

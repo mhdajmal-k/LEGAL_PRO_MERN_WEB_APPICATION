@@ -55,7 +55,11 @@ class AdminController {
       next(error);
     }
   }
+<<<<<<< HEAD
   async getPendingApprovalLawyer(
+=======
+  async getLawyer(
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
     req: Request,
     res: Response,
     next: NextFunction
@@ -74,6 +78,7 @@ class AdminController {
       next(error);
     }
   }
+<<<<<<< HEAD
   async getLawyers(
     req: Request,
     res: Response,
@@ -93,6 +98,8 @@ class AdminController {
       next(error);
     }
   }
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
   async lawyer(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const id: string = req.params.id;
@@ -155,12 +162,17 @@ class AdminController {
   ): Promise<void> {
     try {
       const id: string = req.params.id;
+<<<<<<< HEAD
       const { state, action } = req.body;
       const response = await this.adminInteractor.blockandUnblock(
         id,
         state,
         action
       );
+=======
+      const { state } = req.body;
+      const response = await this.adminInteractor.blockandUnblock(id, state);
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       if (response.result) {
         res.status(response.statusCode).json({
           status: response.status,
