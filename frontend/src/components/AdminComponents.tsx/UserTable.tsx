@@ -28,7 +28,11 @@ const CommonTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
     const { loading, } = useSelector((state: RootState) => state.admin);
     async function handleBlockorUBlock(id: string, block: boolean): Promise<void> {
         try {
+<<<<<<< HEAD
             const response = await dispatch(blockandUnblock({ id, state: !block, action: "user" })).unwrap();
+=======
+            const response = await dispatch(blockandUnblock({ id, state: !block })).unwrap();
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
             if (response.status) {
                 toast(<CustomToast message={response.message} type="success" />);
                 onRefresh()
@@ -115,7 +119,10 @@ const CommonTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
                             >
                                 {user?.block ? 'UnBlock' : "Block"}
                             </Button>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                         </tr>
                     ))}
                 </tbody>

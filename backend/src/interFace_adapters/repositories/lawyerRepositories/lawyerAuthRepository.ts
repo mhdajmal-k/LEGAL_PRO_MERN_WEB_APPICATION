@@ -31,6 +31,10 @@ class LawyerAuthRepository implements iLawyerRepository {
   }
   async validLawyer(email: string): Promise<any> {
     try {
+<<<<<<< HEAD
+=======
+      console.log(email, "is the repo email");
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       const lawyer = await Lawyer.findOne({ email: email }).lean();
       console.log(lawyer);
       return lawyer;
@@ -41,12 +45,19 @@ class LawyerAuthRepository implements iLawyerRepository {
   }
 
   async lawyerAlreadyExist(email: string): Promise<boolean> {
+<<<<<<< HEAD
     const lawyer = await Lawyer.findOne({
       $and: [{ email: email }, { verified: "verified" }],
     }).lean();
     return !!lawyer;
   }
   async getId(id: string): Promise<Types.ObjectId | null | any> {
+=======
+    const lawyer = await Lawyer.findOne({ email: email }).lean();
+    return !!lawyer;
+  }
+  async getId(id: string): Promise<Types.ObjectId | null> {
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
     try {
       console.log(id, "is the id");
       const userId = await Lawyer.findById({ _id: id });
@@ -59,8 +70,11 @@ class LawyerAuthRepository implements iLawyerRepository {
 
   async updateLawyerProfessionalData(data: any, id: string): Promise<boolean> {
     try {
+<<<<<<< HEAD
       data.practiceArea = JSON.parse(data.practiceArea);
       data.languages = JSON.parse(data.languages);
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
       const updateLawyer = await Lawyer.findByIdAndUpdate(
         { _id: id },
         {
@@ -70,7 +84,11 @@ class LawyerAuthRepository implements iLawyerRepository {
             years_of_experience: data.yearsOfExperience,
             languages_spoken: data.languages,
             designation: data.designation,
+<<<<<<< HEAD
             about: data.aboutMe,
+=======
+            aboutMe: data.aboutMe,
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
           },
         },
         { new: true }
@@ -81,6 +99,7 @@ class LawyerAuthRepository implements iLawyerRepository {
       throw error;
     }
   }
+<<<<<<< HEAD
   async updatePassword(password: string, id: string): Promise<any> {
     try {
       const hashedPassword = hashPassword(password);
@@ -99,4 +118,7 @@ class LawyerAuthRepository implements iLawyerRepository {
   }
 }
 
+=======
+}
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 export default LawyerAuthRepository;

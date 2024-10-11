@@ -57,6 +57,7 @@ class UserAuthRepository implements iUserRepository {
       console.log(error);
     }
   }
+<<<<<<< HEAD
   async getId(id: string): Promise<Types.ObjectId | null | any> {
     try {
       const userId = await User.findById(id).lean();
@@ -78,6 +79,12 @@ class UserAuthRepository implements iUserRepository {
         { new: true }
       );
       return updatedPasswordUser;
+=======
+  async getId(id: string): Promise<Types.ObjectId | null> {
+    try {
+      const userId = await User.findById(id).lean();
+      return userId ? userId?.id : null;
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
     } catch (error) {
       console.log(error);
       throw error;

@@ -87,15 +87,26 @@ class EmailService implements iEmailService {
         html: `
           <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+<<<<<<< HEAD
               <h2 style="color: #333; text-align: center;">Registration Form : ${status} successFully</h2>
+=======
+              <h2 style="color: #333; text-align: center;">Registration Form : ${status}"successFully"</h2>
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
               <p style="font-size: 16px; color: #555;">
                 Dear ${userName},
               </p>
               <p style="font-size: 16px; color: #555;">
+<<<<<<< HEAD
                 We would like to inform you that your  Registration Form status has been : <strong>${status}</strong>.
               </p>
               <p style="font-size: 16px; color: #555;">
                ${reason}
+=======
+                We would like to inform you that your  Registration Form status has been verify to: <strong>${status}</strong>.
+              </p>
+              <p style="font-size: 16px; color: #555;">
+                Reason: ${reason}
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
               </p>
               <p style="font-size: 16px; color: #555;">
                 If you have any questions or concerns, feel free to reach out to our support team.
@@ -125,6 +136,7 @@ class EmailService implements iEmailService {
       return false;
     }
   }
+<<<<<<< HEAD
   async sendResetLink(
     email: string,
     resetLink: string,
@@ -180,6 +192,8 @@ class EmailService implements iEmailService {
       return false;
     }
   }
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 }
 
 export default EmailService;

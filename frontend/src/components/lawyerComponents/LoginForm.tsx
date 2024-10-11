@@ -2,7 +2,11 @@ import { useFormik } from 'formik'
 import React, { useEffect, useState } from 'react'
 import CustomToast from '../userComponents/CustomToast'
 import { toast } from 'sonner'
+<<<<<<< HEAD
 import { Link, useNavigate } from 'react-router-dom'
+=======
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 import { Button, Input } from '@nextui-org/react'
 import { FaEyeSlash, FaRegEye } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,13 +14,19 @@ import { AppDispatch, RootState } from '../../services/store/store'
 import { loginLawyer } from '../../services/store/features/lawyerServices'
 import { lawyerLoginValidationSchema } from '../../utils/validator/lawyerValidate'
 import { clearError } from '../../services/store/features/lawyerSlilce'
+<<<<<<< HEAD
 import ResetPasswordModal from '../ForgotPasswordModa'
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
 const LoginForm: React.FC = () => {
     const navigate = useNavigate();
     const dispatch: AppDispatch = useDispatch();
+<<<<<<< HEAD
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
     const { loading, error } = useSelector((state: RootState) => state.lawyer);
     const [showPassword, setShowPassword] = useState<Boolean>(false);
     const formik = useFormik({
@@ -99,12 +109,18 @@ const LoginForm: React.FC = () => {
                                     </button>
                                 </div>
                                 <div className="text-right my-4">
+<<<<<<< HEAD
                                     <a className="text-sm text-blue-600 hover:underline  cursor-pointer" onClick={() => setModalOpen(true)}>
                                         Forgot Password?
                                     </a>
                                     <div>
                                         <ResetPasswordModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} role="lawyer" />
                                     </div>
+=======
+                                    <a href="#" className="text-sm text-blue-600 hover:underline">
+                                        Forgot Password?
+                                    </a>
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
                                 </div>
                                 <Button color="primary" type="submit" className="w-full">
                                     {loading ? "Signing Up..." : "Sign Up"}

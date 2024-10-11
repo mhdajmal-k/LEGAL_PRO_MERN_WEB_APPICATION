@@ -159,11 +159,15 @@ class userAuthInteractor implements IUserAuthInteractor {
         validUser = await this.Repository.createUserFromGoogle(user);
       }
       const jwtToken = this.jwt.generateToken(validUser._id, "user");
+<<<<<<< HEAD
       const jwtRefreshToken = this.jwt.generateRefreshToken(
         validUser._id,
         "user"
       );
       const { ...userDataWithoutPassword } = validUser;
+=======
+      const { password: userPassword, ...userDataWithoutPassword } = validUser;
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
       return {
         status: true,

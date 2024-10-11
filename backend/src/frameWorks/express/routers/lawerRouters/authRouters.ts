@@ -22,7 +22,11 @@ const optGenerator = new OTPService();
 const IS3Services = new S3Service();
 const repository = new LawyerAuthRepository();
 
+<<<<<<< HEAD
 const jwtToken = new JwtToken(config.JWT_SECRET, config.JWT_REFRESH_SECRET);
+=======
+const jwtToken = new JwtToken(config.JWT_SECRET);
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 const interactor = new LawyerAuthInteractor(
   repository,
   emailService,
@@ -42,10 +46,13 @@ lawyerAuthRouter.post(
   "/verify-otp",
   lawyerAuthController.lawyerVerifyOtp.bind(lawyerAuthController)
 );
+<<<<<<< HEAD
 lawyerAuthRouter.post(
   "/resend-otp",
   lawyerAuthController.resendOtp.bind(lawyerAuthController)
 );
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 
 lawyerAuthRouter.post(
   "/verify-professionalData",
@@ -61,6 +68,7 @@ lawyerAuthRouter.post(
   "/login",
   lawyerAuthController.loginLawyer.bind(lawyerAuthController)
 );
+<<<<<<< HEAD
 lawyerAuthRouter.post(
   "/forgotpassword",
   lawyerAuthController.forgotpassword.bind(lawyerAuthController)
@@ -73,3 +81,5 @@ lawyerAuthRouter.post(
   "/logout",
   lawyerAuthController.LawyerLogOut.bind(lawyerAuthController)
 );
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611

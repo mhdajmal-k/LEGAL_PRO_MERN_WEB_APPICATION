@@ -1,7 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserState } from "../../../utils/type/userType";
 import {
+<<<<<<< HEAD
   googleSignup,
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
   loginUser,
   logOut,
   resendOtp,

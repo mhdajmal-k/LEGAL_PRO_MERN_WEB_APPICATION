@@ -2,6 +2,7 @@
     "cSpell.words": [
         "ADMINLOGIN",
         "ADMINLOGOUT",
+<<<<<<< HEAD
         "Approvallawyers",
         "blockand",
         "blockandunblock",
@@ -25,6 +26,20 @@
         "RESENDOTP",
         "resened",
         "RESETFORGOTPASSWORD",
+=======
+        "blockand",
+        "blockandunblock",
+        "Blockor",
+        "FETCHLAWYER",
+        "FETCHPENDINGAPPROVALLAWYERS",
+        "GETLAWYER",
+        "getusers",
+        "LAWYERLOGIN",
+        "LAWYERVERIFYPROFESSIONALDATA",
+        "PHONENUMBER",
+        "RESENDOTP",
+        "resened",
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
         "UNVERIFY",
         "unverifylawyer",
         "USERLOGOUT",

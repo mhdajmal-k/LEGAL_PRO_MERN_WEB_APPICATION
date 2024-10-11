@@ -38,6 +38,7 @@ authRouter.post(
   "/resend-otp",
   userAuthController.resendOtp.bind(userAuthController)
 );
+<<<<<<< HEAD
 authRouter.post(
   "/googlesignup",
   userAuthController.googleSignUp.bind(userAuthController)
@@ -50,4 +51,6 @@ authRouter.post(
   "/resetforgotpassword/:token",
   userAuthController.resetforgotpassword.bind(userAuthController)
 );
+=======
+>>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 authRouter.post("/logout", userAuthController.logOut.bind(userAuthController));
