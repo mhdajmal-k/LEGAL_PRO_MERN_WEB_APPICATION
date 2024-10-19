@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { forgotpasswordValidatorSchema } from '../../utils/validator/ForgotPasswordValidator';
-import { resetForgotPassword } from '../../services/store/features/userServices';
 import CustomToast from '../userComponents/CustomToast';
 import { toast } from 'sonner';
 import { lawyerResetForgotPassword } from '../../services/store/features/lawyerServices';

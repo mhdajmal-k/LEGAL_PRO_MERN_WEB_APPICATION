@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../services/store/store';
 import { Button, Input, Textarea } from '@nextui-org/react';
 import { useFormik } from 'formik';
-
 import Select, { MultiValue } from "react-select";
 import { practiceAreas } from '../../utils/constants/PracticeAreas';
 import { lawyerProfileValidator } from '../../utils/validator/LawyerProfileProfessional';
@@ -19,7 +18,7 @@ const LawyerProfile: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
     const { lawyerInfo, error, loading } = useSelector((state: RootState) => state.lawyer);
     const [editMode, setEditMode] = useState(false);
-
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const options: OptionType[] = practiceAreas.map(area => ({ value: area.value, label: area.label }));
 
@@ -38,12 +37,25 @@ const LawyerProfile: React.FC = () => {
             courtPracticeArea: lawyerInfo?.practice_area || '',
             languages: lawyerInfo?.languages_spoken || [],
             aboutMe: lawyerInfo?.about || '',
+            profilePicture: null as File | null
         },
-        validationSchema: lawyerProfileValidator,
+        // validationSchema: lawyerProfileValidator,
         validateOnChange: editMode,
         validateOnBlur: editMode,
         onSubmit: (values) => {
-            const formData = new FormData();
+            alert("hi")
+            console.log(values, "is the values")
+            // const formData = new FormData();
+            // Object.keys(values).forEach(key => {
+            //     if (key == "practiceArea" || key == "languages") {
+            //         formData.append(key, JSON.stringify(values[key]))
+            //     } else if (key === 'profilePicture' && values.profilePicture || lawyerInfo?.profile_picture) {
+            //         formData.append(key, values.profilePicture);
+            //     } else {
+            //         formData.append(key, values[key])
+            //     }
+            // })
+            setEditMode(false)
         },
     });
 
@@ -51,6 +63,12 @@ const LawyerProfile: React.FC = () => {
         const selectedValues = newValue.map(option => option.value);
         formik.setFieldValue('practiceArea', selectedValues);
     };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.currentTarget.files?.[0]
+        if (file) {
+            formik.setFieldValue("profilePicture", file)
+        }
+    }
 
 
 
@@ -60,12 +78,23 @@ const LawyerProfile: React.FC = () => {
                 <div className='flex justify-center'>
                     <div className='w-32 h-32 rounded-full overflow-hidden border-4 border-gray-300'>
                         <img
-                            src={lawyerInfo?.profile_picture || 'https://via.placeholder.com/150'}
+                            src={formik.values.profilePicture ? URL.createObjectURL(formik.values.profilePicture) : lawyerInfo?.profile_picture || 'https://via.placeholder.com/150'}
+
                             alt='Lawyer Avatar'
                             className='w-full h-full object-cover'
                         />
+
                     </div>
+
                 </div>
+                <Button color="primary" className='text-center items-center' onClick={() => fileInputRef.current?.click()}>
+                    Change
+                </Button>
+                <input type='file'
+                    ref={fileInputRef}
+                    onChange={handleChange}
+                    className='hidden'
+                    accept='image/*' />
                 <h2 className='text-center text-2xl font-bold mt-4'>Welcome {lawyerInfo?.userName}</h2>
 
                 <form onSubmit={formik.handleSubmit} className='space-y-6 mt-6'>
@@ -86,9 +115,8 @@ const LawyerProfile: React.FC = () => {
                         value={formik.values.email}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        readOnly={!editMode}
-                        isInvalid={editMode && !!formik.errors.email && !!formik.touched.email}
-                        errorMessage={editMode && formik.touched.email && formik.errors.email}
+                        readOnly
+
                     />
 
                     <Input
@@ -157,19 +185,19 @@ const LawyerProfile: React.FC = () => {
                     </div>
 
 
-                    {/* 
+
                     <Input
                         label='Years of Experience'
                         name='yearsOfExperience'
-                        value={formik.values.yearsOfExperience}
+                        value={formik.values.yearsOfExperience as string}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         readOnly={!editMode}
                         isInvalid={editMode && !!formik.errors.yearsOfExperience && !!formik.touched.yearsOfExperience}
                         errorMessage={editMode && formik.touched.yearsOfExperience && formik.errors.yearsOfExperience}
-                    /> */}
+                    />
 
-                    <div className='grid grid-cols-2 gap-4'>
+                    <div className='grid  grid-cols-2 gap-4'>
                         <div>
                             <Input
                                 label='Bar Council of India Number'
@@ -199,16 +227,33 @@ const LawyerProfile: React.FC = () => {
                     </div>
 
                     <div className='grid grid-cols-2 gap-4'>
-                        <Input
-                            label='Designation'
-                            name='designation'
-                            value={formik.values.designation}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            readOnly={!editMode}
-                            isInvalid={editMode && !!formik.errors.designation && !!formik.touched.designation}
-                            errorMessage={editMode && formik.touched.designation && formik.errors.designation}
-                        />
+                        <div className=''>
+                            <select
+                                name="designation"
+                                onChange={formik.handleChange}
+                                value={formik.values.designation}
+                                className="w-full sm:p-2 border rounded my-2  bg-gray-200"
+                            >
+                                <option value={formik.values.designation}>{formik.values.designation}</option>
+                                <option value="junior Advocate">Junior Advocate</option>
+                                <option value="senior Advocate">Senior Advocate</option>
+                            </select>
+                        </div>
+                        <div>
+
+                            <select
+                                name="courtPracticeArea"
+                                onChange={formik.handleChange}
+                                value={formik.values.courtPracticeArea}
+                                className=" w-full sm:p-2 border rounded my-2 bg-gray-200"
+                            >
+                                <option value="">Court Practice Area</option>
+                                <option value="district Court">District Court</option>
+                                <option value="high Court">High Court</option>
+                                <option value="supreme Court">Supreme Court</option>
+                            </select>
+                        </div>
+
 
                     </div>
 

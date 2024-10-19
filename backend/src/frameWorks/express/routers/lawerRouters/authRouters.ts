@@ -24,8 +24,6 @@ const repository = new LawyerAuthRepository();
 
 const jwtToken = new JwtToken(config.JWT_SECRET, config.JWT_REFRESH_SECRET);
 
-// const jwtToken = new JwtToken(config.JWT_SECRET);
-// >>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 const interactor = new LawyerAuthInteractor(
   repository,
   emailService,

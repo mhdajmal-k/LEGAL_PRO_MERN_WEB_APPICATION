@@ -1,4 +1,3 @@
-import { error } from "console";
 import {
   ILawyer,
   IProfessionalData,
@@ -148,7 +147,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         },
       ];
       data.certificate = certificates;
-      console.log(data, "is the data in the backend ");
+      console.log(data, "is the hhhhhhhhhhhhhhhhhh data in the backend ");
       const updateLawyer = await this.Repository.updateLawyerProfessionalData(
         data,
         id as string

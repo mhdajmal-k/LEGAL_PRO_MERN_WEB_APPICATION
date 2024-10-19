@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 interface ICertification {
   certificateType?: string;
@@ -17,6 +17,7 @@ export interface ILawyer extends Document {
   certifications?: ICertification[];
   languages_spoken?: string[];
   designation?: string;
+  courtPracticeArea?: string;
   about?: string;
   city?: string;
   state?: string;
@@ -46,4 +47,15 @@ export interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
   };
+}
+
+interface Availability {
+  timeSlot: string;
+  status: boolean;
+}
+export interface ISlot extends Document {
+  lawyerId: mongoose.Types.ObjectId;
+  date: Date;
+  availability: Availability[];
+  fees: number;
 }

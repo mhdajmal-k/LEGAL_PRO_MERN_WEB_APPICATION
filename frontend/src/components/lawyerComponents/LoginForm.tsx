@@ -107,9 +107,7 @@ const LoginForm: React.FC = () => {
                                     <div>
                                         <ResetPasswordModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} role="lawyer" />
                                     </div>
-                                    <a href="#" className="text-sm text-blue-600 hover:underline">
-                                        Forgot Password?
-                                    </a>
+
                                 </div>
                                 <Button color="primary" type="submit" className="w-full">
                                     {loading ? "Signing Up..." : "Sign Up"}

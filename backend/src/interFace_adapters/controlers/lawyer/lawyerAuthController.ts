@@ -109,7 +109,6 @@ class LawyerAuthController {
   ): Promise<any> {
     try {
       const token = req.cookies.lawyerAuth_token;
-      console.log(token, "is the token");
       if (!token) {
         return res.status(400).json({
           status: false,
@@ -142,7 +141,6 @@ class LawyerAuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("hifdfdd");
       const data = req.body;
       const id = req.user?.id;
       const files = req.files as

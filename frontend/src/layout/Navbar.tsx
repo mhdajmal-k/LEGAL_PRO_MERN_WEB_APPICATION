@@ -69,9 +69,9 @@ const Navbar: React.FC = () => {
                 <Avatar
                   isBordered
                   radius="full"
-                  src={userInfo.email || "https://i.pravatar.cc/150?u=default"}
+                  src={userInfo?.profilePicture ?? 'https://i.pravatar.cc/150?u=default'}
                   alt={userInfo.userName}
-                  className="cursor-pointer"
+                  className="cursor-pointer object-contain "
                 />
               </Tooltip>
               <span className="text-sm font-medium">{userInfo.userName}</span>

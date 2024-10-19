@@ -88,7 +88,7 @@ class EmailService implements iEmailService {
           <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
               <h2 style="color: #333; text-align: center;">Registration Form : ${status} successFully</h2>
-              <h2 style="color: #333; text-align: center;">Registration Form : ${status}"successFully"</h2>
+
               <p style="font-size: 16px; color: #555;">
                 Dear ${userName},
               </p>

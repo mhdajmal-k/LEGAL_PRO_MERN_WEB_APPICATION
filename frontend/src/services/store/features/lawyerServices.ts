@@ -2,12 +2,15 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosConfigue";
 import { LawyerSignUpData } from "../../../utils/type/userType";
 import {
+  FETCHLAWYERSLOT,
+  LAWYERCREATESLOT,
   LAWYERFORGOTPASSWORD,
   LAWYERLOGIN,
   LAWYERLOGOUT,
   LAWYERRESENDOTP,
   LAWYERRESETFORGOTPASSWORD,
   LAWYERSIGNUP,
+  LAWYERUPDATESLOT,
   LAWYERVERIFYINGOTP,
   LAWYERVERIFYPROFESSIONALDATA,
 } from "../../api/lawerApi";
@@ -142,7 +145,6 @@ export const lawyerForgotpassword = createAsyncThunk(
   "lawyer/lawyerForgotpassword",
   async (email: string, { rejectWithValue }) => {
     try {
-      alert("hi");
       const response = await axiosInstance.post(LAWYERFORGOTPASSWORD, {
         email,
       });
@@ -187,6 +189,89 @@ export const lawyerResetForgotPassword = createAsyncThunk(
     }
   }
 );
+export const createSlot = createAsyncThunk(
+  "lawyer/createSlot",
+  async (
+    data: {
+      id: string | undefined;
+      date: Date | string;
+      time: string[];
+      feeAmount: number;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.post<response>(
+        LAWYERCREATESLOT,
+        data
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const fetchLawyerSlots = createAsyncThunk(
+  "lawyer/fetchLawyerSlots",
+  async (id: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get<response>(
+        `${FETCHLAWYERSLOT}/${id}`
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const updateSlot = createAsyncThunk(
+  "lawyer/updateSlot",
+  async (
+    data: {
+      id: string | undefined;
+      date: Date | string;
+      time: string[];
+      feeAmount: number;
+      slotId: string | undefined;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.put<response>(
+        `${LAWYERUPDATESLOT}/${data.slotId}`,
+        data
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 export const lawyerLogOut = createAsyncThunk(
   "user/adminLogOut",
   async (_, { rejectWithValue }) => {

@@ -16,6 +16,7 @@ const lawyerSchema = new Schema<ILawyerType>(
     city: { type: String },
     state: { type: String },
     zipcode: { type: String },
+    courtPracticeArea: { type: String },
     verified: {
       type: String,
       enum: ["verified", "not_verified", "rejected"],

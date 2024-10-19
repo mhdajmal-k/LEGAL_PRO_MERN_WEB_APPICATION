@@ -51,7 +51,6 @@ const SignUpForm: React.FC = () => {
             try {
                 const response = await dispatch(signUpUser(values)).unwrap();
 
-                console.log(response.message, "is the response//////////////////////ddddddddddddddd//////////");
                 toast(<CustomToast message={response.message} type="success" />);
 
                 navigate('/otpVerify')
@@ -164,7 +163,7 @@ const SignUpForm: React.FC = () => {
                                 type="button"
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                                style={{ position: "absolute", right: '10px', top: '50%', transform: 'translateY(-50%)' }} // Prevent movement
+                                style={{ position: "absolute", right: '10px', top: '50%', transform: 'translateY(-50%)' }}
                             >
                                 {showConfirmPassword ? <FaRegEye className="h-5 w-5" /> : <FaEyeSlash className="h-5 w-5" />}
                             </button>

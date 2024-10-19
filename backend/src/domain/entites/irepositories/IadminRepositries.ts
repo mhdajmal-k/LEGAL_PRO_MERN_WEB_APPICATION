@@ -10,12 +10,6 @@ interface iAdminRepository {
   verifyLawyer(id: string): Promise<any>;
   unverifyLawyer(id: string): Promise<any>;
   blockorUnblock(id: string, blockState: boolean, action: string): Promise<any>;
-
-  //   getAdmin(id: string): Promise<any>;
-  //   verifyLawyer(id: string): Promise<any>;
-  //   unverifyLawyer(id: string): Promise<any>;
-  //   blockorUnblock(id: string, blockState: boolean): Promise<any>;
-  // >>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 }
 
 export default iAdminRepository;

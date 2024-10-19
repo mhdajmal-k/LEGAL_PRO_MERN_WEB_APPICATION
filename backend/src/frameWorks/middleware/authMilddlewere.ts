@@ -9,10 +9,10 @@ import AdminRepository from "../../interFace_adapters/repositories/adminReposito
 export const authorization =
   (allowedRoles: string) =>
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const userToken = req.cookies.auth_accessToken;
+    const userToken = req.cookies.User_accessToken;
     const lawyerToken = req.cookies.auth_lawyerAccessToken;
     const adminToken = req.cookies.auth_adminAccessToken;
-    console.log(adminToken, "is the parse admintoken");
+    console.log(userToken, "is the parse admintoken");
     // if (!userToken && !lawyerToken) {
     //   return res.status(401).json({
     //     message: "Authorization denied. Please login. fuck in here",
@@ -22,8 +22,6 @@ export const authorization =
     // }
 
     const jwt = new JwtToken(config.JWT_SECRET, config.JWT_REFRESH_SECRET);
-
-    // const jwt = new JwtToken(config.JWT_SECRET);
     let decodeToken;
 
     try {
@@ -90,21 +88,16 @@ export const authorization =
           "is hteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
         );
         if (!existAdmin) {
-        } else if (decodeToken.role === "admin") {
-          const adminRepo = new AdminRepository();
-          const existLawyer = await adminRepo.getAdmin(decodeToken.id);
-          if (!existLawyer) {
-            return res.status(401).json({
-              message: "Authorization denied,admin does not exist.",
-              result: {},
-              status: false,
-            });
-          }
+          return res.status(401).json({
+            message: "Authorization denied,admin does not exist.",
+            result: {},
+            status: false,
+          });
         }
-
-        req.user = { id: decodeToken.id };
-        next();
       }
+
+      req.user = { id: decodeToken.id };
+      next();
     } catch (error) {
       console.error("Authorization Error:", error);
       return res.status(500).json({

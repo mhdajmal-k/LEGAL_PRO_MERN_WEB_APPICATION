@@ -34,6 +34,9 @@ const ForgotPasswordFrom: React.FC = () => {
                 if (response.status) {
                     toast(<CustomToast message={response.message} type="success" />);
                     navigate('/login');
+                    // setTimeout(() => {
+                    //     window.close();
+                    // }, 1000)
                 }
             } catch (error: any) {
                 toast(<CustomToast message={error} type="error" />);

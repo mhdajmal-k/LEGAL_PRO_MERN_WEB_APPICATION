@@ -303,8 +303,8 @@ class AdminInteractor implements IAdminInteractor {
 
   async blockandUnblock(
     id: string,
-    action: string,
-    state: boolean
+    blockState: boolean,
+    action: string
   ): Promise<{
     statusCode: number;
     status: boolean;
@@ -312,10 +312,10 @@ class AdminInteractor implements IAdminInteractor {
     result: [];
   }> {
     try {
-      console.log(state, "is the block state");
+      console.log(blockState, "is the block state");
       const updateUserData = await this.Repository.blockorUnblock(
         id,
-        state,
+        blockState,
         action
       );
       if (!updateUserData) {
@@ -323,7 +323,7 @@ class AdminInteractor implements IAdminInteractor {
         error.statusCode = 404;
         throw error;
       }
-      if (state == true) {
+      if (blockState == true) {
         return {
           statusCode: 200,
           status: true,

@@ -15,7 +15,7 @@ const LawyerFeature: React.FC = () => {
                 <p className="text-lg">Discover the benefits of becoming a part of our legal consulting network.</p>
             </div>
 
-            <div className='min-h-screen container mx-auto px-4'>
+            <div className='min-h-screen container mx-auto px-4 bg-white'>
 
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}

@@ -3,11 +3,11 @@ export interface UserState {
     userName: string;
     email: string;
     phoneNumber?: string | "";
-<<<<<<< HEAD
-    block: boolean;
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+    block?: boolean;
+    _id?: string;
+    profilePicture?: string;
   } | null;
+
   loading: boolean;
   error: string | null;
 }
@@ -27,15 +27,6 @@ export interface userLoginData {
   password: string;
 }
 
-<<<<<<< HEAD
-=======
-export interface lawyerInfo {
-  id: string;
-  name: string;
-  email?: string;
-}
-
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 export interface LawyerSignUpData {
   userName?: string;
   email?: string;

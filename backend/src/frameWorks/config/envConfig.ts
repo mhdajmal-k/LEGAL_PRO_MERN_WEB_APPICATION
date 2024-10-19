@@ -15,4 +15,5 @@ export const config = {
   BUCKET_REGION: process.env.BUCKET_REGION,
   ADMIN_EMAIL: process.env.ADMIN_EMAIL,
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY,
 };

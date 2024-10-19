@@ -14,7 +14,6 @@ const Home: React.FC = () => {
             <Navbar />
             <HeroSection />
             <AboutUs />
-
             <UserFeature />
             <LegalServices />
 

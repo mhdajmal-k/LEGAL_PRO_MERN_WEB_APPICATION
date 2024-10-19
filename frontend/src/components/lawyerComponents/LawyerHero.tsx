@@ -57,10 +57,10 @@ const LawyerLandingPage = () => {
                                     <IoPerson className="text-3xl" title="Profile" onClick={() => navigate("/lawyer/profile")} />
                                 </div>
                                 <div className="bg-gray-200 w-10 h-10 rounded-lg flex items-center justify-center sm:my-5">
-                                    <IoCreateSharp className="text-3xl" title="Create" />
+                                    < RiCalendarScheduleFill className="text-3xl" title=" Schedule" onClick={() => navigate("/lawyer/slot")} />
                                 </div>
                                 <div className="bg-gray-200 w-10 h-10 rounded-lg flex items-center justify-center sm:my-5">
-                                    <RiCalendarScheduleFill className="text-3xl" title="Schedule" />
+                                    <IoCreateSharp className="text-3xl" title="Create" />
                                 </div>
                                 <div className="bg-gray-200 w-10 h-10 rounded-lg flex items-center justify-center sm:my-5">
                                     <FaWallet className="text-3xl" title="Wallet" />

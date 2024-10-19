@@ -47,8 +47,8 @@ interface IAdminInteractor {
   }>;
   blockandUnblock(
     id: string,
-    action: string,
-    state: boolean
+    state: boolean,
+    action: string
   ): Promise<{
     statusCode: number;
     status: boolean;

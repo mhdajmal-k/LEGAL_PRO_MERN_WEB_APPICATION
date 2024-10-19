@@ -21,14 +21,14 @@ export const loginValidator = Yup.object({
 });
 
 export const userDataUpdateValidator = Yup.object({
-  email: Yup.string()
-    .trim()
-    .email("Invalid email format")
-    .matches(
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      "Invalid email format"
-    )
-    .required("Email is required"),
+  // email: Yup.string()
+  //   .trim()
+  //   .email("Invalid email format")
+  //   .matches(
+  //     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+  //     "Invalid email format"
+  //   )
+  //   .required("Email is required"),
 
   userName: Yup.string()
     .trim()

@@ -18,7 +18,6 @@ export interface LoginType {
   email: string;
   password: string;
 }
-<<<<<<< HEAD
 export interface LawyerInfo {
   _id: string;
   userName: string;
@@ -56,12 +55,24 @@ export interface Lawyer {
   profile_picture: string;
   designation: string;
   years_of_experience: string;
+  courtPracticeArea: string;
   verified: boolean;
   city: string;
   state: string;
+  about: string;
   languages_spoken: string[];
   practice_area: string[];
   certifications: Certification[];
 }
-=======
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
+
+export interface TimeSlot {
+  timeSlot: string;
+  status: boolean;
+}
+
+export interface SlotData {
+  _id: string;
+  date: string;
+  availability: TimeSlot[];
+  fees: number;
+}

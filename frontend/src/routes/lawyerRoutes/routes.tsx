@@ -9,6 +9,7 @@ import ProfilePage from '../../pages/lawyerpages/ProfilePage'
 import LawyerProtectRoute from '../LaywerProtectRoute'
 import LawyerPublicRoute from '../LawyerPublicRotute'
 import LawyerForgotPassword from '../../pages/lawyerpages/LawyerForgotPassword'
+import SlotCreation from '../../pages/lawyerpages/SlotCreaion'
 
 
 const LawyerRoutes: React.FC = () => {
@@ -26,14 +27,11 @@ const LawyerRoutes: React.FC = () => {
             <Route element={<LawyerProtectRoute />}>
 
                 <Route path='/profile' element={<ProfilePage />} />
+                <Route path='/slot' element={<SlotCreation />} />
             </Route>
+            <Route path='*' element={<div className='text-center'>404 Not Found</div>} />
         </Routes >
-        // <Route path='/signup' element={<LawyerSingUp />} />
-        // <Route path='/verify-otp' element={<LawyerVerifyOtp />} />
-        // <Route path='/ProfessionalData' element={<ProfessionalDetails />} />
-        // <Route path='/login' element={<LawyerLogin />} />
-        // <Route path='/' element={<h1>heLLO HOME LAYWER</h1>} />
-        // </Routes>
+
     )
 }
 

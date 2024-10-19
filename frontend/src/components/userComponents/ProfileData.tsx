@@ -1,63 +1,88 @@
-
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/store/store';
+import React, { useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../services/store/store';
 import { Button, Input } from '@nextui-org/react';
 import { useFormik } from 'formik';
+import { FaCirclePlus } from "react-icons/fa6";
+import { updateUserProfileData } from '../../services/store/features/userServices';
+import CustomToast from './CustomToast';
+import { toast } from 'sonner';
 import { userDataUpdateValidator } from '../../utils/validator/loginValidaotr';
+
 interface FormValues {
     userName: string;
     email: string;
     phoneNumber?: string;
 }
 
-
 const ProfileData: React.FC = () => {
-    const { userInfo, error, loading } = useSelector((state: RootState) => state.user)
+    const { userInfo, error, loading } = useSelector((state: RootState) => state.user);
     const [editMode, setEditMode] = useState(false);
+    const [previewImage, setPreviewImage] = useState<string>("");
+    const [image, setImage] = useState<File | null>(null);
+    const fileRef = useRef<HTMLInputElement | null>(null);
+    const dispatch: AppDispatch = useDispatch();
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setImage(file);
+            const imageUrl = URL.createObjectURL(file);
+            setPreviewImage(imageUrl);
+        } else {
+            setImage(null);
+            setPreviewImage('');
+        }
+    };
+
+
     const formik = useFormik({
         initialValues: {
             userName: userInfo?.userName || "",
             email: userInfo?.email || '',
             phoneNumber: userInfo?.phoneNumber || '',
-
         },
         validationSchema: userDataUpdateValidator,
         validateOnChange: editMode,
         validateOnBlur: editMode,
         onSubmit: async (values: FormValues) => {
-            alert(values)
-            console.log("cllaed")
-            // setEditMode(false);
-            // try {
-            //     const response = await dispatch(loginUser(values)).unwrap();
-            //     if (response) {
-            //         navigate('/');
-            //     }
-
-
-
-            // } catch (error: any) {
-            //     console.error("Login error:", error);
-            //     toast(<CustomToast message={error.message || 'An error occurred during login'} type="error" />);
-            // }
+            const formData = new FormData();
+            Object.entries(values).forEach(([key, value]) => {
+                formData.append(key, value as string);
+            });
+            if (image) {
+                formData.append("profilePic", image);
+            }
+            setEditMode(false);
+            try {
+                const response = await dispatch(updateUserProfileData({ profileData: formData, id: userInfo?._id })).unwrap();
+                if (response.status) {
+                    toast(<CustomToast message={response.message} type="success" />);
+                }
+            } catch (error: any) {
+                toast(<CustomToast message={error.message || 'An error occurred during update'} type="error" />);
+            }
         },
     });
 
     return (
         <div>
-
             <div className="mb-4 items-center flex justify-center flex-col">
-                <div className="w-34 h-32 rounded-full border-4 border-white overflow-hidden">
+                <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden relative cursor-pointer">
                     <img
-                        src="https://via.placeholder.com/150"
+                        src={previewImage || userInfo?.profilePicture || 'https://via.placeholder.com/150'}
                         alt="User Avatar"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain rounded-full"
+                        onClick={() => fileRef.current?.click()}
                     />
+                    <div className='absolute bottom-1 right-5'>
+                        <FaCirclePlus className='text-primary text-xl' />
+                    </div>
                 </div>
-                <p>Welcome {userInfo?.userName}.</p>
-                <form className='w-full md:w-2/3 pr-0 md:pr-4 md:ml-2 space-y-4 h-full' onSubmit={formik.handleSubmit}>
 
+                <input type='file' ref={fileRef} accept='image/*' className='hidden' onChange={handleFileChange} />
+                <p className='my-5'>Welcome {userInfo?.userName}.</p>
+                <form className='w-full md:w-2/3 pr-0 md:pr-4 md:ml-2 space-y-4 h-full' onSubmit={formik.handleSubmit}>
                     <Input
                         type="text"
                         label="Username"
@@ -65,33 +90,22 @@ const ProfileData: React.FC = () => {
                         size="sm"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        isInvalid={editMode && !!formik.errors.userName && !!formik.touched.userName} // Update condition to only show error in edit mode
+                        isInvalid={editMode && !!formik.errors.userName && !!formik.touched.userName}
                         value={formik.values.userName}
                         variant={editMode ? "bordered" : "flat"}
                         readOnly={!editMode}
                     />
-
                     {formik.errors.userName && formik.touched.userName && editMode && (
                         <div className='text-red-500 text-sm'>{formik.errors.userName}</div>
                     )}
-
-
                     <Input
                         type="email"
                         label="Email"
                         name='email'
                         size="sm"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        isInvalid={editMode && !!formik.errors.email && !!formik.touched.email}
                         value={formik.values.email}
-                        variant={editMode ? "bordered" : "flat"}
-                        readOnly={!editMode}
+                        readOnly
                     />
-                    {formik.errors.email && formik.touched.email && editMode && (
-                        <div className='text-red-500 text-sm'>{formik.errors.email}</div>
-                    )}
-
                     <Input
                         type="tel"
                         label="Phone Number"
@@ -127,15 +141,11 @@ const ProfileData: React.FC = () => {
                             </Button>
                         )}
                     </div>
-
-
                     {error && <div className="text-red-500 mt-2 text-center">{error}</div>}
                 </form>
             </div>
-
         </div>
     );
 };
 
 export default ProfileData;
-

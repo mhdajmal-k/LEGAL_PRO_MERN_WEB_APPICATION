@@ -8,7 +8,7 @@ const AboutUs: React.FC = () => {
             <h1 className='text-center mb-5 font-bold text-2xl'>About Us</h1>
             <div className='max-w-6xl mx-auto'>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-                    {/* Left Column */}
+
                     <div className='space-y-6'>
                         <div className='bg-white rounded-lg shadow-lg p-6'>
                             <h3 className='text-orange-500 font-medium mb-2'>How It Started</h3>
@@ -27,7 +27,7 @@ const AboutUs: React.FC = () => {
 
                     </div>
 
-                    {/* Right Column */}
+
                     <div className='space-y-6'>
                         <div className='bg-white rounded-lg shadow-lg overflow-hidden'>
                             <img src={about} alt="About Us" className='w-full h-auto' />

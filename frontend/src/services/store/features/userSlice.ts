@@ -1,11 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserState } from "../../../utils/type/userType";
 import {
+  AISearch,
+  fetchLawyer,
+  fetchLawyerById,
   googleSignup,
   loginUser,
   logOut,
   resendOtp,
   signUpUser,
+  updateUserProfileData,
   verifyOtp,
 } from "./userServices";
 
@@ -50,7 +54,7 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = actions.payload as string;
       })
-      .addCase(loginUser.pending, (state, actions) => {
+      .addCase(loginUser.pending, (state) => {
         state.userInfo = null;
         state.loading = true;
       })
@@ -82,17 +86,56 @@ const userSlice = createSlice({
       .addCase(googleSignup.rejected, (state, actions) => {
         state.loading = false;
         state.error = actions.payload as string;
+      })
+      .addCase(updateUserProfileData.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+      })
+      .addCase(updateUserProfileData.fulfilled, (state, actions) => {
+        state.error = "";
+        state.loading = false;
+        state.userInfo = actions.payload.result;
+      })
+      .addCase(updateUserProfileData.rejected, (state, actions) => {
+        state.loading = false;
+        state.error = actions.payload as string;
+      })
+      .addCase(fetchLawyer.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+      })
+      .addCase(fetchLawyer.fulfilled, (state) => {
+        state.error = "";
+        state.loading = false;
+      })
+      .addCase(fetchLawyer.rejected, (state, actions) => {
+        state.loading = false;
+        state.error = actions.payload as string;
+      })
+      .addCase(fetchLawyerById.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+      })
+      .addCase(fetchLawyerById.fulfilled, (state) => {
+        state.error = "";
+        state.loading = false;
+      })
+      .addCase(fetchLawyerById.rejected, (state, actions) => {
+        state.loading = false;
+        state.error = actions.payload as string;
+      })
+      .addCase(AISearch.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+      })
+      .addCase(AISearch.fulfilled, (state) => {
+        state.error = "";
+        state.loading = false;
+      })
+      .addCase(AISearch.rejected, (state, actions) => {
+        state.loading = false;
+        state.error = actions.payload as string;
       });
-    // .addCase(logOutUser.pending, (state, action) => {
-    //   state.loading = true;
-    // })
-    // .addCase(logOutUser.rejected, (state, actions) => {
-    //   state.loading = false;
-    //   state.error = actions.payload as string;
-    // })
-    // .addCase(logOutUser.fulfilled, (state, actions) => {
-    //   (state.loading = false), (state.userInfo = null), (state.error = "");
-    // });
   },
 });
 

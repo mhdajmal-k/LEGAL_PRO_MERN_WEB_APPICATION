@@ -8,9 +8,7 @@ import Select, { ActionMeta, MultiValue } from "react-select"
 import { IoMdClose } from 'react-icons/io';
 import { clearError } from '../../services/store/features/lawyerSlilce';
 import { lawyerProfessionalValidate } from '../../utils/validator/lawyerValidate';
-
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
-
 
 import { verifyProfessionalData } from '../../services/store/features/lawyerServices';
 import CustomToast from '../userComponents/CustomToast';
@@ -53,10 +51,6 @@ const ProfessionalData: React.FC = () => {
     };
     //changes in the metaaction
     const handleSelectChange = (newValue: MultiValue<OptionType>, _actionMeta: ActionMeta<OptionType>) => {
-        // =======
-
-        //     const handleSelectChange = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
-        // >>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
         const selectedValues = newValue.map(option => option.value);
         formik.setFieldValue('practiceArea', selectedValues);
     };
@@ -89,7 +83,6 @@ const ProfessionalData: React.FC = () => {
             languages: [],
             aboutMe: '',
 
-
         }, validationSchema: lawyerProfessionalValidate,
         validateOnChange: true,
         validateOnBlur: true,
@@ -108,7 +101,6 @@ const ProfessionalData: React.FC = () => {
             try {
                 console.log(formData, "is the form data in the professionalData")
                 const response = await dispatch(verifyProfessionalData(formData)).unwrap();
-
 
                 if (response.status) {
                     setModalOpen(true);
@@ -145,7 +137,6 @@ const ProfessionalData: React.FC = () => {
                                 <h2 className="text-xl font-semibold mt-2">Professional Information</h2>
                             </div>
                             <form className="space-y-4 container" onSubmit={formik.handleSubmit}>
-
 
                                 <Select
                                     placeholder="Practice Area"
@@ -212,7 +203,6 @@ const ProfessionalData: React.FC = () => {
 
                                         </div>
 
-
                                         <div className='sm:py-2'>
                                             <input
                                                 type='file'
@@ -236,14 +226,8 @@ const ProfessionalData: React.FC = () => {
                                             </div>
                                         )}
                                     </div>
-                                </div>
 
-                                {/* <<<<<<< HEAD */}
-                                <div className="md:flex items-end space-x-4">
-                                    {/* =======
-                                    {/* State Bar Council Section */}
                                     <div className="md:flex items-end space-x-4">
-                                        {/* Input for State Bar Council Number */}
                                         <div className="md:w-1/2 w-full">
                                             <Input
                                                 type="text"
@@ -256,7 +240,6 @@ const ProfessionalData: React.FC = () => {
                                                 className="w-full"
                                             />
                                         </div>
-
 
 
                                         <div className='py-2'>
@@ -295,7 +278,6 @@ const ProfessionalData: React.FC = () => {
                                         <option value="">Designation</option>
                                         <option value="junior Advocate">Junior Advocate</option>
                                         <option value="senior Advocate">Senior Advocate</option>
-
                                     </select>
                                     {formik.errors.designation && formik.touched.designation ? <div className='text-red-500 text-sm'>{formik.errors.designation}</div> : null}
 
@@ -383,9 +365,6 @@ const ProfessionalData: React.FC = () => {
                             </ModalBody>
                             <ModalFooter>
                                 <Button className="bg-primary shadow-lg shadow-indigo-500/20 text-white" onClick={() => Navigate("/lawyer/login")}>
-                                    {/* =======
-                                <Button className="bg-primary shadow-lg shadow-indigo-500/20 text-white" onClick={() => Navigate("/")}>
->>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611 */}
                                     Back to Login Page
                                 </Button>
                             </ModalFooter>

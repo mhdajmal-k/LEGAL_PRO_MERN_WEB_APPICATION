@@ -12,8 +12,6 @@ export const adminRouter = Router();
 
 const jwtToken = new JwtToken(config.JWT_SECRET, config.JWT_REFRESH_SECRET);
 
-// const jwtToken = new JwtToken(config.JWT_SECRET);
-// >>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
 const repository = new AdminRepository();
 const IS3Services = new S3Service();
 const emailService = new EmailService(
@@ -59,7 +57,7 @@ adminRouter.put(
   authorization("admin"),
   adminController.updateLawyer.bind(adminController)
 );
-adminRouter.put(
+adminRouter.patch(
   "/unverifylawyer/:id",
   authorization("admin"),
   adminController.unVerifyLawyer.bind(adminController)

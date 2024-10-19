@@ -9,7 +9,7 @@ const ProtectRoute: React.FC = () => {
     console.log(userInfo, "this is the user Info")
     return userInfo && !userInfo.block ? <Outlet /> : <Navigate to="/" />;
 
-    return userInfo ? <Outlet /> : <Navigate to="/" />;
+
 };
 
 export default ProtectRoute;

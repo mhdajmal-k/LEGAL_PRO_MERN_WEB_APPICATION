@@ -55,6 +55,7 @@ class AdminController {
       next(error);
     }
   }
+
   async getPendingApprovalLawyer(
     req: Request,
     res: Response,
@@ -94,6 +95,7 @@ class AdminController {
       next(error);
     }
   }
+
   async lawyer(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const id: string = req.params.id;
@@ -156,6 +158,7 @@ class AdminController {
   ): Promise<void> {
     try {
       const id: string = req.params.id;
+
       const { state, action } = req.body;
       const response = await this.adminInteractor.blockandUnblock(
         id,
@@ -163,8 +166,6 @@ class AdminController {
         action
       );
 
-      // const { state } = req.body;
-      // const response = await this.adminInteractor.blockandUnblock(id, state);
       if (response.result) {
         res.status(response.statusCode).json({
           status: response.status,

@@ -9,9 +9,6 @@ class JwtToken implements iJwtService {
     private readonly jwtRefreshTokenSecret: string
   ) {}
 
-  // constructor(private readonly jwtSecret: string) {
-  //   this.jwtSecret = jwtSecret;
-  // }
   generateToken(id: IUser | ILawyer, role: string): string {
     const token = jwt.sign({ id, role }, this.jwtSecret, {
       expiresIn: "1h",
@@ -19,23 +16,13 @@ class JwtToken implements iJwtService {
     return token;
   }
 
-  // verifyToken(token: string): { id: string; role: string } | null {
-  //   try {
-  //     const decodedToken = jwt.verify(token, this.jwtSecret) as {
-  //       id: string;
-  //       role: string;
-  //     };
-  //     return decodedToken;
-
-  verifyToken(Token: string): { id: string; role: string } | null {
+  verifyToken(token: string): { id: string; role: string } | null {
     try {
-      console.log("in the verify Token");
-      const decodeToken = jwt.verify(Token, this.jwtSecret) as {
+      const decodedToken = jwt.verify(token, this.jwtSecret) as {
         id: string;
         role: string;
       };
-      console.log(decodeToken, "is the decoded in verify Token");
-      return decodeToken;
+      return decodedToken;
     } catch (error) {
       console.error("Invalid or expired token", error);
       return null;

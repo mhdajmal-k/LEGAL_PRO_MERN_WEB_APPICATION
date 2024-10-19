@@ -78,6 +78,7 @@ class LawyerAuthRepository implements iLawyerRepository {
             languages_spoken: data.languages,
             designation: data.designation,
             about: data.aboutMe,
+            courtPracticeArea: data.courtPracticeArea,
           },
         },
         { new: true }

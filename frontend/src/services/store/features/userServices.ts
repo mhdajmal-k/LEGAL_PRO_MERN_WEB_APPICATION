@@ -1,11 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-// import {userSignData,userLoginData } from "../../../utils/type/userType";
 import axiosInstance from "../../api/axiosConfigue";
 import {
+  AISEARCH,
+  FETCHLAWYERBYID,
+  FETCHLAWYERS,
   FORGOTPASSWORD,
   GOOGLESIGNUP,
   RESENDOTP,
   RESETFORGOTPASSWORD,
+  RESETPASSWORD,
+  UPDATEPROFILEDATA,
   USERLOGIN,
   USERLOGOUT,
   USERSIGNUP,
@@ -40,10 +44,7 @@ export const verifyOtp = createAsyncThunk(
   async (otp: string, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(VERIFYINGOTP, { otp });
-      console.log(
-        response,
-        "is the responcejfffffffffffffffffffffffffffffffffffffff"
-      );
+
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";
@@ -62,7 +63,6 @@ export const loginUser = createAsyncThunk(
   "user/login",
   async (data: userLoginData, { rejectWithValue }) => {
     try {
-      console.log(data, "from the userLogin thunk");
       const response = await axiosInstance.post(USERLOGIN, data);
       return response.data;
     } catch (error) {
@@ -85,7 +85,6 @@ export const googleSignup = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      console.log(data, "from the userLogin thunk");
       const response = await axiosInstance.post(GOOGLESIGNUP, data);
       console.log(response.data);
       return response.data;
@@ -163,6 +162,68 @@ export const forgotpassword = createAsyncThunk(
     }
   }
 );
+
+export const updateUserProfileData = createAsyncThunk(
+  "user/updateUserProfileData",
+  async (
+    { profileData, id }: { profileData: FormData; id: string | undefined },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.put(
+        `${UPDATEPROFILEDATA}/${id}`,
+        profileData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        console.log(error);
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  async (
+    data: {
+      currentPassword: string;
+      newPassword: string | null;
+      id: string | undefined;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.post(`${RESETPASSWORD}/${data.id}`, {
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      });
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        console.log(error);
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
 export const resetForgotPassword = createAsyncThunk(
   "user/resetForgotPassword",
   async (
@@ -170,17 +231,74 @@ export const resetForgotPassword = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const res = await axiosInstance.post<response>(
+      const response = await axiosInstance.post<response>(
         `${RESETFORGOTPASSWORD}/${data.token}`,
         {
           password: data.password,
         }
       );
 
-      console.log("hi");
-      const resp = await axiosInstance.post(USERLOGOUT);
-      console.log(resp, "this is the response");
-      return resp.data;
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const fetchLawyer = createAsyncThunk(
+  "user/fetchLawyer",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get<response>(FETCHLAWYERS);
+
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const AISearch = createAsyncThunk(
+  "user/AISearch",
+  async (prompt: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post<response>(AISEARCH, { prompt });
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const fetchLawyerById = createAsyncThunk(
+  "user/fetchLawyerById",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get<response>(
+        `${FETCHLAWYERBYID}/${id}`
+      );
+      return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";
       if (error instanceof AxiosError) {

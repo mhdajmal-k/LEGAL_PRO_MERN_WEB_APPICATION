@@ -58,7 +58,9 @@ class UserAuthController {
       const { status, message, result } = response;
       if (status) {
         const data = result as IUserResult;
-        res.cookie("auth_accessToken", data.tokenJwt, {
+        // auth_accessToken
+
+        res.cookie("User_accessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 5 * 60 * 1000,
@@ -99,7 +101,7 @@ class UserAuthController {
       const { status, message, result } = response;
       if (status) {
         const data = result as IUserResult;
-        res.cookie("auth_accessToken", data.tokenJwt, {
+        res.cookie("User_accessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 5 * 60 * 1000,
@@ -149,7 +151,7 @@ class UserAuthController {
       const { status, message, result } = response;
       if (status) {
         const data = result as IUserResult;
-        res.cookie("auth_accessToken", data.tokenJwt, {
+        res.cookie("User_accessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 5 * 60 * 1000,
@@ -276,7 +278,6 @@ class UserAuthController {
         });
       }
     } catch (error) {
-      // Pass the error to the error handling middleware
       next(error);
     }
   }
