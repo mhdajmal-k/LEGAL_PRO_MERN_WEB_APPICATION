@@ -5,6 +5,10 @@ export const userColumns: string[] = [
   "PHONE NUMBER",
   "BLOCK",
 ];
+export const AppointmentColumns = {
+  user: ["Date", "Time", "Lawyer", "Fee", "Payment", "View"],
+  lawyer: ["Date", "Time", "User", "Fee", "Payment", "View"],
+};
 export const lawyerColumns: string[] = [
   "PROFILE",
   "NAME",
@@ -12,8 +16,6 @@ export const lawyerColumns: string[] = [
   "DESIGNATION",
   "EXPERIENCE",
   "VERIFY",
-
   "BLOCK",
-
   "VIEW",
 ];

@@ -10,15 +10,35 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
     private readonly Repository: IUserLawyerRepository,
     private readonly s3Service: IS3Service
   ) {}
-  async getVerifiedLawyers(): Promise<any> {
+  async getVerifiedLawyers(
+    currentPage: number,
+    limit: number
+  ): Promise<{
+    status: boolean;
+    statusCode: number;
+    message: string;
+    result: {};
+    totalPages?: number;
+  }> {
     try {
-      const getVerifiedLawyers = await this.Repository.getVerifiedLawyers();
+      console.log(currentPage, "is te auth");
+      console.log(limit, "is te auth");
+      const getVerifiedLawyers = await this.Repository.getVerifiedLawyers(
+        currentPage,
+        limit
+      );
       if (!getVerifiedLawyers) {
         const error: CustomError = new Error();
         error.message = "Incorrect Password";
         error.statusCode = 400;
         throw error;
       }
+      const totalLawyers = await this.Repository.getTotalCountOfLawyers(
+        "lawyer"
+      );
+      console.log(totalLawyers, "is hte auth");
+      const totalPages = Math.ceil(totalLawyers / limit);
+      console.log(totalPages, "it the final");
       const updatedVerifiedLawyers = await Promise.all(
         getVerifiedLawyers.map(async (lawyer: any) => {
           if (lawyer.profile_picture) {
@@ -35,6 +55,7 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         status: true,
         message: "lawyer Got successFully",
         result: updatedVerifiedLawyers,
+        totalPages: totalPages,
       };
     } catch (error) {
       throw error;
@@ -54,6 +75,54 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
       return {
         message: "lawyer got successFully",
         result: getLawyer,
+        status: true,
+        statusCode: 200,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getLawyerslot(lawyerId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }> {
+    try {
+      const slots = await this.Repository.getLawyerSlots(lawyerId);
+      if (!slots) {
+        const error: CustomError = new Error("lawyer not found");
+        error.statusCode = 400;
+        throw error;
+      }
+      const lawyerDetails = {
+        _id: slots[0].lawyerId._id,
+        userName: slots[0].lawyerId.userName,
+        profile_picture: await this.s3Service.fetchFile(
+          slots[0].lawyerId.profile_picture
+        ), // Fetch the profile picture
+        city: slots[0].lawyerId.city,
+        state: slots[0].lawyerId.state,
+        designation: slots[0].lawyerId.designation,
+        years_of_experience: slots[0].lawyerId.years_of_experience,
+      };
+      const formattedSlots = slots.map((slot: any) => ({
+        _id: slot._id,
+        date: slot.date,
+        availability: slot.availability.map((availabilitySlot: any) => ({
+          timeSlot: availabilitySlot.timeSlot,
+          fee: availabilitySlot.fee,
+          status: availabilitySlot.status,
+          _id: availabilitySlot._id,
+        })),
+        fees: slot.fees,
+      }));
+      return {
+        message: "Slots retrieved successfully",
+        result: {
+          lawyerDetails,
+          slots: formattedSlots,
+        },
         status: true,
         statusCode: 200,
       };

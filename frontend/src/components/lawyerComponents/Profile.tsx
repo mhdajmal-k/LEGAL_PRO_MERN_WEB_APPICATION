@@ -81,7 +81,7 @@ const LawyerProfile: React.FC = () => {
                             src={formik.values.profilePicture ? URL.createObjectURL(formik.values.profilePicture) : lawyerInfo?.profile_picture || 'https://via.placeholder.com/150'}
 
                             alt='Lawyer Avatar'
-                            className='w-full h-full object-cover'
+                            className='object-cover'
                         />
 
                     </div>

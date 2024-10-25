@@ -52,6 +52,7 @@ export interface AuthenticatedRequest extends Request {
 interface Availability {
   timeSlot: string;
   status: boolean;
+  fee: number;
 }
 export interface ISlot extends Document {
   lawyerId: mongoose.Types.ObjectId;

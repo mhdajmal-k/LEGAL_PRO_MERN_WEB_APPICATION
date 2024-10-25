@@ -99,5 +99,34 @@ class LawyerSlotController {
       next();
     }
   }
+  async deleteSlot(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { slotId } = req.params;
+      console.log(slotId, "is backend slot id");
+      if (!mongoose.Types.ObjectId.isValid(slotId)) {
+        return res.status(400).json({
+          status: false,
+          message: "slotId Id is Required",
+          result: {},
+        });
+      }
+
+      const response = await this.lawyerSlotInteractor.deleteSlot(slotId);
+
+      if (response.status) {
+        res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next();
+    }
+  }
 }
 export default LawyerSlotController;

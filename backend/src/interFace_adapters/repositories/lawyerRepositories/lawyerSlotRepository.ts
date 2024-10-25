@@ -7,13 +7,18 @@ class LawyerSlotRepository implements ILawyerSlotRepository {
     id: string,
     date: Date | string,
     feeAmount: number,
-    availability: string[]
+    availability: { timeSlot: string; fee: number }[]
   ): Promise<any> {
     try {
-      const availabilityMapped = availability.map((timeSlot) => ({
-        timeSlot,
-        status: false,
-      }));
+      console.log(availability, "is sthe aviliabilti");
+      const availabilityMapped = availability.map(({ timeSlot, fee }) => {
+        return {
+          timeSlot: timeSlot,
+          fee: fee,
+          status: false,
+        };
+      });
+
       const createSlot = new Slot({
         lawyerId: id,
         date: date,
@@ -39,24 +44,46 @@ class LawyerSlotRepository implements ILawyerSlotRepository {
   }
   async updateSlot(
     slotId: string,
-    availability: string[],
-    feeAmount: number
+    feeAmount: number,
+    availability: { _id: string; timeSlot: string; fee: number }[]
   ): Promise<any> {
     try {
-      const availabilityMapped = availability.map((timeSlot) => ({
-        timeSlot,
-        status: false,
-      }));
+      const availabilityMapped = availability.map(({ timeSlot, fee }) => {
+        return {
+          timeSlot: timeSlot,
+          fee: fee,
+          status: false,
+        };
+      });
 
       const updateSlot = await Slot.findByIdAndUpdate(
         { _id: slotId },
         { $set: { availability: availabilityMapped, fees: Number(feeAmount) } },
         { new: true }
       );
+
       return updateSlot;
     } catch (error) {
       console.log(error);
       throw error;
+    }
+  }
+
+  async deleteSlot(id: string): Promise<any> {
+    try {
+      const deletedSlot = await Slot.findOneAndDelete({
+        _id: id,
+        "availability.status": { $eq: false },
+      });
+
+      console.log(deletedSlot, "is the db deletedSlot");
+      if (deletedSlot) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      throw new Error("Failed to delete the slot");
     }
   }
 }

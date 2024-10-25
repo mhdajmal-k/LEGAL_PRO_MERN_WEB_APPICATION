@@ -62,7 +62,7 @@ const OtpFrom: React.FC = () => {
                 toast(<CustomToast message={response.message} type="success" />);
             }
         } catch (error: any) {
-            toast(<CustomToast message={error} type="error" />);
+            toast(<CustomToast message={error || error.message} type="error" />);
         }
 
     }

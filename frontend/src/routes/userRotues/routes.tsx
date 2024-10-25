@@ -6,13 +6,17 @@ const Home = lazy(() => import('../../pages/userPages/Home'));
 import LoginPage from '../../pages/userPages/LoginPage'
 import PublicRoute from '../UserpublicRoute'
 import UserProfileLayout from '../../components/userComponents/UserProfileLayout'
-import Appointment from '../../components/userComponents/Appoinement'
 import ProfileData from '../../components/userComponents/ProfileData'
 import ProtectRoute from '../UserProtectRoute'
 import ForgotPasswordFrom from '../../components/ForgotPasswordFrom'
 import ResetPassword from '../../components/userComponents/ResetPassword'
 import LawyersList from '../../pages/userPages/LawyersList'
 import LawyerProfile from '../../pages/userPages/LawyerProfile';
+import LawyerSlots from '../../pages/userPages/LawyerSlots';
+import AppointmentReviewAndPayment from '../../pages/userPages/AppointmentReviewAndPayment';
+import AppointmentSuccess from '../../pages/userPages/AppoitnmentSuccess';
+import AppointmentList from '../../components/userComponents/Appoinement';
+import ViewAppointment from '../../pages/userPages/ViewAppontment';
 
 
 const UserRouters: React.FC = () => {
@@ -30,11 +34,15 @@ const UserRouters: React.FC = () => {
           <Home />
         </Suspense>} />
         <Route path='/findLawyers' element={<LawyersList />} />
-        <Route path="/viewLawyer/:id" element={<LawyerProfile />} />
         <Route element={<ProtectRoute />}>
+          <Route path="/viewLawyer/:id" element={<LawyerProfile />} />
+          <Route path="/slots/:id" element={<LawyerSlots />} />
+          <Route path="/payment/:id" element={<AppointmentReviewAndPayment />} />
+          <Route path="/paymentSuccess/:AppointmentId" element={<AppointmentSuccess />} />
+          <Route path="/viewAppointment/:AppointmentId" element={<ViewAppointment />} />
           <Route path='/profile' element={<UserProfileLayout />}>
             <Route index element={<ProfileData />} />
-            <Route path='appointment' element={<Appointment />} />
+            <Route path='appointment' element={<AppointmentList userType="user" />} />
             <Route path='wallet' element={<h1>Wallet</h1>} />
             <Route path='changePassword' element={<ResetPassword />} />
           </Route>
@@ -46,3 +54,7 @@ const UserRouters: React.FC = () => {
 }
 
 export default UserRouters
+
+
+
+

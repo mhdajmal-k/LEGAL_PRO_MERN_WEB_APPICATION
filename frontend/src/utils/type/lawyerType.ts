@@ -9,7 +9,7 @@ export interface LawyerSignUpResponse {
 }
 
 export interface response {
-  status: number;
+  status: boolean; //changed
   message: string;
   result: null | string | any;
 }
@@ -64,15 +64,38 @@ export interface Lawyer {
   practice_area: string[];
   certifications: Certification[];
 }
-
-export interface TimeSlot {
-  timeSlot: string;
-  status: boolean;
-}
-
 export interface SlotData {
   _id: string;
   date: string;
   availability: TimeSlot[];
   fees: number;
+}
+
+export interface TimeSlot {
+  timeSlot: string;
+  _id?: string;
+  status: boolean;
+  fee: number;
+}
+
+interface BasicLawyerDetails {
+  _id: string;
+  userName: string;
+  profile_picture: string;
+  city: string;
+  state: string;
+  designation: string;
+  years_of_experience: string;
+}
+
+export interface Slot {
+  _id: string;
+  date: Date;
+  availability: TimeSlot[];
+  fees: number;
+}
+
+export interface FetchedSlotData {
+  lawyerDetails: BasicLawyerDetails;
+  slots: Slot[];
 }

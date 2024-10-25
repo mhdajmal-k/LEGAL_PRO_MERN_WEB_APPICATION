@@ -1,6 +1,6 @@
 
 import React from 'react';
-import about from "../../assets/images/aboutus.jpg";
+import about from "../../assets/images/test.jpg";
 
 const AboutUs: React.FC = () => {
     return (
@@ -8,7 +8,12 @@ const AboutUs: React.FC = () => {
             <h1 className='text-center mb-5 font-bold text-2xl'>About Us</h1>
             <div className='max-w-6xl mx-auto'>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+                    <div className='space-y-6 w-full' >
+                        <div className='bg-white   rounded-lg shadow-lg overflow-hidden'>
+                            <img src={about} alt="About Us" className='object-fill' />
+                        </div>
 
+                    </div>
                     <div className='space-y-6'>
                         <div className='bg-white rounded-lg shadow-lg p-6'>
                             <h3 className='text-orange-500 font-medium mb-2'>How It Started</h3>
@@ -28,30 +33,27 @@ const AboutUs: React.FC = () => {
                     </div>
 
 
-                    <div className='space-y-6'>
-                        <div className='bg-white rounded-lg shadow-lg overflow-hidden'>
-                            <img src={about} alt="About Us" className='w-full h-auto' />
-                        </div>
-                        <div className='bg-white rounded-lg shadow-lg p-6'>
-                            <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-                                <div className='text-center bg-[#f7f9fc]'>
-                                    <h3 className='text-2xl font-bold text-black'>1000+</h3>
-                                    <h5 className='text-sm text-gray-500'>Trusted Clients</h5>
-                                </div>
-                                <div className='text-center bg-[#f7f9fc]'>
-                                    <h3 className='text-2xl font-bold text-black'>300+</h3>
-                                    <h5 className='text-sm text-gray-500'>Expert Lawyers</h5>
-                                </div>
-                                <div className='text-center bg-[#f7f9fc]'>
-                                    <h3 className='text-2xl font-bold text-black'>100+</h3>
-                                    <h5 className='text-sm text-gray-500'>Published Blogs</h5>
-                                </div>
-                                <div className='text-center bg-[#f7f9fc]'>
-                                    <h3 className='text-2xl font-bold text-black'>1000+</h3>
-                                    <h5 className='text-sm text-gray-500'>Successful Consultants</h5>
-                                </div>
-                            </div>
-                        </div>
+
+                </div>
+
+            </div>
+            <div className='bg-gray-100 my-3 w-full rounded-lg shadow-lg p-6'>
+                <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+                    <div className='text-center bg-white'>
+                        <h3 className='text-2xl font-bold text-black'>1000+</h3>
+                        <h5 className='text-sm text-gray-500'>Trusted Clients</h5>
+                    </div>
+                    <div className='text-center bg-white'>
+                        <h3 className='text-2xl font-bold text-black'>300+</h3>
+                        <h5 className='text-sm text-gray-500'>Expert Lawyers</h5>
+                    </div>
+                    <div className='text-center bg-white'>
+                        <h3 className='text-2xl font-bold text-black'>100+</h3>
+                        <h5 className='text-sm text-gray-500'>Published Blogs</h5>
+                    </div>
+                    <div className='text-center bg-white'>
+                        <h3 className='text-2xl font-bold text-black'>1000+</h3>
+                        <h5 className='text-sm text-gray-500'>Successful Consultants</h5>
                     </div>
                 </div>
             </div>

@@ -17,7 +17,7 @@ const ApprovalLawyerList: React.FC = () => {
       setLawyer(response.result);
     } catch (error: any) {
       console.log(error);
-      toast(<CustomToast message={error} type="error" />);
+      toast(<CustomToast message={error || error.message} type="error" />);
     }
   };
 

@@ -60,9 +60,10 @@ const ProfileData: React.FC = () => {
                     toast(<CustomToast message={response.message} type="success" />);
                 }
             } catch (error: any) {
-                toast(<CustomToast message={error.message || 'An error occurred during update'} type="error" />);
+                toast(<CustomToast message={error || error.message || 'An error occurred during Update password'} type="error" />);
             }
         },
+
     });
 
     return (

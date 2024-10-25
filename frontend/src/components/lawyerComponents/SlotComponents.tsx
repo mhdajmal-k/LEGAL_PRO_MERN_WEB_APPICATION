@@ -1,10 +1,10 @@
+import React, { useEffect, useState } from 'react';
 import { Button } from '@nextui-org/react';
 import { SlCalender } from "react-icons/sl";
-import React, { useEffect, useState } from 'react';
 import timeSlots from '../../utils/constants/Time';
 import CustomToast from '../userComponents/CustomToast';
 import { toast } from 'sonner';
-import { createSlot, fetchLawyerSlots, updateSlot } from '../../services/store/features/lawyerServices';
+import { createSlot, deleteSlot, fetchLawyerSlots, updateSlot } from '../../services/store/features/lawyerServices';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { SlotData } from '../../utils/type/lawyerType';
@@ -12,13 +12,16 @@ import { SlotData } from '../../utils/type/lawyerType';
 const SlotComponents: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
     const { lawyerInfo } = useSelector((state: RootState) => state.lawyer);
-    const [slots, setSlots] = useState<SlotData[]>([]);
-    const [feeAmount, setFeeAmount] = useState<number>(0);
+    const [fetchedSlots, setFetchedSlots] = useState<SlotData[]>([]);
+    const [DefaultAmount, setDefaultFeeAmount] = useState<number>(0);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTimes] = useState<string[]>([]);
     const [existingTime, setExistingTime] = useState<string[]>([]);
     const [editingSlot, setEditingSlot] = useState<SlotData | null>(null);
     const [editMode, setEditMode] = useState<boolean>(false);
+    const [customizingFee, setCustomizingFee] = useState<string | null>(null);
+    const [slotFees, setSlotFees] = useState<{ [key: string]: number }>({});
+    const [bookedSlots, setBookedSlots] = useState<string[]>([])
 
     useEffect(() => {
         fetchSlots();
@@ -28,32 +31,45 @@ const SlotComponents: React.FC = () => {
         try {
             const response = await dispatch(fetchLawyerSlots(lawyerInfo?._id)).unwrap();
             if (response.status) {
-                //setting to my slot all the slot
-                setSlots(response.result);
+                setFetchedSlots(response.result);
             }
         } catch (error: any) {
             toast(<CustomToast message={error} type="error" />);
         }
     };
 
-    const handleDate = (date: Date) => {
-        setSelectedDate(date);
-        const existingSlot = slots.find(slot => new Date(slot.date).toDateString() === date.toDateString());
+    const handleDate = (DateForSlotCreation: Date) => {
+        setSelectedDate(DateForSlotCreation);
+        const existingSlot = fetchedSlots.find(slot => new Date(slot.date).toDateString() === DateForSlotCreation.toDateString());
         if (existingSlot) {
             setEditingSlot(existingSlot);
-            // console.log(editingSlot)
-            setFeeAmount(existingSlot.fees);
+            setDefaultFeeAmount(existingSlot.fees);
             const availableTimes = existingSlot.availability.map(slot => slot.timeSlot);
             setSelectedTimes(availableTimes);
             setExistingTime(availableTimes);
+
+
+            const booked = existingSlot.availability
+                .filter(slot => slot.status)
+                .map(slot => slot.timeSlot);
+            setBookedSlots(booked);
+
+
+            const fees: Record<string, number> = {};
+            existingSlot.availability.forEach(slot => {
+                fees[slot.timeSlot] = slot.fee || DefaultAmount;
+            });
+            setSlotFees(fees);
+
             setEditMode(true);
         } else {
             setEditingSlot(null);
-            setFeeAmount(0);
+            setDefaultFeeAmount(0);
             setSelectedTimes([]);
             setExistingTime([]);
             setEditMode(false);
         }
+        // setCustomizingFee(null);
     };
 
     const handleTime = (time: string) => {
@@ -64,19 +80,34 @@ const SlotComponents: React.FC = () => {
                 return [...prevTimes, time];
             }
         });
+
+        setSlotFees(prevFees => ({
+            ...prevFees,
+            [time]: prevFees[time] || DefaultAmount
+        }));
+        // console.log(slotFees)
+        // setCustomizingFee(null);
+    };
+
+    const handleFeeChange = (time: string, fee: number) => {
+        setSlotFees(prevFees => ({
+            ...prevFees,
+            [time]: fee
+        }));
     };
 
     const handleSave = async () => {
-        if (selectedDate && selectedTime.length > 0 && feeAmount) {
-            if (feeAmount > 4000) {
-                toast(<CustomToast message={"Fee amount is huge. Maximum you can add is 4000"} type="error" />);
+        if (selectedDate && selectedTime.length > 0 && DefaultAmount) {
+            const invalidFees = Object.values(slotFees).some(fee => fee < 0 || fee > 4000)
+            if (invalidFees) {
+                toast(<CustomToast message={"Invalid fee amount. Fees must be between 0 and 4000"} type="error" />);
                 return;
             }
-            if (feeAmount < 0) {
-                toast(<CustomToast message={"Invalid fee amount"} type="error" />);
-                return;
-            }
-            let data = { id: lawyerInfo?._id, date: selectedDate, time: selectedTime, feeAmount: feeAmount, slotId: editingSlot?._id };
+            const availability = selectedTime.map(time => ({
+                timeSlot: time,
+                fee: slotFees[time] || DefaultAmount
+            }));
+            let data = { id: lawyerInfo?._id, date: selectedDate, time: availability, feeAmount: DefaultAmount, slotId: editingSlot?._id };
             try {
                 let response;
                 if (editMode) {
@@ -97,13 +128,28 @@ const SlotComponents: React.FC = () => {
         }
     };
 
+    const handleDelete = async () => {
+        console.log(editingSlot?._id)
+        try {
+            const response = await dispatch(deleteSlot(editingSlot?._id)).unwrap();
+            if (response.status) {
+                // fetchSlots()
+                toast(<CustomToast message={response.message} type="success" />);
+            }
+        } catch (error: any) {
+            toast(<CustomToast message={error || error.message} type="error" />);
+        }
+    }
+
     const handleReset = () => {
         setSelectedDate(null);
         setSelectedTimes([]);
         setExistingTime([]);
-        setFeeAmount(0);
+        setDefaultFeeAmount(0);
         setEditMode(false);
         setEditingSlot(null);
+        setSlotFees({});
+        setCustomizingFee(null);
     };
 
     return (
@@ -117,7 +163,7 @@ const SlotComponents: React.FC = () => {
                         const date = new Date();
                         date.setDate(date.getDate() + index);
                         const isSelected = selectedDate?.toDateString() === date.toDateString();
-                        const hasSlot = slots.some(slot => new Date(slot.date).toDateString() === date.toDateString());
+                        const hasSlot = fetchedSlots.some(slot => new Date(slot.date).toDateString() === date.toDateString());
 
                         return (
                             <div
@@ -140,6 +186,20 @@ const SlotComponents: React.FC = () => {
                     })}
                 </div>
             </div>
+            {!editMode &&
+                <div className="mb-6">
+                    <h3 className="text-lg font-semibold mb-2">Set Default Fee Amount</h3>
+                    <input
+                        min={0}
+                        max={4000}
+                        type="number"
+                        value={DefaultAmount}
+                        onChange={(e) => setDefaultFeeAmount(parseInt(e.target.value))}
+                        className="w-full p-2 border rounded"
+                    />
+                </div>
+            }
+
 
             {selectedDate && (
                 <div className="my-5">
@@ -148,54 +208,83 @@ const SlotComponents: React.FC = () => {
                         {timeSlots.map(time => {
                             const isSelected = selectedTime.includes(time);
                             const isExisting = existingTime.includes(time);
+                            const isBooked = bookedSlots.includes(time);
                             return (
-                                <Button
-                                    key={time}
-                                    onClick={() => handleTime(time)}
-                                    className={`
-                                        ${isSelected && isExisting ? 'bg-gray-500 text-white' :
-                                            isSelected ? 'bg-blue-500 text-white' :
-                                                'bg-gray-100'}
-                                    `}
-                                >
-                                    {time}
-                                </Button>
+                                <div key={time} className="flex flex-col items-center">
+                                    <Button
+                                        onClick={() => !isBooked && handleTime(time)}
+                                        className={`
+                                            ${isBooked ? 'bg-red-100 text-red-600 cursor-not-allowed' :
+                                                isSelected && isExisting ? 'bg-gray-500 text-white' :
+                                                    isSelected ? 'bg-blue-500 text-white' :
+                                                        'bg-gray-100'}
+                                            transition-colors duration-200
+                                        `}
+                                    >
+                                        <span>{time}
+                                        </span>
+
+                                        {isBooked && (
+                                            <p className="text-xs font-medium">Booked</p>
+                                        )}
+                                    </Button>
+                                    {!isBooked && isSelected && (
+                                        <div className="my-1 text-center">
+
+                                            {customizingFee === time ? (
+
+                                                <input
+                                                    type="number"
+                                                    min={0}
+                                                    max={4000}
+                                                    value={slotFees[time] || ''}
+                                                    onChange={(e) => handleFeeChange(time, parseInt(e.target.value))}
+                                                    className="mt-1 w-full text-sm p-1 border rounded"
+                                                    placeholder="Fee"
+                                                    onBlur={() => setCustomizingFee(null)}
+                                                />
+                                            ) : (
+                                                <button
+                                                    onClick={() => setCustomizingFee(time)}
+                                                    className="mt-1 text-xs text-blue-500 underline cursor-pointer"
+                                                >
+                                                    {!editMode ? "Customize Fee" : "Update Fee"}
+
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
                             );
                         })}
+
                     </div>
                 </div>
             )}
 
-            {(
-                <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-2">Set Fee Amount for selected Date</h3>
-                    <input
-                        min={0}
-                        max={4000}
-                        type="number"
-                        value={feeAmount}
-                        onChange={(e) => setFeeAmount(parseInt(e.target.value))}
-                        className="w-full p-2 border rounded"
-                    />
-                </div>
-            )}
-            <div className='flex  justify-start gap-4 max-w-[50%] items-center '>
+
+
+            <div className='flex justify-start gap-4 max-w-[50%] items-center mb-4'>
                 <span className='w-3 h-3 bg-green-600'></span><p>Booked</p>
-                <span className='w-3 h-3 bg-gray-500'></span><p>selected</p>
-                <span className='w-3 h-3 bg-white'></span><p>UnSelected</p>
+                <span className='w-3 h-3 bg-gray-500'></span><p>Selected</p>
+                <span className='w-3 h-3 bg-white'></span><p>Unselected</p>
             </div>
-            {(
-                <div className="flex justify-end space-x-4">
-                    <Button className="px-4 py-2 bg-yellow-400 rounded" onClick={handleSave}>
-                        {editMode ? 'Update' : 'Save'}
+
+            <div className="flex justify-end space-x-4">
+                <Button className="px-4 py-2 bg-yellow-400 rounded" onClick={handleSave}>
+                    {editMode ? 'Update' : 'Save'}
+                </Button>
+                {selectedDate && editMode &&
+                    <Button className="px-4 py-2 bg-red-600" onClick={handleDelete}>
+                        Delete All Slot
                     </Button>
-                    {editMode && (
-                        <Button className="px-4 py-2 bg-red-500 text-white rounded" onClick={handleReset}>
-                            Cancel Edit
-                        </Button>
-                    )}
-                </div>
-            )}
+                }
+                {editMode && (
+                    <Button className="px-4 py-2 bg-red-500 text-white rounded" onClick={handleReset}>
+                        Cancel Edit
+                    </Button>
+                )}
+            </div>
         </div>
     );
 };

@@ -8,6 +8,7 @@ import {
 import { config } from "./envConfig";
 import { IS3Service } from "../../domain/services/Is3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import sharp from "sharp";
 
 export class S3Service implements IS3Service {
   private s3: S3Client;
@@ -23,10 +24,19 @@ export class S3Service implements IS3Service {
   }
 
   async uploadFile(file: Express.Multer.File, key: string): Promise<string> {
+    const buffer = await sharp(file.buffer)
+      .resize({
+        height: 512,
+        width: 512,
+        fit: "contain",
+        background: { r: 255, g: 255, b: 255, alpha: 1 },
+      }) // White background
+      .toBuffer();
+
     const params = {
       Bucket: config.BUCKET_NAME,
       Key: key,
-      Body: file.buffer,
+      Body: buffer,
       ContentType: file.mimetype,
     };
 
@@ -35,6 +45,7 @@ export class S3Service implements IS3Service {
       await this.s3.send(command);
       return `https://${config.BUCKET_NAME}.s3.${config.BUCKET_REGION}.amazonaws.com/${key}`;
     } catch (error) {
+      console.log(error, "from upload Image");
       throw error;
     }
   }

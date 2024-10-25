@@ -25,7 +25,7 @@ profileRoute.post(
   "/search",
   userProfileController.AISearch.bind(userProfileController)
 );
-profileRoute.post(
+profileRoute.patch(
   "/resetPassword/:id",
   authorization("user"),
   userProfileController.resetPassword.bind(userProfileController)

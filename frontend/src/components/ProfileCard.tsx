@@ -13,7 +13,7 @@ const CommonCard: React.FC<LawyerCardProps> = ({ lawyer }) => {
         <div className="bg-white shadow-md border border-gray-200 w-full rounded-lg overflow-hidden  transition-transform transform hover:scale-105 ease-in  hover:shadow-lg">
             <div className="h-64 overflow-hidden ">
                 <img
-                    className="w-[90%] mx-auto mt-4 border rounded-lg shadow-xl h-full object-cover"
+                    className="w-[90%] mx-auto  rounded-lg  h-full object-contain"
                     src={lawyer.profile_picture}
                     alt="profile-picture"
                 />

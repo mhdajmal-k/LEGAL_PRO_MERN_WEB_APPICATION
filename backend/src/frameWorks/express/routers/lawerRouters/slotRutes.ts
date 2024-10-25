@@ -23,3 +23,8 @@ slotRoute.put(
   authorization("lawyer"),
   lawyerSlotController.updateSlots.bind(lawyerSlotController)
 );
+slotRoute.delete(
+  "/:slotId",
+  authorization("lawyer"),
+  lawyerSlotController.deleteSlot.bind(lawyerSlotController)
+);

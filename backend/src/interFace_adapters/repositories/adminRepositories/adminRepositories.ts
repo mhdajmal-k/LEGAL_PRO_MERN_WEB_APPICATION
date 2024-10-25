@@ -29,11 +29,13 @@ class AdminRepository implements iAdminRepository {
       console.log(error);
     }
   }
-  async getUser(): Promise<any> {
+  async getUser(currentPage: number, limit: number): Promise<any> {
     try {
       const users = await User.find({ role: { $ne: "admin" } })
         .select("-password")
         .sort({ createdAt: -1 })
+        .skip((currentPage - 1) * limit)
+        .limit(limit)
         .lean();
 
       console.log(users, "is th eusesrs");
@@ -41,6 +43,23 @@ class AdminRepository implements iAdminRepository {
       return users;
     } catch (error) {
       throw new Error("Could not fetch users");
+    }
+  }
+  async getTotalCount(db: string): Promise<any> {
+    try {
+      let total;
+      if (db == "user") {
+        total = await User.countDocuments({
+          role: { $ne: "admin" },
+        });
+      } else if (db == "lawyer") {
+        total = await Lawyer.countDocuments({
+          verified: "verified",
+        });
+      }
+      return total;
+    } catch (error) {
+      throw new Error("field to get total counts");
     }
   }
   async getPendingApprovalLawyers(): Promise<any> {
@@ -55,11 +74,13 @@ class AdminRepository implements iAdminRepository {
     }
   }
 
-  async getLawyers(): Promise<any> {
+  async getLawyers(currentPage: number, limit: number): Promise<any> {
     try {
       const lawyers = await Lawyer.find({ verified: "verified" })
         .select("-password")
         .sort({ createdAt: -1 })
+        .skip((currentPage - 1) * limit)
+        .limit(limit)
         .lean();
       console.log(lawyers, "in thee db ");
       return lawyers;

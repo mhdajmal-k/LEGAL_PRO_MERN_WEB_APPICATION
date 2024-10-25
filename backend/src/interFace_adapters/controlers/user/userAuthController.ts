@@ -63,7 +63,7 @@ class UserAuthController {
         res.cookie("User_accessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
-          maxAge: 5 * 60 * 1000,
+          maxAge: 20 * 60 * 1000,
         });
         res.clearCookie("auth_token");
         return res.status(200).json({
@@ -127,7 +127,7 @@ class UserAuthController {
       }
       return res.status;
     } catch (error) {
-      console.log(error);
+      console.log(error, "in here rate limit");
       next(error);
     }
   }
@@ -245,6 +245,7 @@ class UserAuthController {
     next: NextFunction
   ): Promise<any> {
     try {
+      console.log("in the reset");
       const token = req.params.token as string | undefined;
       console.log(token, "is the extracted");
       if (!token) {
@@ -284,7 +285,7 @@ class UserAuthController {
   async logOut(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       console.log("in logout");
-      res.clearCookie("auth_accessToken");
+      res.clearCookie("User_accessToken");
       res.status(200).json({ message: "Logout successful" });
     } catch (error) {
       next(error);

@@ -52,7 +52,7 @@ adminRouter.get(
   authorization("admin"),
   adminController.lawyer.bind(adminController)
 );
-adminRouter.put(
+adminRouter.patch(
   "/verifylawyer/:id",
   authorization("admin"),
   adminController.updateLawyer.bind(adminController)
@@ -62,9 +62,12 @@ adminRouter.patch(
   authorization("admin"),
   adminController.unVerifyLawyer.bind(adminController)
 );
-adminRouter.put(
+adminRouter.patch(
   "/blockandunblock/:id",
   authorization("admin"),
   adminController.blockOrUnblock.bind(adminController)
 );
-adminRouter.post("/logout", adminController.adminLogOut.bind(adminController));
+adminRouter.delete(
+  "/logout",
+  adminController.adminLogOut.bind(adminController)
+);

@@ -11,10 +11,6 @@ import { toast } from 'sonner';
 // import { Lawyer } from '../../utils/type/lawyerType';
 
 
-
-
-
-
 interface Lawyer {
     _id: string;
     userName: string;
@@ -63,6 +59,10 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
             console.error("Failed to fetch lawyer details", error);
         }
     };
+    const handilclose = () => {
+        setShowReasonInput(false)
+        setUnverifyReason("")
+    }
 
     const handleVerify = async () => {
         if (selectedLawyer) {
@@ -77,7 +77,7 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
 
             } catch (error: any) {
                 console.error("Verification failed:", error);
-                toast(<CustomToast message={error} type="error" />)
+                toast(<CustomToast message={error || error.message} type="error" />)
             }
         }
     };
@@ -167,43 +167,46 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
             </table>
 
 
-            {/* Modal for Viewing Lawyer Details */}
-            <Modal isOpen={isViewModalOpen} onOpenChange={setViewModalOpen} placement="top-center" className='container'>
-                <ModalContent className='max-w-xl flex items-center justify-center gap-2'>
+
+            <Modal isOpen={isViewModalOpen} onOpenChange={setViewModalOpen} placement="center" className="container mt-5">
+                <ModalContent className="max-w-xl p-6 bg-white shadow-lg rounded-lg">
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Lawyer Profile</ModalHeader>
-                            <ModalBody>
+                            <ModalHeader className="text-center text-xl font-semibold text-gray-800 ">
+                                Lawyer Profile
+                            </ModalHeader>
+                            <ModalBody className="flex flex-col items-center">
                                 {selectedLawyer ? (
-                                    <div>
-                                        <img
-                                            className="rounded-full border-2 border-blue-500 mx-auto"
-                                            src={selectedLawyer.profile_picture}
-                                            alt={selectedLawyer.userName}
-                                            style={{ width: '100px', height: '100px' }}
-                                        />
-                                        <div className='my-3'>
-                                            <h3>Name: {selectedLawyer.userName}</h3>
-                                            <p>Email: {selectedLawyer.email}</p>
-                                            <p>Phone Number: {selectedLawyer.phoneNumber || 'N/A'}</p>
-                                            <p>City: {selectedLawyer.city || 'N/A'}</p>
-                                            <p>State: {selectedLawyer.state || 'N/A'}</p>
-                                            <p>Years of Experience: {selectedLawyer.years_of_experience}</p>
-                                            <p>Designation: {selectedLawyer.designation}</p>
-                                            <p>Verified: {selectedLawyer.verified ? 'Yes' : 'No'}</p>
-                                            <p>Practice Areas: {selectedLawyer.practice_area.join(', ') || 'N/A'}</p>
-                                            <p>Languages Spoken: {selectedLawyer.languages_spoken.join(', ') || 'N/A'}</p>
+                                    <div className="w-full">
+                                        <div className="flex justify-center mb-4">
+                                            <img
+                                                className="rounded-full border-4 border-blue-500 shadow-lg"
+                                                src={selectedLawyer.profile_picture}
+                                                alt={selectedLawyer.userName}
+                                                style={{ width: '120px', height: '120px' }}
+                                            />
+                                        </div>
+                                        <div className="text-left space-y-2">
+                                            <h3 className="text-lg font-semibold">Name: <span className="font-normal">{selectedLawyer.userName}</span></h3>
+                                            <p className="text-gray-600">Email: <span className="font-normal">{selectedLawyer.email}</span></p>
+                                            <p className="text-gray-600">Phone Number: <span className="font-normal">{selectedLawyer.phoneNumber || 'N/A'}</span></p>
+                                            <p className="text-gray-600">City: <span className="font-normal">{selectedLawyer.city || 'N/A'}</span></p>
+                                            <p className="text-gray-600">State: <span className="font-normal">{selectedLawyer.state || 'N/A'}</span></p>
+                                            <p className="text-gray-600">Years of Experience: <span className=" font-semibold text-black">{selectedLawyer.years_of_experience}</span></p>
+                                            <p className="text-gray-600">Designation: <span className="font-semibold text-black">{selectedLawyer.designation}</span></p>
+                                            <p className="text-gray-600">Practice Areas: <span className="font-semibold text-black">{selectedLawyer.practice_area.join(', ') || 'N/A'}</span></p>
+                                            <p className="text-gray-600">Languages Spoken: <span className="font-normal">{selectedLawyer.languages_spoken.join(', ') || 'N/A'}</span></p>
 
-                                            <div>
+                                            <div className="mt-4">
                                                 <strong>Certifications:</strong>
                                                 {selectedLawyer.certifications && selectedLawyer.certifications.length > 0 ? (
-                                                    <ul>
+                                                    <ul className="space-y-3">
                                                         {selectedLawyer.certifications.map((cert, index) => (
-                                                            <li key={index} className="mb-2">
-                                                                <p>Type: {cert.certificateType}</p>
-                                                                <p>Enrolment Number: {cert.enrolmentNumber}</p>
+                                                            <li key={index} className="bg-gray-50 p-3 rounded-lg border shadow-sm">
+                                                                <p className="text-gray-800">Type: <span className="font-normal">{cert.certificateType}</span></p>
+                                                                <p className="text-gray-800">Enrolment Number: <span className="font-normal">{cert.enrolmentNumber}</span></p>
                                                                 {cert.certificate && (
-                                                                    <a href={cert.certificate} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                                                                    <a href={cert.certificate} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline mt-1 block">
                                                                         View Certificate
                                                                     </a>
                                                                 )}
@@ -211,7 +214,7 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
                                                         ))}
                                                     </ul>
                                                 ) : (
-                                                    <p>N/A</p>
+                                                    <p className="text-gray-600">N/A</p>
                                                 )}
                                             </div>
                                         </div>
@@ -221,23 +224,54 @@ const LawyerTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
                                 )}
                             </ModalBody>
 
-                            <ModalFooter className="flex justify-between gap-3">
-                                <Button id="close-btn" color="danger" variant="flat" onPress={onClose}>Close</Button>
-                                {!showReasonInput && <Button id="verify-btn" color="success" variant="flat" onPress={handleVerify}>VERIFY</Button>
-                                }
-                                <Button id="unverify-btn" color="danger" variant="flat" onPress={() => setShowReasonInput(true)}>UNVERIFY</Button>
+                            <ModalFooter className="flex justify-between w-full mt-6 gap-3">
+                                <Button id="close-btn" color="danger" variant="flat" onPress={onClose} onClick={handilclose} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                                    Close
+                                </Button>
+                                {!showReasonInput && (
+                                    <Button
+                                        id="verify-btn"
+                                        color="success"
+                                        variant="flat"
+                                        onPress={handleVerify}
+                                        className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+                                    >
+                                        VERIFY
+                                    </Button>
+                                )}
+                                <Button
+                                    id="unverify-btn"
+                                    color="danger"
+                                    variant="flat"
+                                    onPress={() => setShowReasonInput(true)}
+                                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+                                >
+                                    UNVERIFY
+                                </Button>
 
                                 {showReasonInput && (
-                                    <>
-                                        <Input type="text" placeholder="Enter reason" value={unverifyReason} onChange={(e) => setUnverifyReason(e.target.value)} />
-                                        <Button onPress={() => handleUnverify()}>Submit</Button>
-                                    </>
+                                    <div className="flex flex-col items-center space-y-3 w-full mt-4">
+                                        <Input
+                                            type="text"
+                                            placeholder="Enter reason"
+                                            value={unverifyReason}
+                                            onChange={(e) => setUnverifyReason(e.target.value)}
+                                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-400"
+                                        />
+                                        <Button
+                                            onPress={handleUnverify}
+                                            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                                        >
+                                            Submit
+                                        </Button>
+                                    </div>
                                 )}
                             </ModalFooter>
                         </>
                     )}
                 </ModalContent>
             </Modal>
+
         </div>
     );
 };

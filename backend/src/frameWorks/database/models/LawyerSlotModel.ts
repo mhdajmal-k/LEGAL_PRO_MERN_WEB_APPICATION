@@ -16,6 +16,7 @@ const SlotSchema: Schema<ISlot> = new Schema(
     availability: [
       {
         timeSlot: { type: String, required: true },
+        fee: { type: Number },
         status: { type: Boolean, required: true, default: false },
       },
     ],

@@ -24,8 +24,8 @@ const LoginForm: React.FC = () => {
     const { loading, error } = useSelector((state: RootState) => state.user)
     const formik = useFormik({
         initialValues: {
-            email: '',
-            password: '',
+            email: 'ajmalchundappuram@gmail.com',
+            password: '@Ajmal111',
         },
         validationSchema: loginValidator,
         validateOnChange: true,
@@ -36,12 +36,9 @@ const LoginForm: React.FC = () => {
                 if (response) {
                     navigate('/');
                 }
-
-
-
             } catch (error: any) {
                 console.error("Login error:", error);
-                toast(<CustomToast message={error.message || 'An error occurred during login'} type="error" />);
+                toast(<CustomToast message={error || error.message} type="error" />);
             }
         },
     });
@@ -69,7 +66,7 @@ const LoginForm: React.FC = () => {
                 }
             } catch (error: any) {
                 console.error("Login error:", error);
-                toast(<CustomToast message={error.message || 'An error occurred during login'} type="error" />);
+                toast(<CustomToast message={error || error.message || 'An error occurred during login'} type="error" />);
             }
         }
 

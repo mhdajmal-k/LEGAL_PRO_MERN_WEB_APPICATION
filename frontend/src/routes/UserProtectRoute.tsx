@@ -7,7 +7,7 @@ const ProtectRoute: React.FC = () => {
     const { userInfo } = useSelector((state: RootState) => state.user);
 
     console.log(userInfo, "this is the user Info")
-    return userInfo && !userInfo.block ? <Outlet /> : <Navigate to="/" />;
+    return userInfo?._id ? <Outlet /> : <Navigate to="/login" />;
 
 
 };

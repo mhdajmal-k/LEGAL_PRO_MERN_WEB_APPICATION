@@ -1,12 +1,11 @@
 import React from 'react';
-import { AppDispatch, RootState } from '../../services/store/store';
-import { useDispatch, useSelector } from 'react-redux';
-import CustomSkelton from '../skeltton';
+// import { AppDispatch, } from '../services/store/store';
+// import { useDispatch } from 'react-redux';
+import CustomSkelton from './skeltton';
 import { CgProfile } from "react-icons/cg";
 import { Button } from '@nextui-org/react';
-import { blockandUnblock } from '../../services/store/features/adminServices';
-import { toast } from 'sonner';
-import CustomToast from '../userComponents/CustomToast';
+
+
 
 interface User {
     _id: string;
@@ -20,30 +19,16 @@ interface User {
 interface CommonTableProps {
     columns: string[];
     data: User[];
-    onRefresh: () => void
+    onAction: (id: string, block: boolean) => Promise<void>;
+    loading: boolean;
+    Who: 'user' | 'lawyer';
 }
 
-const CommonTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) => {
-    const dispatch: AppDispatch = useDispatch();
-    const { loading, } = useSelector((state: RootState) => state.admin);
-    async function handleBlockorUBlock(id: string, block: boolean): Promise<void> {
-        try {
-
-            const response = await dispatch(blockandUnblock({ id, state: !block, action: "user" })).unwrap();
-            // const response = await dispatch(blockandUnblock({ id, state: !block })).unwrap();
-            if (response.status) {
-                toast(<CustomToast message={response.message} type="success" />);
-                onRefresh()
-            }
-            // setViewModalOpen(false);
-
-        } catch (error: any) {
-            console.error("Verification failed:", error);
-            toast(<CustomToast message={error} type="error" />)
-        }
+const CommonTable: React.FC<CommonTableProps> = ({ columns, data, onAction, loading, Who }) => {
 
 
-    }
+    // const dispatch: AppDispatch = useDispatch();
+
 
     return (
         <div className="overflow-x-auto mx-auto sm:max-w-6xl shadow-md rounded-lg ">
@@ -78,7 +63,7 @@ const CommonTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
                             key={user._id}
                             className="hover:bg-gray-100 transition duration-300 ease-in-out even:bg-gray-50"
                         >
-                            {/* Profile Image */}
+
                             <td className="px-6 py-4 whitespace-nowrap">
                                 <div className="flex items-center">
                                     <div className="h-10 w-10">
@@ -112,7 +97,9 @@ const CommonTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
                                     {user.block ? 'Blocked' : 'Active'}
                                 </span>
                             </td>
-                            <Button className='mt-3' onClick={() => handleBlockorUBlock(user._id, user.block)}
+                            <Button
+                                className='mt-3'
+                                onClick={() => onAction(user._id, user.block)}
                                 color={user?.block ? 'danger' : "success"}
                             >
                                 {user?.block ? 'UnBlock' : "Block"}
@@ -122,6 +109,7 @@ const CommonTable: React.FC<CommonTableProps> = ({ columns, data, onRefresh }) =
                     ))}
                 </tbody >
             </table >
+
         </div >
     );
 };

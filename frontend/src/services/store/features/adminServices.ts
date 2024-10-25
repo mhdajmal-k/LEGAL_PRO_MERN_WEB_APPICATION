@@ -20,9 +20,14 @@ import { ADMINLOGIN } from "../../api/lawyerApi";
 
 export const getUsers = createAsyncThunk(
   "admin/getUsers",
-  async (_, { rejectWithValue }) => {
+  async (
+    { page, limit }: { page: number; limit: number },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await axiosInstance.get<LawyerSignUpResponse>(FETCHUSER);
+      const response = await axiosInstance.get(FETCHUSER, {
+        params: { page, limit },
+      });
       console.log(response.data, "//////////////////////////////////");
       return response.data;
     } catch (error) {
@@ -106,9 +111,14 @@ export const getLawyer = createAsyncThunk(
 
 export const getLawyers = createAsyncThunk(
   "admin/getLawyers",
-  async (_, { rejectWithValue }) => {
+  async (
+    { page, limit }: { page: number; limit: number },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await axiosInstance.get<response>(`${FETCHLAWYERS}`);
+      const response = await axiosInstance.get<response>(`${FETCHLAWYERS}`, {
+        params: { page, limit },
+      });
       console.log(response.data, "//////////////////////////////////");
       return response.data;
     } catch (error) {
@@ -131,7 +141,7 @@ export const verifyLawyer = createAsyncThunk(
     try {
       console.log("hi");
       console.log(id);
-      const response = await axiosInstance.put<response>(
+      const response = await axiosInstance.patch<response>(
         `${VERIFYLAWYER}/${id}`
       );
       console.log(response.data, "//////////////////////////////////");
@@ -158,7 +168,7 @@ export const undVerifyLawyer = createAsyncThunk(
     try {
       console.log("hi");
       console.log(id);
-      const response = await axiosInstance.put<response>(
+      const response = await axiosInstance.patch<response>(
         `${UNVERIFYLAWYER}/${id}`,
         { reason }
       );
@@ -181,14 +191,11 @@ export const blockandUnblock = createAsyncThunk(
   "admin/blockandUnblock",
   async (
     { id, state, action }: { id: string; state: boolean; action: string },
-
-    //     { id, state }: { id: string; state: boolean },
-    // >>>>>>> 1cb3bf3d1224596338a622879a6d01c174d4c611
     { rejectWithValue }
   ) => {
     try {
       console.log(state, "is the state");
-      const response = await axiosInstance.put<response>(
+      const response = await axiosInstance.patch<response>(
         `${BLOCKANDUNBLOCK}/${id}`,
 
         { state, action }
@@ -212,7 +219,7 @@ export const adminLogOut = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       console.log("hi");
-      const response = await axiosInstance.post<response>(ADMINLOGOUT);
+      const response = await axiosInstance.delete<response>(ADMINLOGOUT);
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";

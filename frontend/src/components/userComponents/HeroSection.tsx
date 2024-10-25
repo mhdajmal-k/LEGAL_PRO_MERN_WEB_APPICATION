@@ -7,14 +7,16 @@ import { AISearch } from '../../services/store/features/userServices';
 import CustomToast from './CustomToast';
 import { toast } from 'sonner';
 
-const HeroSection: React.FC = () => {
+const HeroSection: React.FC = React.memo(() => {
     const searchInput = useRef<HTMLInputElement>(null)
     const [searching, setSearching] = useState<boolean>(false)
     const { loading } = useSelector((state: RootState) => state.user)
     const dispatch: AppDispatch = useDispatch()
     const [result, setResult] = useState<string>("")
+
     const handleSearch = async (e: React.FormEvent) => {
         setResult("")
+
         e.preventDefault()
         try {
             if (searchInput.current) {
@@ -30,7 +32,7 @@ const HeroSection: React.FC = () => {
             }
 
         } catch (error: any) {
-            toast(<CustomToast message={error.message || 'An error occurred during login'} type="error" />);
+            toast(<CustomToast message={error || error.message} type="error" />);
             setSearching(false)
         }
 
@@ -128,6 +130,6 @@ const HeroSection: React.FC = () => {
             </section>
         </div>
     );
-};
+});
 
 export default HeroSection;

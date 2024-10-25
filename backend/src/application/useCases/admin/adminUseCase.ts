@@ -80,9 +80,20 @@ class AdminInteractor implements IAdminInteractor {
       throw error;
     }
   }
-  async getUsers(): Promise<{ status: boolean; message: string; result: [] }> {
+  async getUsers(
+    currentPage: number,
+    limit: number
+  ): Promise<{
+    status: boolean;
+    message: string;
+    result: [];
+    totalUsers?: number;
+    totalPages?: number;
+  }> {
     try {
-      const allUser = await this.Repository.getUser();
+      const allUser = await this.Repository.getUser(currentPage, limit);
+      const totalUsers = await this.Repository.getTotalCount("user");
+      const totalPages = Math.ceil(totalUsers / limit);
       if (!allUser) {
         return {
           status: false,
@@ -96,6 +107,8 @@ class AdminInteractor implements IAdminInteractor {
         status: true,
         message: "message fetched SuccessFully",
         result: allUser,
+        totalUsers: totalUsers,
+        totalPages: totalPages,
       };
     } catch (error) {
       throw error;
@@ -188,20 +201,26 @@ class AdminInteractor implements IAdminInteractor {
       throw error;
     }
   }
-  async getLawyersList(): Promise<{
+  async getLawyersList(
+    currentPage: number,
+    limit: number
+  ): Promise<{
     statusCode: number;
     status: boolean;
     message: string;
     result: any[];
+    totalLawyers?: number;
+    totalPages?: number;
   }> {
     try {
-      const lawyers = await this.Repository.getLawyers();
+      const lawyers = await this.Repository.getLawyers(currentPage, limit);
       if (!lawyers) {
         const error: CustomError = new Error("Lawyer not found");
         error.statusCode = 404;
         throw error;
       }
-
+      const totalLawyers = await this.Repository.getTotalCount("user");
+      const totalPages = Math.ceil(totalLawyers / limit);
       const updatedLawyer = await Promise.all(
         lawyers.map(async (lawyer: any) => {
           console.log(lawyer, "is the map ");
@@ -218,6 +237,8 @@ class AdminInteractor implements IAdminInteractor {
         status: true,
         message: "lawyer Got successFully",
         result: updatedLawyer,
+        totalLawyers: totalLawyers,
+        totalPages: totalPages,
       };
     } catch (error) {
       throw error;

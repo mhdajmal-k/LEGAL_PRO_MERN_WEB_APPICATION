@@ -12,7 +12,10 @@ export const errorHandler = (
 ) => {
   console.log("Middleware Error Hadnling");
   const errStatus = err.statusCode || res.statusCode || 500;
+
   const errMsg = err.message || res.statusMessage || "Something went wrong";
+  console.log(errMsg, "erro.message");
+  console.log(res.statusMessage, "erro.message");
   res.status(errStatus).json({
     success: false,
     status: errStatus,

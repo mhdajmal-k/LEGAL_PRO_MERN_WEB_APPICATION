@@ -6,6 +6,7 @@ import UserAuthRepository from "../../../../interFace_adapters/repositories/user
 import { config } from "../../../config/envConfig";
 import EmailService from "../../../services/mailer";
 import JwtToken from "../../../services/jwt";
+import { apiLimiter } from "../../../config/rateLimit";
 
 export const authRouter = Router();
 require("dotenv").config();
@@ -25,16 +26,21 @@ const interactor = new userAuthInteractor(
 
 const userAuthController = new UserAuthController(interactor);
 
-authRouter.post("/signup", userAuthController.signUp.bind(userAuthController));
+authRouter.post(
+  "/signup",
+  apiLimiter,
+  userAuthController.signUp.bind(userAuthController)
+);
 authRouter.post(
   "/verify-otp",
   userAuthController.verifyOtp.bind(userAuthController)
 );
 authRouter.post(
   "/login",
+  apiLimiter,
   userAuthController.loginUser.bind(userAuthController)
 );
-authRouter.post(
+authRouter.get(
   "/resend-otp",
   userAuthController.resendOtp.bind(userAuthController)
 );
@@ -47,9 +53,12 @@ authRouter.post(
   "/forgotpassword",
   userAuthController.forgotpassword.bind(userAuthController)
 );
-authRouter.post(
+authRouter.patch(
   "/resetforgotpassword/:token",
   userAuthController.resetforgotpassword.bind(userAuthController)
 );
 
-authRouter.post("/logout", userAuthController.logOut.bind(userAuthController));
+authRouter.delete(
+  "/logout",
+  userAuthController.logOut.bind(userAuthController)
+);

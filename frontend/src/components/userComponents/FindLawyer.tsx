@@ -12,27 +12,35 @@ import { toast } from 'sonner'
 import { Lawyer } from '../../utils/type/lawyerType'
 import CommonCard from '../ProfileCard'
 import CardSkelton from '../CardSkeltton'
+import CommonPagination from '../Pagination'
 
 const FindLawyer: React.FC = () => {
     const dispatch: AppDispatch = useDispatch()
     const [lawyers, setLawyers] = useState<Lawyer[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [lawyerPerPage] = useState<number>(4);
     const { loading, error } = useSelector((state: RootState) => state.user)
-
-    const fetchLawyers = async () => {
+    const handlePageChange = (page: number) => {
+        // alert(page)
+        setCurrentPage(page);
+    };
+    const fetchLawyers = async (page: number) => {
         try {
-            const response = await dispatch(fetchLawyer()).unwrap()
+            const response = await dispatch(fetchLawyer({ page, limit: lawyerPerPage })).unwrap()
 
-            setLawyers(response.result);
-
+            setLawyers(response.result.lawyers);
+            setTotalPages(response.result.totalPages);
+            console.log(totalPages, "is the response")
         } catch (error: any) {
-            toast(<CustomToast message={error.message || 'An error occurred during login'} type="error" />);
+            toast(<CustomToast message={error || error.message} type="error" />);
 
             console.error('Error fetching lawyers:', error);
         }
     };
     useEffect(() => {
-        fetchLawyers();
-    }, [dispatch]);
+        fetchLawyers(currentPage);
+    }, [dispatch, currentPage, lawyerPerPage]);
     return (
         <div className='container p-5 min-h-screen'>
             <div className='my-5 max-w-[65%] h-16 rounded-lg shadow-lg bg-primary mx-auto flex justify-evenly items-center'>
@@ -73,6 +81,15 @@ const FindLawyer: React.FC = () => {
                         ? lawyers.map((lawyer) => <CommonCard key={lawyer._id} lawyer={lawyer} />)
                         : <p className="text-center font-semibold text-3xl">No Lawyer found</p>}
             </div>
+            {lawyers.length > 0 && (
+                <div className='text-center mx-auto flex justify-center mt-7'>
+                    <CommonPagination
+                        totalPage={totalPages}
+                        initialPage={currentPage}
+                        onChange={handlePageChange}
+                    />
+                </div>
+            )}
 
         </div>
 

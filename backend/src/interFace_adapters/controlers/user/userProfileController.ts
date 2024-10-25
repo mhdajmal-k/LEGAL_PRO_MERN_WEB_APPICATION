@@ -41,6 +41,9 @@ class UserProfileController {
   }
   async resetPassword(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log("hidddddddddd");
+      console.log(req.body);
+      console.log(req.params.id);
       const { newPassword, currentPassword } = req.body;
       const id = req.params.id;
 
@@ -52,11 +55,12 @@ class UserProfileController {
         throw error;
       }
       if (newPassword == currentPassword) {
-        return res.status(400).json({
-          status: false,
-          message: "Entered the new password and current Password is same",
-          result: {},
-        });
+        console.log("in here in same as");
+        const error: CustomError = new Error(
+          "Entered and Current password is same"
+        );
+        error.statusCode = 400;
+        throw error;
       }
       const response = await this.userProfileInteractor.resetPassword({
         currentPassword,
@@ -76,6 +80,7 @@ class UserProfileController {
         result: response.result,
       });
     } catch (error) {
+      console.log("in here errorr", error);
       next(error);
     }
   }

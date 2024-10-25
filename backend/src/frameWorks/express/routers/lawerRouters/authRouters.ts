@@ -9,6 +9,7 @@ import LawyerAuthController from "../../../../interFace_adapters/controlers/lawy
 import multer from "multer";
 import { S3Service } from "../../../config/s3Setup";
 import { authorization } from "../../../middleware/authMilddlewere";
+import { apiLimiter } from "../../../config/rateLimit";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -36,6 +37,7 @@ const lawyerAuthController = new LawyerAuthController(interactor);
 
 lawyerAuthRouter.post(
   "/signup",
+  apiLimiter,
   upload.single("image"),
   lawyerAuthController.lawyerSignUp.bind(lawyerAuthController)
 );
@@ -44,7 +46,7 @@ lawyerAuthRouter.post(
   lawyerAuthController.lawyerVerifyOtp.bind(lawyerAuthController)
 );
 
-lawyerAuthRouter.post(
+lawyerAuthRouter.get(
   "/resend-otp",
   lawyerAuthController.resendOtp.bind(lawyerAuthController)
 );
@@ -61,6 +63,7 @@ lawyerAuthRouter.post(
 
 lawyerAuthRouter.post(
   "/login",
+  apiLimiter,
   lawyerAuthController.loginLawyer.bind(lawyerAuthController)
 );
 
@@ -68,11 +71,11 @@ lawyerAuthRouter.post(
   "/forgotpassword",
   lawyerAuthController.forgotpassword.bind(lawyerAuthController)
 );
-lawyerAuthRouter.post(
+lawyerAuthRouter.patch(
   "/resetforgotpassword/:token",
   lawyerAuthController.resetforgotpassword.bind(lawyerAuthController)
 );
-lawyerAuthRouter.post(
+lawyerAuthRouter.delete(
   "/logout",
   lawyerAuthController.LawyerLogOut.bind(lawyerAuthController)
 );

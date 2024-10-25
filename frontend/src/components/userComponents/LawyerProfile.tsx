@@ -8,12 +8,14 @@ import { fetchLawyerById } from '../../services/store/features/userServices';
 import { FaLocationDot } from "react-icons/fa6";
 import { Button, Skeleton } from '@nextui-org/react';
 import { FaHeart } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 interface LawyerProfile {
     id: string | undefined;
 }
 
 const ViewLawyerProfile: React.FC<LawyerProfile> = ({ id }) => {
+    const navigate = useNavigate()
     const dispatch: AppDispatch = useDispatch();
     const [lawyer, setLawyer] = useState<Lawyer | null>(null);
     const { loading } = useSelector((state: RootState) => state.user)
@@ -26,7 +28,7 @@ const ViewLawyerProfile: React.FC<LawyerProfile> = ({ id }) => {
                     setLawyer(response.result);
                     console.log(response, "is the response");
                 } catch (error: any) {
-                    toast(<CustomToast message={error.message || 'An error occurred while fetching lawyer data'} type="error" />);
+                    toast(<CustomToast message={error || error.message} type="error" />);
                     console.error('Error fetching lawyer data:', error);
                 }
             }
@@ -46,7 +48,7 @@ const ViewLawyerProfile: React.FC<LawyerProfile> = ({ id }) => {
                         <img
                             src={lawyer?.profile_picture || "/api/placeholder/395/429"}
                             alt={lawyer?.userName}
-                            className="w-full h-1/2 object-cover rounded"
+                            className="w-full h-full object-cover rounded"
                         />
                     )}
 
@@ -140,7 +142,7 @@ const ViewLawyerProfile: React.FC<LawyerProfile> = ({ id }) => {
                         <Skeleton className="rounded-lg h-12 w-full" />
                     ) : (
                         <div className="flex flex-col sm:flex-row gap-4 mt-10">
-                            <Button className="bg-primary text-white px-4 py-2 rounded transition">
+                            <Button className="bg-primary text-white px-4 py-2 rounded transition" onClick={() => navigate(`/slots/${id}`)}>
                                 Book a Consultant
                             </Button>
                             <Button className="bg-primary text-white px-4 py-2 rounded">

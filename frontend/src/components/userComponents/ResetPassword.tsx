@@ -33,8 +33,8 @@ const ResetPassword: React.FC = () => {
                     resetForm()
                 }
             } catch (error: any) {
-
-                toast(<CustomToast message={error.message || 'An error occurred during Update password'} type="error" />);
+                console.log(error, "is the service Error")
+                toast(<CustomToast message={error || error.message || 'An error occurred during Update password'} type="error" />);
             }
         },
     });

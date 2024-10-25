@@ -23,3 +23,7 @@ userLawyerRoute.get(
   "/profile/:id",
   userLawyerController.getLawyerById.bind(userLawyerController)
 );
+userLawyerRoute.get(
+  "/slots/:id",
+  userLawyerController.lawyerSlot.bind(userLawyerController)
+);

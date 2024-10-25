@@ -16,11 +16,19 @@ interface ILawyerSlotInteractor {
     message: string;
     result: string | {};
   }>;
+
   updateSlot(
     slotId: string,
     feeAmount: number,
-    availability: string[]
+    availability: { timeSlot: string; fee: number }[]
   ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }>;
+
+  deleteSlot(slotId: string): Promise<{
     statusCode: number;
     status: boolean;
     message: string;

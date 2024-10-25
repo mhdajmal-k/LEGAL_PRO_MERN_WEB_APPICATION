@@ -10,6 +10,7 @@ import LawyerProtectRoute from '../LaywerProtectRoute'
 import LawyerPublicRoute from '../LawyerPublicRotute'
 import LawyerForgotPassword from '../../pages/lawyerpages/LawyerForgotPassword'
 import SlotCreation from '../../pages/lawyerpages/SlotCreaion'
+import Appointments from '../../pages/lawyerpages/Appointmnets'
 
 
 const LawyerRoutes: React.FC = () => {
@@ -28,6 +29,7 @@ const LawyerRoutes: React.FC = () => {
 
                 <Route path='/profile' element={<ProfilePage />} />
                 <Route path='/slot' element={<SlotCreation />} />
+                <Route path='/appointments' element={<Appointments />} />
             </Route>
             <Route path='*' element={<div className='text-center'>404 Not Found</div>} />
         </Routes >

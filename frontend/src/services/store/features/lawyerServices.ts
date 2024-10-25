@@ -189,18 +189,21 @@ export const lawyerResetForgotPassword = createAsyncThunk(
     }
   }
 );
+
 export const createSlot = createAsyncThunk(
   "lawyer/createSlot",
   async (
     data: {
       id: string | undefined;
       date: Date | string;
-      time: string[];
+      time: { timeSlot: string; fee: number }[];
       feeAmount: number;
+      slotId: string | undefined;
     },
     { rejectWithValue }
   ) => {
     try {
+      console.log(data, "is the final data");
       const response = await axiosInstance.post<response>(
         LAWYERCREATESLOT,
         data
@@ -246,7 +249,7 @@ export const updateSlot = createAsyncThunk(
     data: {
       id: string | undefined;
       date: Date | string;
-      time: string[];
+      time: { timeSlot: string; fee: number }[];
       feeAmount: number;
       slotId: string | undefined;
     },
@@ -271,13 +274,34 @@ export const updateSlot = createAsyncThunk(
     }
   }
 );
+export const deleteSlot = createAsyncThunk(
+  "lawyer/deleteSlot",
+  async (slotId: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.delete<response>(
+        `${LAWYERUPDATESLOT}/${slotId}`
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
 
 export const lawyerLogOut = createAsyncThunk(
-  "user/adminLogOut",
+  "user/lawyerLogOut",
   async (_, { rejectWithValue }) => {
     try {
       console.log("hi");
-      const response = await axiosInstance.post<response>(LAWYERLOGOUT);
+      const response = await axiosInstance.delete<response>(LAWYERLOGOUT);
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";

@@ -3,7 +3,22 @@ import { ILawyer } from "../imodels/iLawyer";
 import { IProfileUpdateData, IUpdateResponse } from "../imodels/iUserProfle";
 
 interface IUsersLawyerInteractor {
-  getVerifiedLawyers(): Promise<IUpdateResponse<IUser>>;
+  getVerifiedLawyers(
+    currentPage: number,
+    limit: number
+  ): Promise<{
+    status: boolean;
+    statusCode: number;
+    message: string;
+    result: {};
+    totalPages?: number;
+  }>;
   getLawyerById(id: string): Promise<IUpdateResponse<ILawyer>>;
+  getLawyerslot(lawyerId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }>;
 }
 export default IUsersLawyerInteractor;

@@ -66,7 +66,7 @@ const LawyerOtpFrom: React.FC = () => {
             }
         } catch (error: any) {
 
-            toast(<CustomToast message={error} type="error" />);
+            toast(<CustomToast message={error || error.message} type="error" />);
         }
 
     }

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { UserState } from "../../../utils/type/userType";
 import {
   AISearch,
+  createAppointment,
   fetchLawyer,
   fetchLawyerById,
   googleSignup,
@@ -133,6 +134,18 @@ const userSlice = createSlice({
         state.loading = false;
       })
       .addCase(AISearch.rejected, (state, actions) => {
+        state.loading = false;
+        state.error = actions.payload as string;
+      })
+      .addCase(createAppointment.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+      })
+      .addCase(createAppointment.fulfilled, (state) => {
+        state.error = "";
+        state.loading = false;
+      })
+      .addCase(createAppointment.rejected, (state, actions) => {
         state.loading = false;
         state.error = actions.payload as string;
       });

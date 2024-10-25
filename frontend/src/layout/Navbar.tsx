@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Logo from '../assets/images/logo.png';
 import { Button } from "@nextui-org/button";
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../services/store/store';
 import { IoIosNotifications } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
@@ -12,12 +12,13 @@ import { logOut } from '../services/store/features/userServices';
 import CustomToast from '../components/userComponents/CustomToast';
 import { toast } from 'sonner';
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC = React.memo(() => {
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch();
-  const { userInfo } = useSelector((state: RootState) => state.user);
+  const { userInfo } = useSelector((state: RootState) => state.user, shallowEqual);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       dispatch(userLogout());
       const response = await dispatch(logOut()).unwrap();
@@ -27,7 +28,8 @@ const Navbar: React.FC = () => {
     } catch (error: any) {
       toast(<CustomToast message={error} type="error" />);
     }
-  };
+  }, [dispatch]);
+
 
   return (
     <nav className="bg-primary p-2">
@@ -122,6 +124,6 @@ const Navbar: React.FC = () => {
       )}
     </nav>
   );
-};
+});
 
 export default Navbar;

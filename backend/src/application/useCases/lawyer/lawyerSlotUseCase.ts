@@ -10,7 +10,7 @@ class LawyerSlotInteractor implements ILawyerSlotInteractor {
     id: string,
     date: Date | string,
     feeAmount: number,
-    availabilityTime: string[]
+    availabilityTime: []
   ): Promise<{
     statusCode: number;
     status: boolean;
@@ -60,7 +60,7 @@ class LawyerSlotInteractor implements ILawyerSlotInteractor {
   async updateSlot(
     slotId: string,
     feeAmount: number,
-    availability: string[]
+    availabilityTime: []
   ): Promise<{
     statusCode: number;
     status: boolean;
@@ -70,14 +70,32 @@ class LawyerSlotInteractor implements ILawyerSlotInteractor {
     try {
       const updatedSlot = await this.Repository.updateSlot(
         slotId,
-        availability,
-        feeAmount
+        feeAmount,
+        availabilityTime
       );
       return {
         statusCode: 200,
         status: true,
         message: "slot updated SuccessFully",
         result: updatedSlot,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async deleteSlot(slotId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }> {
+    try {
+      const deleteSlot = await this.Repository.deleteSlot(slotId);
+      return {
+        statusCode: 200,
+        status: true,
+        message: "slot deleted SuccessFully",
+        result: deleteSlot,
       };
     } catch (error) {
       throw error;

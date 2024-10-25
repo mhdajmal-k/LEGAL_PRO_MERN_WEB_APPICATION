@@ -46,6 +46,7 @@ class userProfileInteractor implements IUserProfileInteractor {
     id: string;
   }): Promise<{ status: boolean; message: string; result: null }> {
     try {
+      console.log("hihihhihihihihdihid");
       console.log(currentPassword, "is the current password");
       const checkValidPasswordAndUpdatePassword =
         await this.Repository.validUserPassword(

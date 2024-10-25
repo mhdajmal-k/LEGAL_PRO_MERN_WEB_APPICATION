@@ -23,8 +23,8 @@ const LoginForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState<Boolean>(false);
     const formik = useFormik({
         initialValues: {
-            email: '',
-            password: '',
+            email: 'ajmalchundappuram@gmail.com',
+            password: '@Ajmal111',
         },
         validationSchema: lawyerLoginValidationSchema,
         validateOnChange: true,
@@ -40,7 +40,7 @@ const LoginForm: React.FC = () => {
                     navigate('/lawyer/');
                 }
             } catch (error: any) {
-                toast(<CustomToast message={error} type="error" />);
+                toast(<CustomToast message={error || error.message} type="error" />);
             }
         },
     })

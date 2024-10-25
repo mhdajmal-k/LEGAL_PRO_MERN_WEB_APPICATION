@@ -23,7 +23,7 @@ class AdminController {
         res.cookie("auth_adminAccessToken", response.result?.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
-          maxAge: 10 * 60 * 1000,
+          maxAge: 60 * 60 * 1000,
         });
 
         res.status(200).json({
@@ -42,13 +42,20 @@ class AdminController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const response = await this.adminInteractor.getUsers();
-      console.log(response, "is the responces");
+      const currentPage = req.query.page ? req.query.page : 1;
+      const limit = req.query.limit ? req.query.limit : 5;
+      const response = await this.adminInteractor.getUsers(
+        Number(currentPage),
+        Number(limit)
+      );
+      const users = response.result;
+      const totalUsers = response.totalUsers;
+      const totalPages = response.totalPages;
       if (response.result) {
         res.status(200).json({
           status: response.status,
           message: response.message,
-          result: response.result,
+          result: { users, totalUsers, totalPages },
         });
       }
     } catch (error) {
@@ -82,8 +89,12 @@ class AdminController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("in the controller");
-      const response = await this.adminInteractor.getLawyersList();
+      const currentPage = req.query.page ? req.query.page : 1;
+      const limit = req.query.limit ? req.query.limit : 5;
+      const response = await this.adminInteractor.getLawyersList(
+        Number(currentPage),
+        Number(limit)
+      );
       if (response.result) {
         res.status(response.statusCode).json({
           status: response.status,

@@ -5,10 +5,15 @@ interface IAdminInteractor {
   adminLogin(
     user: IUser
   ): Promise<{ status: boolean; message: string; result: IUserResult | null }>;
-  getUsers(): Promise<{
+  getUsers(
+    currentPage: number,
+    limit: number
+  ): Promise<{
     status: boolean;
     message: string;
     result: [];
+    totalUsers?: number;
+    totalPages?: number;
   }>;
   getPendingApprovalLawyers(): Promise<{
     statusCode: number;
@@ -17,11 +22,16 @@ interface IAdminInteractor {
     result: [];
   }>;
 
-  getLawyersList(): Promise<{
+  getLawyersList(
+    currentPage: number,
+    limit: number
+  ): Promise<{
     statusCode: number;
     status: boolean;
     message: string;
     result: any[];
+    totalUsers?: number;
+    totalPages?: number;
   }>;
 
   getLawyer(id: string): Promise<{

@@ -4,6 +4,7 @@ import { RiCalendarScheduleFill } from "react-icons/ri";
 import { FaWallet } from "react-icons/fa";
 import lawyerHero from "../../assets/images/LawyerHero.png";
 import { useNavigate } from 'react-router-dom';
+import appointmentshedule from "../../assets/images/appointment-shedule.png"
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store/store';
 import CustomToast from '../userComponents/CustomToast';
@@ -28,7 +29,7 @@ const LawyerLandingPage = () => {
 
             }
         } catch (error: any) {
-            toast(<CustomToast message={error} type="error" />);
+            toast(<CustomToast message={error || error.message} type="error" />);
         }
     }
     return (
@@ -60,7 +61,8 @@ const LawyerLandingPage = () => {
                                     < RiCalendarScheduleFill className="text-3xl" title=" Schedule" onClick={() => navigate("/lawyer/slot")} />
                                 </div>
                                 <div className="bg-gray-200 w-10 h-10 rounded-lg flex items-center justify-center sm:my-5">
-                                    <IoCreateSharp className="text-3xl" title="Create" />
+                                    <img src={appointmentshedule} alt="" className="text-3xl" title="Appointment" onClick={() => navigate("/lawyer/appointments")} />
+
                                 </div>
                                 <div className="bg-gray-200 w-10 h-10 rounded-lg flex items-center justify-center sm:my-5">
                                     <FaWallet className="text-3xl" title="Wallet" />
