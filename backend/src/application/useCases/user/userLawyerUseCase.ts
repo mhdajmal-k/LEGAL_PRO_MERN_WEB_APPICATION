@@ -2,7 +2,7 @@ import IUserLawyerRepository from "../../../domain/entites/irepositories/IUserLa
 import { IS3Service } from "../../../domain/services/Is3";
 import IUsersLawyerInteractor from "../../../domain/entites/iuseCase/IUserLawyerList";
 import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
-import { ILawyer } from "../../../domain/entites/imodels/iLawyer";
+import { ILawyer, LawyerQuery } from "../../../domain/entites/imodels/iLawyer";
 import { IUpdateResponse } from "../../../domain/entites/imodels/iUserProfle";
 
 class UserLawyerInteractor implements IUsersLawyerInteractor {
@@ -12,7 +12,8 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
   ) {}
   async getVerifiedLawyers(
     currentPage: number,
-    limit: number
+    limit: number,
+    query: LawyerQuery
   ): Promise<{
     status: boolean;
     statusCode: number;
@@ -25,7 +26,8 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
       console.log(limit, "is te auth");
       const getVerifiedLawyers = await this.Repository.getVerifiedLawyers(
         currentPage,
-        limit
+        limit,
+        query
       );
       if (!getVerifiedLawyers) {
         const error: CustomError = new Error();
@@ -34,11 +36,11 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         throw error;
       }
       const totalLawyers = await this.Repository.getTotalCountOfLawyers(
-        "lawyer"
+        "lawyer",
+        query
       );
-      console.log(totalLawyers, "is hte auth");
+
       const totalPages = Math.ceil(totalLawyers / limit);
-      console.log(totalPages, "it the final");
       const updatedVerifiedLawyers = await Promise.all(
         getVerifiedLawyers.map(async (lawyer: any) => {
           if (lawyer.profile_picture) {

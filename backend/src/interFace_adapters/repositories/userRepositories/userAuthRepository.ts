@@ -59,8 +59,9 @@ class UserAuthRepository implements iUserRepository {
   }
   async getId(id: string): Promise<Types.ObjectId | null | any> {
     try {
+      console.log(id, "i passed the id .........................");
       const userId = await User.findById(id).lean();
-      console.log(userId, " is the middware");
+      console.log(userId, "is the user Id................................");
       return userId ? userId : null;
     } catch (error) {
       console.log(error);

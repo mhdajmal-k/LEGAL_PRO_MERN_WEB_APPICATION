@@ -1,3 +1,4 @@
+import { IAppointmentAdminSide } from "../imodels/iAppontment";
 import { IUser } from "../imodels/Iuser";
 import IUserResult from "../imodels/IUserResult";
 
@@ -64,6 +65,23 @@ interface IAdminInteractor {
     status: boolean;
     message: string;
     result: [];
+  }>;
+  allAppointments(
+    status: string,
+    currentPage: number,
+    limit: number
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IAppointmentAdminSide[];
+    totalPages?: number;
+  }>;
+  getAppointment(appointmentId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
   }>;
 }
 

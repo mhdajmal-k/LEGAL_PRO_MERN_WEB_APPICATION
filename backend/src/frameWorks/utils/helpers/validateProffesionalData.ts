@@ -6,6 +6,14 @@ export const validatePracticeArea = (practiceArea: string[]): string | null => {
     : null;
 };
 
+export const validateUserName = (userName: string): string | null =>
+  isNullOrEmpty(userName) ? "userName is required" : null;
+export const validateGender = (gender: string): string | null =>
+  isNullOrEmpty(gender) ? "gender is required" : null;
+export const validateCity = (city: string): string | null =>
+  isNullOrEmpty(city) ? "city is required" : null;
+export const validateState = (State: string): string | null =>
+  isNullOrEmpty(State) ? "State is required" : null;
 export const validateYearsOfExperience = (years: string): string | null =>
   isNullOrEmpty(years) ? "Years of experience is required" : null;
 
@@ -63,6 +71,51 @@ export const validateProfessionalDataInput = (data: {
   if (languagesError) return languagesError;
 
   const aboutMeError = validateAboutMe(data.aboutMe);
+  if (aboutMeError) return aboutMeError;
+
+  return null;
+};
+export const validateProfileDataInput = (data: {
+  practice_area: string[];
+  years_of_experience: string;
+  userName: string;
+  gender: string;
+  city: string;
+  state: string;
+  designation: string;
+  courtPracticeArea: string;
+  languages: string[];
+  about: string;
+}): string | null => {
+  const practiceAreaError = validatePracticeArea(data.practice_area);
+  if (practiceAreaError) return practiceAreaError;
+
+  const yearsOfExperienceError = validateYearsOfExperience(
+    data.years_of_experience
+  );
+  if (yearsOfExperienceError) return yearsOfExperienceError;
+
+  const validateUserNameError = validateUserName(data.userName);
+  if (validateUserNameError) return validateUserNameError;
+  const validateGenderError = validateGender(data.gender);
+  if (validateGenderError) return validateGenderError;
+  const validateCityNameError = validateCity(data.city);
+  if (validateCityNameError) return validateCityNameError;
+  const validateStateError = validateState(data.state);
+  if (validateStateError) return validateStateError;
+
+  const designationError = validateDesignation(data.designation);
+  if (designationError) return designationError;
+
+  const courtPracticeAreaError = validateCourtPracticeArea(
+    data.courtPracticeArea
+  );
+  if (courtPracticeAreaError) return courtPracticeAreaError;
+
+  const languagesError = validateLanguages(data.languages);
+  if (languagesError) return languagesError;
+
+  const aboutMeError = validateAboutMe(data.about);
   if (aboutMeError) return aboutMeError;
 
   return null;

@@ -16,6 +16,10 @@ class UserAppointmentRepositories implements IUserAppointmentRepository {
     image: string
   ): Promise<any> {
     try {
+      console.log(
+        image,
+        "is iam looking 222222222222222222222222222222222222222222"
+      );
       const createAppointment = new Appointment({
         lawyerId: LawyerId,
         userId: userId,
@@ -71,24 +75,30 @@ class UserAppointmentRepositories implements IUserAppointmentRepository {
       );
 
       return updatedAppointment;
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      throw error;
+      throw Error(error.message);
     }
   }
   async updateAppointmentStatus(
     appointmentId: string,
+    razorpay_payment_id: string,
     status: string
   ): Promise<IAppointment | null> {
     try {
       const updateAppointment = await Appointment.findByIdAndUpdate(
         { _id: appointmentId },
-        { $set: { paymentStatus: status } },
+        {
+          $set: {
+            paymentStatus: status,
+            razorpayPaymentId: razorpay_payment_id,
+          },
+        },
         { new: true }
       );
       return updateAppointment;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
   async getAllAppointmentBasedStatus(
@@ -116,11 +126,12 @@ class UserAppointmentRepositories implements IUserAppointmentRepository {
         )
         .skip((currentPage - 1) * limit)
         .limit(limit)
+        .sort({ createdAt: -1 })
         .lean();
 
       return appointments;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
   async getTotalCountOfAppointment(
@@ -143,6 +154,34 @@ class UserAppointmentRepositories implements IUserAppointmentRepository {
       return appointmentsTotal;
     } catch (error) {
       throw new Error("field to get total counts");
+    }
+  }
+  async cancelAppointmentById(
+    appointmentId: string,
+    razorpay_payment_id: string,
+    status: string
+  ): Promise<IAppointment | null> {
+    try {
+      const updateAppointment = await Appointment.findByIdAndUpdate(
+        { _id: appointmentId },
+        { $set: { status: status, razorpayPaymentId: razorpay_payment_id } },
+        { new: true }
+      );
+      return updateAppointment;
+    } catch (error: any) {
+      throw Error(error.message);
+    }
+  }
+  async getCancelledAppointmentById(appointmentId: string): Promise<any> {
+    try {
+      const cancelledAppointment = await Appointment.findOne({
+        _id: appointmentId,
+        status: "Cancelled",
+      });
+      console.log(cancelledAppointment, "in the repo");
+      return cancelledAppointment;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
 }

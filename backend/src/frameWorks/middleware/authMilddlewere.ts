@@ -10,9 +10,10 @@ export const authorization =
   (allowedRoles: string) =>
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const userToken = req.cookies.User_accessToken;
-    const lawyerToken = req.cookies.auth_lawyerAccessToken;
+
+    const lawyerToken = req.cookies.Lawyer_AccessToken;
     const adminToken = req.cookies.auth_adminAccessToken;
-    console.log(userToken, "is the parse admintoken");
+    console.log(lawyerToken, "is the parse admintoken");
     // if (!userToken && !lawyerToken) {
     //   return res.status(401).json({
     //     message: "Authorization denied. Please login. fuck in here",
@@ -29,6 +30,7 @@ export const authorization =
         decodeToken = jwt.verifyToken(userToken);
       } else if (lawyerToken && allowedRoles === "lawyer") {
         decodeToken = jwt.verifyToken(lawyerToken);
+        console.log(decodeToken);
       } else if (adminToken && allowedRoles === "admin") {
         console.log("in here");
         decodeToken = jwt.verifyToken(adminToken);
@@ -36,11 +38,11 @@ export const authorization =
 
       if (!decodeToken || decodeToken.role !== allowedRoles) {
         console.log(decodeToken, "is the decoded Token");
-        console.log(allowedRoles, "this is the allowed Role");
-        console.log(decodeToken?.role, "is the role");
+        // console.log(allowedRoles, "this is the allowed Role");
+        // console.log(decodeToken?.role, "is the role");
         return res.status(401).json({
-          message: "Authorization denied. Invalid token or role mismatch.",
-          result: {},
+          message: `Authorization denied. Invalid token`,
+          result: allowedRoles,
           status: false,
         });
       }

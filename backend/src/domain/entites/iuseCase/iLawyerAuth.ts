@@ -20,6 +20,11 @@ interface ILawyerAuthInteractor {
     files?: { [fieldname: string]: Express.Multer.File[] },
     id?: string
   ): Promise<{ statusCode: number; message: string; result: string | {} }>;
+  updateProfessionalData(
+    data: IProfessionalData,
+    file?: Express.Multer.File,
+    id?: string
+  ): Promise<{ statusCode: number; message: string; result: string | {} }>;
   lawyerLogin(user: { email: string; password: string }): Promise<{
     statusCode: number;
     status: boolean;
@@ -36,6 +41,12 @@ interface ILawyerAuthInteractor {
     password: string,
     token: string | any
   ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | null;
+  }>;
+  checkRefreshToken(token: string): Promise<{
     statusCode: number;
     status: boolean;
     message: string;

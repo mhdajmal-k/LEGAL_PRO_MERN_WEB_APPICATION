@@ -68,6 +68,7 @@ class LawyerSlotInteractor implements ILawyerSlotInteractor {
     result: string | {};
   }> {
     try {
+      console.log(availabilityTime, "is the avilability");
       const updatedSlot = await this.Repository.updateSlot(
         slotId,
         feeAmount,
@@ -90,6 +91,7 @@ class LawyerSlotInteractor implements ILawyerSlotInteractor {
     result: string | {};
   }> {
     try {
+      console.log(slotId, "is the dleted Slotd Id");
       const deleteSlot = await this.Repository.deleteSlot(slotId);
       return {
         statusCode: 200,

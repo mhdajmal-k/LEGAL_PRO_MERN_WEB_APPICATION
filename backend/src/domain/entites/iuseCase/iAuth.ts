@@ -25,6 +25,9 @@ interface IUserAuthInteractor {
   sendForgotPasswordLink(
     email: string
   ): Promise<{ status: boolean; message: string; result: string | null }>;
+  checkRefreshToken(
+    token: string
+  ): Promise<{ status: boolean; message: string; result: string | null }>;
   resetforgotpassword(
     password: string,
     token: string | any

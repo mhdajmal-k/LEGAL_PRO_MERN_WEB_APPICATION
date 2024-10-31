@@ -6,7 +6,7 @@ interface iUserRepository {
   updatePassword(password: string, id: string): Promise<any>;
   createUserFromGoogle(data: object): Promise<any>;
   validUser(email: string): Promise<any>;
-  getId(id: string): Promise<Types.ObjectId | null>;
+  getId(id: string): Promise<Types.ObjectId | null | any>;
 }
 
 export default iUserRepository;

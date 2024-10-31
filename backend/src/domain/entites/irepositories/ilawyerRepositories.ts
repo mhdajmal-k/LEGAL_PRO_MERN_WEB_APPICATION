@@ -5,7 +5,7 @@ interface iLawyerRepository {
   lawyerAlreadyExist(email: string): Promise<boolean>;
   createLawyer(data: ILawyer): Promise<any>;
   validLawyer(email: string): Promise<any>;
-  getId(id: string): Promise<Types.ObjectId | null>;
+  getId(id: string): Promise<Types.ObjectId | null | any>;
 
   updatePassword(password: string, id: string): Promise<any>;
 
@@ -13,6 +13,7 @@ interface iLawyerRepository {
     data: IProfessionalData,
     id: string
   ): Promise<boolean>;
+  updateLawyerProfileData(data: any, id: string): Promise<boolean>;
 }
 
 export default iLawyerRepository;

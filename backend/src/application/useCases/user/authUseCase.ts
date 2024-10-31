@@ -14,13 +14,15 @@ import {
   generatingSignUpToken,
 } from "../../../frameWorks/utils/jwt";
 import { validatePassword } from "../../../frameWorks/utils/validatePassword";
+import { IS3Service } from "../../../domain/services/Is3";
 
 class userAuthInteractor implements IUserAuthInteractor {
   constructor(
     private readonly Repository: iUserRepository,
     private readonly nodeMailer: iEmailService,
     private readonly optGenerator: iOTPService,
-    private readonly jwt: iJwtService
+    private readonly jwt: iJwtService,
+    private readonly s3Service: IS3Service
   ) {}
   async userSingUp(
     data: IUser
@@ -132,6 +134,13 @@ class userAuthInteractor implements IUserAuthInteractor {
         validUser._id,
         "user"
       );
+      console.log(validUser, "is the valid user");
+      validUser.profilePicture
+        ? (validUser.profilePicture = await this.s3Service.fetchFile(
+            validUser.profilePicture
+          ))
+        : "";
+
       const { password: userPassword, ...userDataWithoutPassword } = validUser;
 
       return {
@@ -273,6 +282,53 @@ class userAuthInteractor implements IUserAuthInteractor {
       };
     } catch (error) {
       throw error;
+    }
+  }
+  async checkRefreshToken(
+    token: string
+  ): Promise<{ status: boolean; message: string; result: string | null }> {
+    try {
+      const verifyRefreshToken = this.jwt.VerifyTokenRefresh(token);
+
+      if (verifyRefreshToken?.role === "user") {
+        const existUser = await this.Repository.getId(verifyRefreshToken.id);
+
+        if (!existUser) {
+          return {
+            status: false,
+            message: "Authorization denied. User does not exist.",
+            result: null,
+          };
+        }
+
+        if (existUser.block) {
+          return {
+            status: false,
+            message: "OOPS YOU HAVE BEEN BLOCKED BY ADMIN",
+            result: null,
+          };
+        }
+
+        const newJwtAccessToken = this.jwt.generateToken(existUser._id, "user");
+        return {
+          status: true,
+          message: "Access token refreshed successfully.",
+          result: newJwtAccessToken,
+        };
+      } else {
+        return {
+          status: false,
+          message: "Invalid role in refresh token.",
+          result: null,
+        };
+      }
+    } catch (error) {
+      console.error("Refresh token verification failed:", error);
+      return {
+        status: false,
+        message: "Refresh token verification failed.",
+        result: null,
+      };
     }
   }
 }

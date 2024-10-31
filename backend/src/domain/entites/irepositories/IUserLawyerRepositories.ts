@@ -1,7 +1,13 @@
+import { LawyerQuery } from "../imodels/iLawyer";
+
 interface IUserLawyerRepository {
-  getVerifiedLawyers(currentPage: number, limit: number): Promise<any>;
+  getVerifiedLawyers(
+    currentPage: number,
+    limit: number,
+    query: LawyerQuery
+  ): Promise<any>;
   getLawyerById(id: string): Promise<any>;
-  getTotalCountOfLawyers(db: string): Promise<any>;
+  getTotalCountOfLawyers(db: string, query: LawyerQuery): Promise<any>;
   getLawyerSlots(id: string): Promise<any>;
   getSlotBySlotId(slotId: string): Promise<any>;
   getSlotBySpecifSlotId(slotId: string, specificSlotId: string): Promise<any>;

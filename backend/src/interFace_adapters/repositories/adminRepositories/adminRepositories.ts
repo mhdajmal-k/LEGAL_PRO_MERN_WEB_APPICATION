@@ -4,6 +4,8 @@ import iAdminRepository from "../../../domain/entites/irepositories/IadminReposi
 import Lawyer from "../../../frameWorks/database/models/lawyerModel";
 import User from "../../../frameWorks/database/models/userModel";
 import { hashPassword } from "../../../frameWorks/utils/helpers/passwordHelper";
+import Appointment from "../../../frameWorks/database/models/appointmentModel";
+import { IAppointmentAdminSide } from "../../../domain/entites/imodels/iAppontment";
 
 class AdminRepository implements iAdminRepository {
   async adminAlreadyExist(email: string, role: string): Promise<any> {
@@ -36,9 +38,8 @@ class AdminRepository implements iAdminRepository {
         .sort({ createdAt: -1 })
         .skip((currentPage - 1) * limit)
         .limit(limit)
+        .sort({ createdAt: -1 })
         .lean();
-
-      console.log(users, "is th eusesrs");
 
       return users;
     } catch (error) {
@@ -80,6 +81,7 @@ class AdminRepository implements iAdminRepository {
         .select("-password")
         .sort({ createdAt: -1 })
         .skip((currentPage - 1) * limit)
+        .sort({ createdAt: -1 })
         .limit(limit)
         .lean();
       console.log(lawyers, "in thee db ");
@@ -166,6 +168,69 @@ class AdminRepository implements iAdminRepository {
       //       { new: true }
       //     );
       //     if (updateUser) return updateUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getAllAppointmentBasedStatusInAdmin(
+    status: string,
+    currentPage: number,
+    limit: number
+  ): Promise<IAppointmentAdminSide[] | null> {
+    try {
+      // let filter = {};
+      // if (status === "Pending") {
+      //   filter = { date: { $gte: new Date() }, status: "Pending" };
+      // } else if (status === "Completed") {
+      //   filter = { date: { $lt: new Date() }, status: "Completed" };
+      // } else if (status === "canceled") {
+      //   filter = { status: "Cancelled" };
+      // }
+      const appointments = await Appointment.find({ status: status })
+        .populate("userId", "userName profilePicture")
+        .populate("lawyerId", "userName profile_picture city state designation")
+        .skip((currentPage - 1) * limit)
+        .limit(limit)
+        .sort({ createdAt: -1 })
+        .lean<IAppointmentAdminSide[]>();
+      console.log(appointments);
+      return appointments;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getTotalCountOfAppointment(status: string): Promise<any | null> {
+    try {
+      let filter = {};
+      if (status === "Pending") {
+        filter = { date: { $gte: new Date() }, status: "Pending" };
+      } else if (status === "completed") {
+        filter = { date: { $lt: new Date() }, status: "Completed" };
+      } else if (status === "canceled") {
+        filter = { status: "Cancelled" };
+      }
+      console.log(status, "is total couont");
+      const appointmentsTotal = await Appointment.countDocuments({ status });
+      console.log(appointmentsTotal, "iksssdfsdfdfsdf");
+      return appointmentsTotal;
+    } catch (error) {
+      throw new Error("field to get total counts");
+    }
+  }
+  async getAppointmentById(
+    appointmentId: string
+  ): Promise<IAppointmentAdminSide | null> {
+    try {
+      const appointment = await Appointment.findById({
+        _id: appointmentId,
+      })
+        .populate("userId", "userName profilePicture email")
+        .populate(
+          "lawyerId",
+          "userName profile_picture city state designation years_of_experience practice_area"
+        )
+        .lean();
+      return appointment as any;
     } catch (error) {
       throw error;
     }

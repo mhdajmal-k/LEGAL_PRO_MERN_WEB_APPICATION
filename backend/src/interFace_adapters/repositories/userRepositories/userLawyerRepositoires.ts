@@ -7,29 +7,31 @@ import {
   HttpStatusCode,
   MessageError,
 } from "../../../frameWorks/utils/helpers/Enums";
+import { LawyerQuery } from "../../../domain/entites/imodels/iLawyer";
 class UserLawyerRepositories implements IUserLawyerRepository {
-  async getVerifiedLawyers(currentPage: number, limit: number): Promise<any> {
+  async getVerifiedLawyers(
+    currentPage: number,
+    limit: number,
+    query: LawyerQuery
+  ): Promise<any> {
     try {
-      const getVerifiedLawyers = await Lawyer.find({
-        verified: "verified",
-      })
+      const lawyers = await Lawyer.find(query)
         .select("-password")
+        .sort({ createdAt: -1 })
         .skip((currentPage - 1) * limit)
         .limit(limit)
         .lean();
-      console.log(getVerifiedLawyers, "is the repo");
-      return getVerifiedLawyers;
+      console.log(lawyers, "is the repo");
+      return lawyers;
     } catch (error) {
       throw error;
     }
   }
-  async getTotalCountOfLawyers(db: string): Promise<any> {
+  async getTotalCountOfLawyers(db: string, query: LawyerQuery): Promise<any> {
     try {
       let total;
       if (db == "lawyer") {
-        total = await Lawyer.countDocuments({
-          verified: "verified",
-        });
+        total = await Lawyer.countDocuments(query);
       }
       return total;
     } catch (error) {

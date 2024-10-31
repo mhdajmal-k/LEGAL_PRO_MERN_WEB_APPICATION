@@ -35,7 +35,7 @@ export interface IProfessionalData {
   barCouncilNumber: string;
   stateBarCouncilNumber?: string;
   designation: string;
-  courtPracticeArea: string;
+  courtPracticeArea?: string;
   languages: string[];
   aboutMe: string;
   barCouncilCertificate?: string;
@@ -59,4 +59,15 @@ export interface ISlot extends Document {
   date: Date;
   availability: Availability[];
   fees: number;
+}
+
+export interface LawyerQuery {
+  verified?: string;
+  years_of_experience?: { $gte: string };
+  gender?: { $regex: string; $options: string };
+  designation?: { $regex: string; $options: string };
+  city?: { $regex: string; $options: string };
+  courtPracticeArea?: { $regex: string; $options: string };
+  languages_spoken?: { $in: string[] };
+  $or?: Array<{ [key: string]: { $regex: string; $options: string } }>;
 }

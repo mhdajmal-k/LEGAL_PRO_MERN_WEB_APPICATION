@@ -5,8 +5,12 @@ import {
   AuthenticatedRequest,
   ILawyer,
 } from "../../../domain/entites/imodels/iLawyer";
-import { validateProfessionalDataInput } from "../../../frameWorks/utils/helpers/validateProffesionalData";
+import {
+  validateProfessionalDataInput,
+  validateProfileDataInput,
+} from "../../../frameWorks/utils/helpers/validateProffesionalData";
 import IUserResult from "../../../domain/entites/imodels/IUserResult";
+import { Console } from "console";
 class LawyerAuthController {
   constructor(private lawyerAuthInteractor: ILawyerAuthInteractor) {}
   async lawyerSignUp(
@@ -74,7 +78,7 @@ class LawyerAuthController {
         const data = result as ILawyer;
         res.clearCookie("lawyerAuth_token");
 
-        res.cookie("auth_lawyerAccessToken", data.tokenJwt, {
+        res.cookie("Lawyer_AccessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 60 * 60 * 1000,
@@ -142,6 +146,7 @@ class LawyerAuthController {
   ): Promise<void> {
     try {
       const data = req.body;
+      console.log(data);
       const id = req.user?.id;
       const files = req.files as
         | { [fieldname: string]: Express.Multer.File[] }
@@ -179,6 +184,42 @@ class LawyerAuthController {
       next(error);
     }
   }
+  async updateProfileData(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const data = req.body;
+      console.log(req.body);
+      const id = req.user?.id;
+      const file = req.file;
+      console.log("in here ");
+      const validateDataError = validateProfileDataInput(data);
+      if (validateDataError) {
+        res
+          .status(400)
+          .json({ status: false, message: validateDataError, result: {} });
+        return;
+      }
+      data.practice_area = JSON.parse(data.practice_area);
+      const response = await this.lawyerAuthInteractor.updateProfessionalData(
+        data,
+        file,
+        id
+      );
+      console.log("success");
+      res.clearCookie("auth_lawyerAccessToken");
+      res.status(response.statusCode).json({
+        status: true,
+        message: response.message,
+        result: {},
+      });
+    } catch (error) {
+      console.log(error, "is the error ");
+      next(error);
+    }
+  }
   async loginLawyer(
     req: Request,
     res: Response,
@@ -197,10 +238,10 @@ class LawyerAuthController {
       const { status, message, result, statusCode } = response;
       if (response.status == true) {
         const data = result as IUserResult;
-        res.cookie("auth_lawyerAccessToken", data.tokenJwt, {
+        res.cookie("Lawyer_AccessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
-          maxAge: 5 * 60 * 1000,
+          maxAge: 60 * 60 * 1000,
         });
         res.cookie("Lawyer_refreshToken", data.jwtRefreshToken, {
           httpOnly: true,
@@ -280,6 +321,48 @@ class LawyerAuthController {
       if (response.status) {
         res.status(response.statusCode).json({
           status: response.status,
+          message: response.message,
+          result: {},
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async checkRefreshToken(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+      const refreshToken = req.cookies.Lawyer_refreshToken;
+      if (!refreshToken) {
+        return res.status(401).json({
+          status: false,
+          message: "Bad Parameters - Refresh token missing.",
+          result: {},
+        });
+      }
+      console.log(refreshToken, "jdfjdjf");
+      const response = await this.lawyerAuthInteractor.checkRefreshToken(
+        refreshToken
+      );
+      console.log(response, "is the possible REsponnce");
+      if (response.status) {
+        res.cookie("Lawyer_AccessToken", response.result, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 15 * 60 * 1000,
+        });
+        return res.status(response.statusCode).json({
+          status: true,
+          message: "Access token refreshed successfully.",
+          result: {},
+        });
+      } else {
+        return res.status(response.statusCode).json({
+          status: false,
           message: response.message,
           result: {},
         });

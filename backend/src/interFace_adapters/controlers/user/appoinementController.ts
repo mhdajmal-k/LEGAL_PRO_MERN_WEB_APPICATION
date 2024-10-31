@@ -111,7 +111,7 @@ class AppointmentController {
     }
   }
   async getAllAppointmentBasedStatus(
-    req: Request,
+    req: AuthenticatedRequest,
     res: Response,
     next: NextFunction
   ): Promise<any> {
@@ -123,12 +123,12 @@ class AppointmentController {
       const limit = req.query.limit ? req.query.limit : 5;
       console.log(currentPage);
       console.log(limit);
-      const userId = "671379b9f51e0a4d4378b767";
+      const userIdFromToken = req.user?.id;
       const filter = status ?? "Pending";
       const response =
         await this.UserAppointmentInteractor.getAllAppointmentBasedStatus(
           filter as string,
-          userId as string,
+          userIdFromToken as string,
           Number(currentPage),
           Number(limit)
         );
@@ -206,6 +206,69 @@ class AppointmentController {
           razorpay_order_id,
           razorpay_payment_id,
           razorpay_signature,
+          appointmentId
+        );
+      if (response.status) {
+        return res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async cancelAppointment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { appointmentId } = req.params;
+
+      if (!appointmentId) {
+        console.log("checking..");
+        return res.status(HttpStatusCode.BadRequest).json({
+          status: false,
+          message: MessageError.BadPrams,
+          result: {},
+        });
+      }
+
+      const response =
+        await this.UserAppointmentInteractor.cancellingAppointment(
+          appointmentId
+        );
+      if (response.status) {
+        return res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async checkRefundStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      console.log("hi");
+      const { appointmentId } = req.params;
+
+      if (!appointmentId) {
+        return res.status(HttpStatusCode.BadRequest).json({
+          status: false,
+          message: MessageError.BadPrams,
+          result: {},
+        });
+      }
+      const response =
+        await this.UserAppointmentInteractor.getCancelledRefundStatus(
           appointmentId
         );
       if (response.status) {

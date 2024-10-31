@@ -29,6 +29,7 @@ const AppointmentSchema: Schema<IAppointment> = new Schema(
       enum: Object.values(PaymentStatus),
       default: PaymentStatus.Pending,
     },
+    razorpayPaymentId: { type: String },
   },
   {
     timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },

@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import IUserAuthInteractor from "../../../domain/entites/iuseCase/iAuth";
 import IUserResult from "../../../domain/entites/imodels/IUserResult";
+import {
+  HttpStatusCode,
+  MessageError,
+} from "../../../frameWorks/utils/helpers/Enums";
 
 class UserAuthController {
   constructor(private userAuthInteractor: IUserAuthInteractor) {}
@@ -104,7 +108,7 @@ class UserAuthController {
         res.cookie("User_accessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
-          maxAge: 5 * 60 * 1000,
+          maxAge: 60 * 60 * 1000,
         });
         res.cookie("User_refreshToken", data.jwtRefreshToken, {
           httpOnly: true,
@@ -154,7 +158,7 @@ class UserAuthController {
         res.cookie("User_accessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
-          maxAge: 5 * 60 * 1000,
+          maxAge: 15 * 60 * 1000,
         });
         res.clearCookie("auth_token");
         res.status(200).json({
@@ -282,6 +286,48 @@ class UserAuthController {
       next(error);
     }
   }
+  async checkRefreshToken(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const refreshToken = req.cookies.User_refreshToken;
+      if (!refreshToken) {
+        return res.status(401).json({
+          status: false,
+          message: "Bad Parameters - Refresh token missing.",
+          result: {},
+        });
+      }
+
+      const response = await this.userAuthInteractor.checkRefreshToken(
+        refreshToken
+      );
+
+      if (response.status) {
+        res.cookie("User_accessToken", response.result, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 15 * 60 * 1000,
+        });
+        return res.status(200).json({
+          status: true,
+          message: "Access token refreshed successfully.",
+          result: {},
+        });
+      } else {
+        return res.status(401).json({
+          status: false,
+          message: response.message,
+          result: {},
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async logOut(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       console.log("in logout");

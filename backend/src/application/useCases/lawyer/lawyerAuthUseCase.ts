@@ -78,6 +78,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
           message: "entered Invalid OTP",
           result: undefined,
         };
+
       const creatingNewLawyer = await this.Repository.createLawyer(
         decodeToken.user
       );
@@ -111,7 +112,6 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
     id?: string
   ): Promise<{ statusCode: number; message: string; result: string | {} }> {
     try {
-      console.log("hi in the authcase");
       const { barCouncilNumber, stateBarCouncilNumber } = data;
       for (const fieldname in files) {
         const filesArray = files[fieldname];
@@ -337,6 +337,78 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         statusCode: 200,
         message: "password Resetted successFully",
         result: null,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async checkRefreshToken(token: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | null;
+  }> {
+    try {
+      const verifyRefreshToken = this.jwt.VerifyTokenRefresh(token);
+
+      if (verifyRefreshToken?.role === "lawyer") {
+        const existUser = await this.Repository.getId(verifyRefreshToken.id);
+        if (!existUser) {
+          return {
+            statusCode: 401,
+            status: false,
+            message: "Authorization denied. User does not exist.",
+            result: null,
+          };
+        }
+        console.log("existingUser._id", existUser._id);
+        const newJwtAccessToken = this.jwt.generateToken(existUser, "lawyer");
+        return {
+          statusCode: 200,
+          status: true,
+          message: "Access token refreshed successfully.",
+          result: newJwtAccessToken,
+        };
+      } else {
+        return {
+          statusCode: 400,
+          status: false,
+          message: "Invalid role in refresh token.",
+          result: null,
+        };
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+  async updateProfessionalData(
+    data: any,
+    file?: Express.Multer.File,
+    id?: string
+  ): Promise<{ statusCode: number; message: string; result: string | {} }> {
+    try {
+      let updateData;
+      if (file) {
+        const key = `lawyer-profiles/${Date.now()}-${file.originalname}`;
+        const uploadPromise = this.s3Service.uploadFile(file, key);
+        data.profile_picture = key;
+      }
+
+      const updateLawyer = await this.Repository.updateLawyerProfileData(
+        data,
+        id as string
+      );
+      if (!updateLawyer) {
+        const error: CustomError = new Error();
+        error.message = "Failed to create Account Try agin";
+        error.statusCode = 400;
+        throw error;
+      }
+
+      return {
+        statusCode: 201,
+        message: "profile Updated SuccessFully",
+        result: {},
       };
     } catch (error) {
       throw error;

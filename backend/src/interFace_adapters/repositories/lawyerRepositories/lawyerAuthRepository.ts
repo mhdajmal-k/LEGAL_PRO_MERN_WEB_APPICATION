@@ -105,6 +105,16 @@ class LawyerAuthRepository implements iLawyerRepository {
       throw error;
     }
   }
+  async updateLawyerProfileData(data: any, id: string): Promise<boolean> {
+    try {
+      const updatedLawyer = await Lawyer.findByIdAndUpdate(id, data, {
+        new: true,
+      });
+      return updatedLawyer ? true : false;
+    } catch (error: any) {
+      throw Error(error.message);
+    }
+  }
 }
 
 export default LawyerAuthRepository;

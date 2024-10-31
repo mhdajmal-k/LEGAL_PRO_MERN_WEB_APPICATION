@@ -16,6 +16,11 @@ interface IUserAppointmentRepository {
   ): Promise<any>;
 
   getAppointmentById(appointmentId: string): Promise<IAppointment | null>;
+  cancelAppointmentById(
+    appointmentId: string,
+    razorPayRefundId: string,
+    status: string
+  ): Promise<IAppointment | null>;
   getTotalCountOfAppointment(
     status: string,
     userId: string
@@ -28,6 +33,7 @@ interface IUserAppointmentRepository {
   ): Promise<IAppointment[] | null>;
   updateAppointmentStatus(
     appointmentId: string,
+    razorpay_payment_id: string,
     status: string
   ): Promise<IAppointment | null>;
   updateConsultationFee(
@@ -37,5 +43,6 @@ interface IUserAppointmentRepository {
     subTotal: number,
     newSpecifSlotId: String
   ): Promise<any>;
+  getCancelledAppointmentById(appointmentId: string): Promise<any>;
 }
 export default IUserAppointmentRepository;

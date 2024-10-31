@@ -13,12 +13,16 @@ import {
 import { razorpayInstance } from "../../../frameWorks/services/razorPay";
 import { config } from "../../../frameWorks/config/envConfig";
 import { appointmentId } from "../../../frameWorks/utils/helpers/randomAppontmentId";
+import { iEmailService } from "../../../domain/services/IEmailService";
+import iUserRepository from "../../../domain/entites/irepositories/iuserRepositories";
 
 class UserAppointmentInteractor implements IUserAppointmentInteractor {
   constructor(
     private readonly UserLawyerRepository: IUserLawyerRepository,
     private readonly AppointmentRepository: IUserAppointmentRepository,
-    private readonly s3Service: IS3Service
+    private readonly s3Service: IS3Service,
+    private readonly nodeMailer: iEmailService,
+    private readonly UserRepository: iUserRepository
   ) {}
   async createAppointment(
     LawyerId: string,
@@ -79,16 +83,19 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         error.statusCode = HttpStatusCode.BadRequest;
         throw error;
       }
-      let url;
+      let key;
       if (file) {
-        const key = `Appointment/image${Date.now()}-${file.originalname}`;
-        await this.s3Service.uploadFile(file, key);
-        url = await this.s3Service.fetchFile(key);
+        console.log(file, "is ddddddddddddddddddddddddddddd");
+        key = `lawyer-caseImage/${Date.now()}-${file.originalname}`;
+        console.log(
+          key,
+          "sssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+        );
+        const uploadPromise = await this.s3Service.uploadFile(file, key);
       }
       const convenienceFee = Math.ceil(fee * 0.03);
       const subTotal = Number(convenienceFee) + Number(fee);
-      console.log(subTotal, "is the subtotal");
-
+      console.log(key, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
       const createdAppointment =
         await this.AppointmentRepository.createAppointment(
           LawyerId,
@@ -101,7 +108,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
           userId,
           Number(convenienceFee),
           Number(subTotal),
-          url
+          key
         );
 
       if (!createdAppointment) {
@@ -155,17 +162,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       appointment.lawyerId.profile_picture = await this.s3Service.fetchFile(
         appointment.lawyerId.profile_picture
       );
-      // const updatedAppointments = await Promise.all(
-      //   appointment.map(async (appointment) => {
-      //     if (appointment.lawyerId && appointment.lawyerId.profile_picture) {
-      //       appointment.lawyerId.profile_picture =
-      //         await this.s3Service.fetchFile(
-      //           appointment.lawyerId.profile_picture
-      //         );
-      //     }
-      //     return appointment;
-      //   })
-      // );
+
       console.log("new apojddddddddddddddddddddddddddddddd");
 
       console.log(appointment);
@@ -190,17 +187,17 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       const appointment = await this.AppointmentRepository.getAppointmentById(
         appointmentId
       );
-      console.log(
-        appointment,
-        "is the apointment ...................................................."
-      );
+      // console.log(
+      //   appointment,
+      //   "is the apointment ...................................................."
+      // );
       if (!appointment) {
         const error: CustomError = new Error(MessageError.AppointmentNotFound);
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
       const LawyerId = appointment.lawyerId._id;
-      console.log(LawyerId, "is the laywer Id");
+      // console.log(LawyerId, "is the laywer Id");
       const validLawyer = await this.UserLawyerRepository.getLawyerById(
         LawyerId.toString()
       );
@@ -221,10 +218,10 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         error.statusCode = HttpStatusCode.Forbidden;
         throw error;
       }
-      console.log(
-        validSlot,
-        "is the valid slot 888888888888888888888888888888888888888888888888888888888888888"
-      );
+      // console.log(
+      //   validSlot,
+      //   "is the valid slot 888888888888888888888888888888888888888888888888888888888888888"
+      // );
       const specificSlotId = appointment.appointmentTime;
       const specificSlot =
         await this.UserLawyerRepository.getSlotBySpecifSlotId(
@@ -241,13 +238,13 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       if (specificSlot.availability[0].fee != fee) {
         const newConsolationFee = specificSlot.availability[0].fee;
         const newSpecifSlotId = specificSlot.availability[0]._id;
-        console.log(
-          newSpecifSlotId,
-          "is sthe idshfihseoihfoisldjfiuiaeofsfo;ififius"
-        );
+        // console.log(
+        //   newSpecifSlotId,
+        //   "is sthe idshfihseoihfoisldjfiuiaeofsfo;ififius"
+        // );
         const newConvenienceFee = Math.ceil(newConsolationFee * 0.03);
         const subTotal = Number(newConvenienceFee) + Number(newConsolationFee);
-        console.log(subTotal, "is the subtotal");
+        // console.log(subTotal, "is the subtotal");
         const updateAppointment =
           await this.AppointmentRepository.updateConsultationFee(
             appointmentId,
@@ -270,7 +267,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       }
 
       if (specificSlot.availability[0].status == true) {
-        console.log("in here status");
+        // console.log("in here status");
         const error: CustomError = new Error(MessageError.AlreadyBooked);
         error.statusCode = HttpStatusCode.BadRequest;
         throw error;
@@ -330,6 +327,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       const updatedAppointment =
         await this.AppointmentRepository.updateAppointmentStatus(
           appointmentId,
+          razorpay_payment_id,
           "Success"
         );
       if (!updatedAppointment) {
@@ -350,7 +348,35 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
-
+      const validLawyer = await this.UserLawyerRepository.getLawyerById(
+        updatedAppointment.lawyerId.toString()
+      );
+      console.log(validLawyer, "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+      console.log(updateSlot.userId);
+      const user = await this.UserRepository.getId(
+        updatedAppointment?.userId.toString()
+      );
+      console.log(user, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      const emailSentToLawyer = this.nodeMailer.sendBookingConfirmation(
+        validLawyer?.email,
+        validLawyer.userName,
+        {
+          date: updatedAppointment.appointmentDate.toDateString(),
+          time: bookedSpecificSlot,
+          lawyerName: user.userName,
+        }
+      );
+      const emailSentToUser = this.nodeMailer.sendBookingConfirmation(
+        user?.email,
+        user.userName,
+        {
+          date: updatedAppointment.appointmentDate.toDateString(),
+          time: bookedSpecificSlot,
+          lawyerName: validLawyer.userName,
+        }
+      );
+      if (!emailSentToLawyer || !emailSentToUser)
+        console.error("Failed to send booking confirmation");
       return {
         statusCode: HttpStatusCode.Created,
         status: true,
@@ -405,6 +431,95 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         totalPages: totalPages,
       };
     } catch (error) {
+      throw error;
+    }
+  }
+  async cancellingAppointment(appointmentId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }> {
+    try {
+      const getAppointment =
+        await this.AppointmentRepository.getAppointmentById(appointmentId);
+      if (!getAppointment) {
+        const error: CustomError = new Error(MessageError.AppointmentNotFound);
+        error.statusCode = HttpStatusCode.NotFound;
+        throw error;
+      }
+      const razorpay_payment_id = getAppointment?.razorpayPaymentId!;
+      const consultationFeeWithoutConvenienceFee =
+        getAppointment?.consultationFee! * 100;
+      const issueRefund = await razorpayInstance.payments.refund(
+        razorpay_payment_id,
+        { amount: consultationFeeWithoutConvenienceFee }
+      );
+      if (!issueRefund) {
+        const error: CustomError = new Error(MessageError.RefundInitiatedFiled);
+        error.statusCode = HttpStatusCode.NotFound;
+        throw error;
+      }
+      console.log(issueRefund);
+      const canceledAppointment =
+        await this.AppointmentRepository.cancelAppointmentById(
+          appointmentId,
+          issueRefund.id,
+          "Cancelled"
+        );
+      const slot = canceledAppointment?.slotId;
+      const bookedSpecificSlot = canceledAppointment?.appointmentTime;
+      const updateSlot =
+        await this.UserLawyerRepository.updateStatusSlotBySpecifSlotId(
+          slot as string,
+          bookedSpecificSlot as string,
+          false
+        );
+      if (!updateSlot) {
+        const error: CustomError = new Error(MessageError.SlotNotFound);
+        error.statusCode = HttpStatusCode.NotFound;
+        throw error;
+      }
+      return {
+        statusCode: HttpStatusCode.OK,
+        status: true,
+        message: MessageError.cancelAppointment,
+        result: {},
+      };
+    } catch (error) {
+      console.log(error, "is the cancelling Appointment Error");
+      throw error;
+    }
+  }
+  async getCancelledRefundStatus(appointmentId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }> {
+    try {
+      const cancelledAppointment =
+        await this.AppointmentRepository.getCancelledAppointmentById(
+          appointmentId
+        );
+
+      if (!cancelledAppointment) {
+        const error: CustomError = new Error(MessageError.AppointmentNotFound);
+        error.statusCode = HttpStatusCode.NotFound;
+        throw error;
+      }
+      console.log(cancelledAppointment, "is the cancelled Appointmnet");
+      const refund_id = cancelledAppointment.razorpayPaymentId;
+      console.log(refund_id, "is the refund Id");
+      const refundDetails = await razorpayInstance.refunds.fetch(refund_id);
+      return {
+        statusCode: HttpStatusCode.OK,
+        status: true,
+        message: "",
+        result: refundDetails,
+      };
+    } catch (error) {
+      console.log(error);
       throw error;
     }
   }

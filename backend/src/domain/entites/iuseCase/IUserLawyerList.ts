@@ -1,11 +1,12 @@
 import { IUser } from "../../../domain/entites/imodels/Iuser";
-import { ILawyer } from "../imodels/iLawyer";
+import { ILawyer, LawyerQuery } from "../imodels/iLawyer";
 import { IProfileUpdateData, IUpdateResponse } from "../imodels/iUserProfle";
 
 interface IUsersLawyerInteractor {
   getVerifiedLawyers(
     currentPage: number,
-    limit: number
+    limit: number,
+    query: LawyerQuery
   ): Promise<{
     status: boolean;
     statusCode: number;

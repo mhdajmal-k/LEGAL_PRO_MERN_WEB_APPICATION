@@ -60,6 +60,12 @@ lawyerAuthRouter.post(
   ]),
   lawyerAuthController.verifyProfessionalData.bind(lawyerAuthController)
 );
+lawyerAuthRouter.post(
+  "/updateProfessionalData",
+  authorization("lawyer"),
+  upload.single("profilePicture"),
+  lawyerAuthController.updateProfileData.bind(lawyerAuthController)
+);
 
 lawyerAuthRouter.post(
   "/login",
@@ -74,6 +80,10 @@ lawyerAuthRouter.post(
 lawyerAuthRouter.patch(
   "/resetforgotpassword/:token",
   lawyerAuthController.resetforgotpassword.bind(lawyerAuthController)
+);
+lawyerAuthRouter.post(
+  "/refreshToken",
+  lawyerAuthController.checkRefreshToken.bind(lawyerAuthController)
 );
 lawyerAuthRouter.delete(
   "/logout",

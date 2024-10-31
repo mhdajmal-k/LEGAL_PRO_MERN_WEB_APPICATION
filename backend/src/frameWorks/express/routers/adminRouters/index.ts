@@ -42,15 +42,21 @@ adminRouter.get(
   "/lawyers",
   authorization("admin"),
   adminController.getLawyers.bind(adminController)
-
-  // "/lawyers",
-  // authorization("admin"),
-  // adminController.getLawyer.bind(adminController)
 );
 adminRouter.get(
   "/lawyer/:id",
   authorization("admin"),
   adminController.lawyer.bind(adminController)
+);
+adminRouter.get(
+  "/appointments",
+  // authorization("admin"),
+  adminController.getAllAppointments.bind(adminController)
+);
+adminRouter.get(
+  "/viewAppointment/:appointmentId",
+  // authorization("admin"),
+  adminController.getAppointmentData.bind(adminController)
 );
 adminRouter.patch(
   "/verifylawyer/:id",

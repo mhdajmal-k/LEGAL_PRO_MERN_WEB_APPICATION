@@ -28,6 +28,18 @@ class JwtToken implements iJwtService {
       return null;
     }
   }
+  VerifyTokenRefresh(token: string): { id: string; role: string } | null {
+    try {
+      const decodedToken = jwt.verify(token, this.jwtRefreshTokenSecret) as {
+        id: string;
+        role: string;
+      };
+      return decodedToken;
+    } catch (error) {
+      console.error("Invalid or expired token", error);
+      return null;
+    }
+  }
 
   generateRefreshToken(id: IUser | ILawyer, role: string): string {
     const refreshToken = jwt.sign({ id, role }, this.jwtRefreshTokenSecret, {

@@ -50,5 +50,17 @@ interface IUserAppointmentInteractor {
     message: string;
     result: string | {};
   }>;
+  cancellingAppointment(appointmentId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }>;
+  getCancelledRefundStatus(appointmentId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }>;
 }
 export default IUserAppointmentInteractor;

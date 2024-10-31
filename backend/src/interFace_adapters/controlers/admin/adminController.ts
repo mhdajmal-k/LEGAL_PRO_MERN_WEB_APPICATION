@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import IAdminInteractor from "../../../domain/entites/iuseCase/iadmin";
 import { corsOptions } from "../../../frameWorks/config/corsConfig";
+import {
+  HttpStatusCode,
+  MessageError,
+} from "../../../frameWorks/utils/helpers/Enums";
 
 class AdminController {
   constructor(private adminInteractor: IAdminInteractor) {}
@@ -188,6 +192,71 @@ class AdminController {
       next(error);
     }
   }
+  async getAllAppointments(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { status } = req.query;
+      const currentPage = req.query.page ? req.query.page : 1;
+      const limit = req.query.limit ? req.query.limit : 5;
+      console.log(currentPage);
+      console.log(limit);
+      const filter = status ?? "Pending";
+      console.log(filter, "is the sllllllllllllllllllllll");
+      const response = await this.adminInteractor.allAppointments(
+        filter as string,
+        Number(currentPage),
+        Number(limit)
+      );
+      console.log(response, "sssssssssssssssssssssssssssssssssss");
+      if (response.result) {
+        const appointment = response.result;
+        console.log(appointment);
+        const totalPages = response.totalPages;
+        console.log(totalPages, "yugfffffffffffffffffffffffffffffffffffff");
+
+        res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: { appointment, totalPages },
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getAppointmentData(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      console.log("in here");
+      const { appointmentId } = req.params;
+
+      if (!appointmentId) {
+        console.log("checking..");
+        return res.status(HttpStatusCode.BadRequest).json({
+          status: false,
+          message: MessageError.BadPrams,
+          result: {},
+        });
+      }
+      const response = await this.adminInteractor.getAppointment(appointmentId);
+      if (response.status) {
+        return res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async adminLogOut(
     req: Request,
     res: Response,

@@ -12,6 +12,14 @@ import { hashPassword } from "../../../frameWorks/utils/helpers/passwordHelper";
 import { validatePassword } from "../../../frameWorks/utils/validatePassword";
 import EmailService from "../../../frameWorks/services/mailer";
 import e from "express";
+import {
+  HttpStatusCode,
+  MessageError,
+} from "../../../frameWorks/utils/helpers/Enums";
+import {
+  IAppointmentAdminSide,
+  IAppointmentLawyerSide,
+} from "../../../domain/entites/imodels/iAppontment";
 
 class AdminInteractor implements IAdminInteractor {
   constructor(
@@ -357,6 +365,84 @@ class AdminInteractor implements IAdminInteractor {
         status: true,
         message: `user UnBlocked successFully`,
         result: [],
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async allAppointments(
+    status: string,
+    currentPage: number,
+    limit: number
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IAppointmentAdminSide[];
+    totalPages?: number;
+  }> {
+    try {
+      const appointments =
+        await this.Repository.getAllAppointmentBasedStatusInAdmin(
+          status,
+          currentPage,
+          limit
+        );
+      if (!appointments) {
+        const error: CustomError = new Error(MessageError.AppointmentNotFound);
+        error.statusCode = HttpStatusCode.NotFound;
+        throw error;
+      }
+      const totalAppointment = await this.Repository.getTotalCountOfAppointment(
+        status
+      );
+      console.log(totalAppointment, "is the total Appointment");
+      const totalPages = Math.ceil(totalAppointment / limit);
+      console.log(totalPages, "is the auth total page");
+      return {
+        statusCode: HttpStatusCode.OK,
+        status: true,
+        message: MessageError.AppointmentGot,
+        result: appointments,
+        totalPages: totalPages,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getAppointment(appointmentId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }> {
+    try {
+      const appointment = await this.Repository.getAppointmentById(
+        appointmentId
+      );
+      if (!appointment) {
+        const error: CustomError = new Error(MessageError.AppointmentNotFound);
+        error.statusCode = HttpStatusCode.NotFound;
+        throw error;
+      }
+
+      if (appointment.imageUrl) {
+        appointment.imageUrl = await this.s3Service.fetchFile(
+          appointment.imageUrl
+        );
+      }
+      console.log("Appointment:", appointment);
+      appointment.lawyerId.profile_picture = await this.s3Service.fetchFile(
+        appointment.lawyerId.profile_picture
+      );
+      appointment.userId.profilePicture = await this.s3Service.fetchFile(
+        appointment.userId.profilePicture
+      );
+      return {
+        statusCode: HttpStatusCode.OK,
+        status: true,
+        message: MessageError.AppointmentGot,
+        result: appointment,
       };
     } catch (error) {
       throw error;

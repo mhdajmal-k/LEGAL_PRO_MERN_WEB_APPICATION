@@ -7,6 +7,7 @@ import { config } from "../../../config/envConfig";
 import EmailService from "../../../services/mailer";
 import JwtToken from "../../../services/jwt";
 import { apiLimiter } from "../../../config/rateLimit";
+import { S3Service } from "../../../config/s3Setup";
 
 export const authRouter = Router();
 require("dotenv").config();
@@ -14,6 +15,7 @@ const emailService = new EmailService(
   process.env.EMAIL_ID as string,
   process.env.EMAIL_PASS as string
 );
+const IS3Services = new S3Service();
 const optGenerator = new OTPService();
 const jwtToken = new JwtToken(config.JWT_SECRET, config.JWT_REFRESH_SECRET);
 const repository = new UserAuthRepository();
@@ -21,7 +23,8 @@ const interactor = new userAuthInteractor(
   repository,
   emailService,
   optGenerator,
-  jwtToken
+  jwtToken,
+  IS3Services
 );
 
 const userAuthController = new UserAuthController(interactor);
@@ -56,6 +59,10 @@ authRouter.post(
 authRouter.patch(
   "/resetforgotpassword/:token",
   userAuthController.resetforgotpassword.bind(userAuthController)
+);
+authRouter.post(
+  "/refreshToken",
+  userAuthController.checkRefreshToken.bind(userAuthController)
 );
 
 authRouter.delete(
