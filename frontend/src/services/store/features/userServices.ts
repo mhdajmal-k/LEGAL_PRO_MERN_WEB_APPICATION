@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosConfigue";
 import {
   AISEARCH,
+  CHECKREFUNDSTATUS,
   CREATEAPPOINTMENT,
   CREATEPAYMENT,
   FETCHALLAPPOINTMENT,
@@ -31,7 +32,6 @@ export const signUpUser = createAsyncThunk(
   async (userData: userSignUp, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(USERSIGNUP, userData);
-      console.log(response.data, "//////////////////////////////////");
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";
@@ -73,7 +73,6 @@ export const loginUser = createAsyncThunk(
       const response = await axiosInstance.post(USERLOGIN, data);
       return response.data;
     } catch (error) {
-      console.log(error, "in the service");
       let errorMessage = "Network error. try again later.";
       if (error instanceof AxiosError) {
         if (error.response) {
@@ -97,7 +96,7 @@ export const googleSignup = createAsyncThunk(
   ) => {
     try {
       const response = await axiosInstance.post(GOOGLESIGNUP, data);
-      console.log(response.data);
+
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";
@@ -194,7 +193,6 @@ export const updateUserProfileData = createAsyncThunk(
     } catch (error) {
       let errorMessage = "An unknown error occurred";
       if (error instanceof AxiosError) {
-        console.log(error);
         if (error.response) {
           errorMessage = error.response.data.message || "Server error";
         } else if (error.request) {
@@ -227,7 +225,6 @@ export const resetPassword = createAsyncThunk(
     } catch (error) {
       let errorMessage = "An unknown error occurred";
       if (error instanceof AxiosError) {
-        console.log(error);
         if (error.response) {
           errorMessage = error.response.data.message || "Server error";
         } else if (error.request) {
@@ -269,12 +266,42 @@ export const resetForgotPassword = createAsyncThunk(
 export const fetchLawyer = createAsyncThunk(
   "user/fetchLawyer",
   async (
-    { page, limit }: { page: number; limit: number },
+    {
+      page,
+      limit,
+      searchText,
+      experience,
+      gender,
+      languagesSpoken,
+      designation,
+      courtPracticeArea,
+      city,
+    }: {
+      page: number;
+      limit: number;
+      searchText?: string;
+      experience?: string;
+      gender?: string;
+      languagesSpoken?: string[];
+      designation?: string;
+      courtPracticeArea?: string;
+      city: string;
+    },
     { rejectWithValue }
   ) => {
     try {
       const response = await axiosInstance.get<response>(FETCHLAWYERS, {
-        params: { page, limit },
+        params: {
+          page,
+          limit,
+          searchText,
+          experience,
+          gender,
+          languagesSpoken: languagesSpoken?.join(","),
+          designation,
+          courtPracticeArea,
+          city,
+        },
       });
 
       return response.data;
@@ -339,8 +366,6 @@ export const createAppointment = createAsyncThunk(
   "user/createAppointment",
   async (appointmentData: FormData, { rejectWithValue }) => {
     try {
-      console.log("hi from the service");
-      console.log(appointmentData, "is the appointment Data");
       const response = await axiosInstance.post(
         CREATEAPPOINTMENT,
         appointmentData,
@@ -352,7 +377,6 @@ export const createAppointment = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      console.log(error, "is the errro");
       let errorMessage = "An unknown error occurred";
       if (error instanceof AxiosError) {
         if (error.response) {
@@ -386,6 +410,49 @@ export const fetchAppointmentDataById = createAsyncThunk(
     }
   }
 );
+export const cancelAppointmentDataById = createAsyncThunk(
+  "user/cancelAppointmentDataById",
+  async (appointmentId: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch(
+        `${GETAPPOINTMENT}/${appointmentId}`
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || error || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const fetchRefundStatus = createAsyncThunk(
+  "user/RefundStatus",
+  async (appointmentId: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `${CHECKREFUNDSTATUS}/${appointmentId}`
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || error || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 export const fetchAllAppointment = createAsyncThunk(
   "user/fetchAllAppointment",
   async (

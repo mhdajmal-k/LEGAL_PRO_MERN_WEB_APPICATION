@@ -9,7 +9,6 @@ class UserProfileController {
     try {
       const { email, userName, phoneNumber } = req.body;
       const id = req.params.id;
-      console.log(id, "is the id");
 
       const file = req.file ?? null;
       if (!email?.trim() || !userName?.trim()) {
@@ -41,9 +40,6 @@ class UserProfileController {
   }
   async resetPassword(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("hidddddddddd");
-      console.log(req.body);
-      console.log(req.params.id);
       const { newPassword, currentPassword } = req.body;
       const id = req.params.id;
 
@@ -87,14 +83,12 @@ class UserProfileController {
   async AISearch(req: Request, res: Response, next: NextFunction) {
     try {
       const { prompt } = req.body;
-      console.log(prompt, "is the prompt");
       if (!prompt) {
         const error: CustomError = new Error("Bad Request");
         error.statusCode = 400;
         throw error;
       }
       const response = await this.userProfileInteractor.AiSearch(prompt);
-      console.log(response, "is the rjhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
       if (response.status) {
         return res.status(200).json({
           status: response.status,

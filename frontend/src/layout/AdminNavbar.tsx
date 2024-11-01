@@ -45,6 +45,9 @@ const AdminNavbar: React.FC = () => {
 
 
                 <div className="hidden md:flex space-x-6 text-white">
+                    <Link to="/lawyer" className="hover:text-black">
+                        HOME
+                    </Link>
                     <Link to="/services" className="hover:text-black">
                         ABOUT
                     </Link>

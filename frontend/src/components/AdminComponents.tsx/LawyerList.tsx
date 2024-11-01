@@ -8,7 +8,8 @@ import { useState } from "react";
 import { blockandUnblock, getLawyer } from "../../services/store/features/adminServices";
 import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from '@nextui-org/react';
 import CustomToast from "../userComponents/CustomToast";
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
+import { logout } from "../../services/store/features/lawyerSlilce";
 interface LawyerTableListProps {
     columns: string[];
     data: Lawyer[];
@@ -32,24 +33,55 @@ const LawyerTableList: React.FC<LawyerTableListProps> = ({ columns, data, onRefr
             console.error("Failed to fetch lawyer details", error);
         }
     };
-    async function handleBlockorUBlock(id: string, block: boolean): Promise<void> {
-        try {
-            const response = await dispatch(blockandUnblock({ id, state: !block, action: "lawyer" })).unwrap();
-            if (response.status) {
-                toast(<CustomToast message={response.message} type="success" />);
-                onRefresh()
+
+
+    async function handleBlockorUBlock(id: string, isCurrentlyBlocked: boolean): Promise<void> {
+        const action = isCurrentlyBlocked ? 'Unblock' : 'Block';
+
+        // Show confirmation toast
+        toast(
+            <div >
+                <p>Are you sure you want to {action.toLowerCase()} this lawyer?</p>
+                <div className="flex space-x-2 mt-3 ">
+                    <button
+                        className={`${isCurrentlyBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600 '}text-white px-3 py-1 rounded-md`}
+                        onClick={async () => {
+                            try {
+                                const response = await dispatch(blockandUnblock({ id, state: !isCurrentlyBlocked, action: "lawyer" })).unwrap();
+                                if (response.status) {
+
+                                    if (response.message == "user blocked successFully") {
+
+                                        dispatch(logout());
+                                    }
+                                    toast(<CustomToast message={response.message} type="success" />);
+                                    onRefresh();  // Refresh the data
+                                }
+                            } catch (error: any) {
+                                console.error("Block/Unblock action failed:", error);
+                                toast(<CustomToast message={error?.message || 'Action failed'} type="error" />);
+                            }
+                        }}
+                    >
+                        Confirm
+                    </button>
+                    <button
+                        className="bg-gray-300 text-gray-700 px-3 py-1 rounded-md"
+                        onClick={() => toast.dismiss()}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>,
+            {
+                duration: 2000,
             }
-            // setViewModalOpen(false);
-
-        } catch (error: any) {
-            console.error("Verification failed:", error);
-            toast(<CustomToast message={error || error.message} type="error" />)
-        }
-
-
+        );
     }
+
     return (
         <div className="overflow-x-auto mx-auto sm:max-w-6xl shadow-md rounded-lg ">
+
             <table className="min-w-full border border-gray-200 divide-y divide-gray-200 bg-white">
                 <thead className="bg-gray-400 border-gray-300 text-white text-center">
                     <tr>

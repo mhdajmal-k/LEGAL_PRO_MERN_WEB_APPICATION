@@ -7,6 +7,7 @@ import UserLawyerInteractor from "../../../../application/useCases/user/userLawy
 import UserProfileController from "../../../../interFace_adapters/controlers/user/userProfileController";
 import UserLawyerController from "../../../../interFace_adapters/controlers/user/lawyerControler";
 import { S3Service } from "../../../config/s3Setup";
+import { authorization } from "../../../middleware/authMilddlewere";
 const IS3Services = new S3Service();
 const repository = new UserLawyerRepositories();
 
@@ -25,5 +26,6 @@ userLawyerRoute.get(
 );
 userLawyerRoute.get(
   "/slots/:id",
+  authorization("user"),
   userLawyerController.lawyerSlot.bind(userLawyerController)
 );

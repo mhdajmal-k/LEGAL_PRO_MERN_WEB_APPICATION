@@ -6,6 +6,9 @@ import { useFormik } from 'formik';
 import Select, { MultiValue } from "react-select";
 import { practiceAreas } from '../../utils/constants/PracticeAreas';
 import { lawyerProfileValidator } from '../../utils/validator/LawyerProfileProfessional';
+import { updateProfessionalData } from '../../services/store/features/lawyerServices';
+import CustomToast from '../userComponents/CustomToast';
+import { toast } from 'sonner';
 
 
 
@@ -34,7 +37,7 @@ const LawyerProfile: React.FC = () => {
             barCouncilNumber: lawyerInfo?.certifications[0].enrolmentNumber || '',
             stateBarCouncilNumber: lawyerInfo?.certifications[1].enrolmentNumber || '',
             designation: lawyerInfo?.designation || '',
-            courtPracticeArea: lawyerInfo?.practice_area || '',
+            courtPracticeArea: lawyerInfo?.courtPracticeArea || '',
             languages: lawyerInfo?.languages_spoken || [],
             aboutMe: lawyerInfo?.about || '',
             profilePicture: null as File | null
@@ -42,19 +45,37 @@ const LawyerProfile: React.FC = () => {
         // validationSchema: lawyerProfileValidator,
         validateOnChange: editMode,
         validateOnBlur: editMode,
-        onSubmit: (values) => {
-            alert("hi")
-            console.log(values, "is the values")
-            // const formData = new FormData();
-            // Object.keys(values).forEach(key => {
-            //     if (key == "practiceArea" || key == "languages") {
-            //         formData.append(key, JSON.stringify(values[key]))
-            //     } else if (key === 'profilePicture' && values.profilePicture || lawyerInfo?.profile_picture) {
-            //         formData.append(key, values.profilePicture);
-            //     } else {
-            //         formData.append(key, values[key])
-            //     }
-            // })
+        onSubmit: async (values) => {
+
+            const formData = new FormData();
+
+            formData.append('userName', values.userName);
+            formData.append('gender', values.gender);
+            formData.append('city', values.city);
+            formData.append('state', values.state);
+            formData.append('years_of_experience', String(values.yearsOfExperience));
+            formData.append('designation', values.designation);
+            formData.append('courtPracticeArea', values.courtPracticeArea);
+            formData.append('about', values.aboutMe);
+
+            formData.append('practice_area', JSON.stringify(values.practiceArea));
+
+
+            formData.append('languages', JSON.stringify(values.languages));
+            if (values.profilePicture) {
+                formData.append('profilePicture', values.profilePicture);
+            }
+            try {
+                console.log(formData, "is the form data in the professionalData")
+                const response = await dispatch(updateProfessionalData(formData)).unwrap();
+
+                if (response.status) {
+                    toast(<CustomToast message={response.message} type="success" />);
+
+                }
+            } catch (error: any) {
+                toast(<CustomToast message={error || error.message} type="error" />);
+            }
             setEditMode(false)
         },
     });
@@ -247,7 +268,7 @@ const LawyerProfile: React.FC = () => {
                                 value={formik.values.courtPracticeArea}
                                 className=" w-full sm:p-2 border rounded my-2 bg-gray-200"
                             >
-                                <option value="">Court Practice Area</option>
+                                <option value="" disabled>Court Practice Area</option>
                                 <option value="district Court">District Court</option>
                                 <option value="high Court">High Court</option>
                                 <option value="supreme Court">Supreme Court</option>

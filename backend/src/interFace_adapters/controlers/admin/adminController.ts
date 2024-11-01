@@ -22,7 +22,7 @@ class AdminController {
         return;
       }
       const response = await this.adminInteractor.adminLogin(data);
-      console.log(response, "is the repsonse");
+
       if (response) {
         res.cookie("auth_adminAccessToken", response.result?.tokenJwt, {
           httpOnly: true,
@@ -74,7 +74,7 @@ class AdminController {
   ): Promise<void> {
     try {
       const response = await this.adminInteractor.getPendingApprovalLawyers();
-      console.log(response, "is the response ");
+
       if (response.result) {
         res.status(response.statusCode).json({
           status: response.status,
@@ -100,10 +100,13 @@ class AdminController {
         Number(limit)
       );
       if (response.result) {
+        const lawyers = response.result;
+        const totalUsers = response.totalUsers;
+        const totalPages = response.totalPages;
         res.status(response.statusCode).json({
           status: response.status,
           message: response.message,
-          result: response.result,
+          result: { lawyers, totalUsers, totalPages },
         });
       }
     } catch (error) {
@@ -115,7 +118,7 @@ class AdminController {
     try {
       const id: string = req.params.id;
       const response = await this.adminInteractor.getLawyer(id);
-      console.log(response.result);
+
       if (response.result) {
         res.status(200).json({
           status: response.status,
@@ -201,21 +204,16 @@ class AdminController {
       const { status } = req.query;
       const currentPage = req.query.page ? req.query.page : 1;
       const limit = req.query.limit ? req.query.limit : 5;
-      console.log(currentPage);
-      console.log(limit);
+
       const filter = status ?? "Pending";
-      console.log(filter, "is the sllllllllllllllllllllll");
       const response = await this.adminInteractor.allAppointments(
         filter as string,
         Number(currentPage),
         Number(limit)
       );
-      console.log(response, "sssssssssssssssssssssssssssssssssss");
       if (response.result) {
         const appointment = response.result;
-        console.log(appointment);
         const totalPages = response.totalPages;
-        console.log(totalPages, "yugfffffffffffffffffffffffffffffffffffff");
 
         res.status(response.statusCode).json({
           status: response.status,
@@ -233,11 +231,9 @@ class AdminController {
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("in here");
       const { appointmentId } = req.params;
 
       if (!appointmentId) {
-        console.log("checking..");
         return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: MessageError.BadPrams,

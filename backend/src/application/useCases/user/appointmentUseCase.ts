@@ -85,17 +85,13 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       }
       let key;
       if (file) {
-        console.log(file, "is ddddddddddddddddddddddddddddd");
         key = `lawyer-caseImage/${Date.now()}-${file.originalname}`;
-        console.log(
-          key,
-          "sssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
-        );
+
         const uploadPromise = await this.s3Service.uploadFile(file, key);
       }
       const convenienceFee = Math.ceil(fee * 0.03);
       const subTotal = Number(convenienceFee) + Number(fee);
-      console.log(key, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
       const createdAppointment =
         await this.AppointmentRepository.createAppointment(
           LawyerId,
@@ -158,14 +154,11 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
-      console.log("Appointment:", appointment);
+
       appointment.lawyerId.profile_picture = await this.s3Service.fetchFile(
         appointment.lawyerId.profile_picture
       );
 
-      console.log("new apojddddddddddddddddddddddddddddddd");
-
-      console.log(appointment);
       return {
         statusCode: HttpStatusCode.OK,
         status: true,
@@ -351,12 +344,11 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       const validLawyer = await this.UserLawyerRepository.getLawyerById(
         updatedAppointment.lawyerId.toString()
       );
-      console.log(validLawyer, "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-      console.log(updateSlot.userId);
+
       const user = await this.UserRepository.getId(
         updatedAppointment?.userId.toString()
       );
-      console.log(user, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
       const emailSentToLawyer = this.nodeMailer.sendBookingConfirmation(
         validLawyer?.email,
         validLawyer.userName,
@@ -417,11 +409,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
           status,
           userId
         );
-      console.log(totalLawyers, "is the total ");
       const totalPages = Math.ceil(totalLawyers / limit);
-      console.log(totalPages, "is the total pages");
-
-      // console.log("Appointment:", appointments);
 
       return {
         statusCode: HttpStatusCode.OK,
@@ -508,9 +496,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
-      console.log(cancelledAppointment, "is the cancelled Appointmnet");
       const refund_id = cancelledAppointment.razorpayPaymentId;
-      console.log(refund_id, "is the refund Id");
       const refundDetails = await razorpayInstance.refunds.fetch(refund_id);
       return {
         statusCode: HttpStatusCode.OK,

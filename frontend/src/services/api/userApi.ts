@@ -11,6 +11,7 @@ export const CREATEAPPOINTMENT = "/api/user/appointment/";
 export const FETCHALLAPPOINTMENT = "/api/user/appointment/list";
 export const FETCHONEAPPOINTMENT = "/api/user/appointment/view";
 export const GETAPPOINTMENT = "/api/user/appointment/";
+export const CHECKREFUNDSTATUS = "api/user/appointment/checkRefundStatus";
 export const FETCHLAWYERS = "/api/user/lawyers/";
 export const FETCHLAWYERSLOT = "/api/user/lawyers/slots";
 export const FETCHLAWYERBYID = "/api/user/lawyers/profile";

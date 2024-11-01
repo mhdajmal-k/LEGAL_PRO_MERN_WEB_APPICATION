@@ -22,7 +22,7 @@ class AdminRepository implements iAdminRepository {
       });
       try {
         await newUser.save();
-        console.log(newUser, "is hte new user");
+
         return newUser;
       } catch (error) {
         console.log(error);
@@ -129,7 +129,6 @@ class AdminRepository implements iAdminRepository {
         { verified: "rejected" },
         { new: true }
       );
-      console.log(updatedLawyer);
       return updatedLawyer;
     } catch (error) {
       throw error;
@@ -193,7 +192,7 @@ class AdminRepository implements iAdminRepository {
         .limit(limit)
         .sort({ createdAt: -1 })
         .lean<IAppointmentAdminSide[]>();
-      console.log(appointments);
+
       return appointments;
     } catch (error) {
       throw error;
@@ -201,17 +200,16 @@ class AdminRepository implements iAdminRepository {
   }
   async getTotalCountOfAppointment(status: string): Promise<any | null> {
     try {
-      let filter = {};
-      if (status === "Pending") {
-        filter = { date: { $gte: new Date() }, status: "Pending" };
-      } else if (status === "completed") {
-        filter = { date: { $lt: new Date() }, status: "Completed" };
-      } else if (status === "canceled") {
-        filter = { status: "Cancelled" };
-      }
-      console.log(status, "is total couont");
+      // let filter = {};
+      // if (status === "Pending") {
+      //   filter = { date: { $gte: new Date() }, status: "Pending" };
+      // } else if (status === "completed") {
+      //   filter = { date: { $lt: new Date() }, status: "Completed" };
+      // } else if (status === "canceled") {
+      //   filter = { status: "Cancelled" };
+      // }
+
       const appointmentsTotal = await Appointment.countDocuments({ status });
-      console.log(appointmentsTotal, "iksssdfsdfdfsdf");
       return appointmentsTotal;
     } catch (error) {
       throw new Error("field to get total counts");

@@ -74,7 +74,7 @@ export const AppointmentDetails: React.FC<AppointmentReviewProps> = ({ appointme
                         console.log(response, "is the iam looking the result")
                         if (response.status) {
                             const AppointmentId = response.result._id as string
-                            alert(AppointmentId)
+
                             navigate(`/paymentSuccess/${AppointmentId}`)
                         }
 
@@ -98,7 +98,7 @@ export const AppointmentDetails: React.FC<AppointmentReviewProps> = ({ appointme
 
             toast(<CustomToast message={error || error.message} type="error" />);
             if (error == "Consultation fee has increased. Please confirm the new fee.") {
-                alert("in this")
+
                 fetchAppointmentData(appointmentId)
             }
 

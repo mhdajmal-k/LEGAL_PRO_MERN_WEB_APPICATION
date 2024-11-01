@@ -124,7 +124,6 @@ class LawyerAppointmentInteractor implements ILawyerAppointmentInteractor {
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
-      console.log(issueRefund);
 
       await this.LawyerAppointmentRepository.cancelAppointmentById(
         appointmentId,
@@ -144,17 +143,15 @@ class LawyerAppointmentInteractor implements ILawyerAppointmentInteractor {
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
-      console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
-      console.log(getAppointment.lawyerId, "sssssssssssssssssssssssss");
+
       const validLawyer = await this.UserLawyerRepository.getLawyerById(
         getAppointment.lawyerId._id.toString()
       );
-      console.log(validLawyer, "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-      console.log(updateSlot.userId);
+
       const user = await this.UserRepository.getId(
         getAppointment?.userId._id.toString()
       );
-      console.log(user, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
       const emailSentToLawyer =
         this.nodeMailer.sendCancellationConfirmationToLawyer(
           validLawyer?.email,
@@ -183,7 +180,6 @@ class LawyerAppointmentInteractor implements ILawyerAppointmentInteractor {
         result: {},
       };
     } catch (error) {
-      console.log(error, "is the cancelling Appointment Error");
       throw error;
     }
   }

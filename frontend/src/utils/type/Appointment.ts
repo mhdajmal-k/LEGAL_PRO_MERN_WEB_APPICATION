@@ -5,12 +5,25 @@ interface Lawyer {
   city: string;
   state: string;
   designation: string;
+  years_of_experience?: number | string;
+  practice_area?: string[];
+  email?: string;
+}
+interface User {
+  _id: string;
+  userName: string;
+  profilePicture: string;
+  email?: string;
+  // city: string;
+  // state: string;
+  // designation: string;
 }
 
+//error may be happen here
 export interface Appointment {
   _id: string;
   lawyerId: Lawyer;
-  userId: string;
+  userId: User;
   appointmentDate: string;
   appointmentTime: string;
   status: string;
@@ -24,4 +37,5 @@ export interface Appointment {
   convenienceFee: number;
   subTotal: number;
   paymentStatus?: string;
+  imageUrl: string;
 }

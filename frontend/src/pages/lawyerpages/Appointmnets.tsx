@@ -1,14 +1,16 @@
-import AppointmentList from "../../components/userComponents/Appoinement"
+import AppointmentListLawyerSide from "../../components/lawyerComponents/AppointmentList"
+import AppointmentListAdminSide from "../../components/lawyerComponents/AppointmentList"
 import AdminNavbar from "../../layout/AdminNavbar"
 import LegalFooter from "../../layout/footer"
 
-const Appointments: React.FC = () => {
+const LawyerSideAppointments: React.FC = () => {
+
     return (
         <div>
             <AdminNavbar />
-            <AppointmentList userType="user" />
+            <AppointmentListLawyerSide userType="lawyer" />
             <LegalFooter />
         </div>
     )
 }
-export default Appointments
+export default LawyerSideAppointments

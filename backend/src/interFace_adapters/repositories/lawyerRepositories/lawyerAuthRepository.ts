@@ -57,7 +57,7 @@ class LawyerAuthRepository implements iLawyerRepository {
     try {
       console.log(id, "is the id");
       const userId = await Lawyer.findById({ _id: id });
-      return userId ? userId?.id : null;
+      return userId ? userId : null;
     } catch (error) {
       console.log(error);
       throw error;

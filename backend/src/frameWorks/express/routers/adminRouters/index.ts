@@ -50,12 +50,12 @@ adminRouter.get(
 );
 adminRouter.get(
   "/appointments",
-  // authorization("admin"),
+  authorization("admin"),
   adminController.getAllAppointments.bind(adminController)
 );
 adminRouter.get(
   "/viewAppointment/:appointmentId",
-  // authorization("admin"),
+  authorization("admin"),
   adminController.getAppointmentData.bind(adminController)
 );
 adminRouter.patch(

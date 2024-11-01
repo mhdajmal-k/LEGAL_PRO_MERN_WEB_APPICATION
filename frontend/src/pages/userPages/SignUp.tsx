@@ -10,7 +10,6 @@ const SignUp: React.FC = () => {
   return (
     <div>
       <Navbar />
-
       <SingUpForm />
       <Footer />
     </div>

@@ -8,6 +8,16 @@ export const userColumns: string[] = [
 export const AppointmentColumns = {
   user: ["Date", "Time", "Lawyer", "Fee", "Payment", "View"],
   lawyer: ["Date", "Time", "User", "Fee", "Payment", "View"],
+  admin: [
+    "Date",
+    "Time",
+    "User",
+    "lawyer",
+    "consultationFee",
+    "Convenience Fee",
+    "Payment",
+    "View",
+  ],
 };
 export const lawyerColumns: string[] = [
   "PROFILE",

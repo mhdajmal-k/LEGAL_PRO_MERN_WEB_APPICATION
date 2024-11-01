@@ -13,17 +13,38 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-// axiosInstance.interceptors.response.use((response: AxiosResponse) => {
-//   async (error: AxiosError) => {
-//     alert("hi");
-//     const originalRequest = error.config;
-//     console.log(originalRequest, "is the original request ");
-//     if (error.response?.status === 401) {
-//       console.log(error.response.statusText);
-//     }
-//     return axios(originalRequest);
-//   };
-//   return Promise.reject("error");
-// });
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const requestedApi = error.config;
+    console.log(requestedApi);
+    console.log(error);
+    if (
+      error.response.status === 401 &&
+      error.response.data?.message === "Authorization denied. Invalid token"
+    ) {
+      try {
+        if (error.response.data.result == "user") {
+          const response = await axiosInstance.post("/api/user/refreshToken");
+          if (response.status == 200) {
+            return axiosInstance(requestedApi);
+          }
+        } else if (error.response.data.result == "lawyer") {
+          const response = await axiosInstance.post("/api/lawyer/refreshToken");
+
+          if (response.status == 200) {
+            return axiosInstance(requestedApi);
+          }
+        }
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default axiosInstance;

@@ -9,6 +9,8 @@ import { AxiosError } from "axios";
 import {
   ADMINLOGOUT,
   BLOCKANDUNBLOCK,
+  FETCHAPPOINTMENTDATA,
+  FETCHAPPOINTMENTS,
   FETCHLAWYER,
   FETCHLAWYERS,
   FETCHPENDINGAPPROVALLAWYERS,
@@ -197,7 +199,6 @@ export const blockandUnblock = createAsyncThunk(
       console.log(state, "is the state");
       const response = await axiosInstance.patch<response>(
         `${BLOCKANDUNBLOCK}/${id}`,
-
         { state, action }
       );
       return response.data;
@@ -206,6 +207,55 @@ export const blockandUnblock = createAsyncThunk(
       if (error instanceof AxiosError) {
         if (error.response) {
           errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const fetchAllAppointmentAdminSide = createAsyncThunk(
+  "admin/fetchAllAppointment",
+  async (
+    { page, limit, status }: { page: number; limit: number; status: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.get(`${FETCHAPPOINTMENTS}/`, {
+        params: {
+          page: page,
+          limit: limit,
+          status: status,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || error || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const adminFetchAppointmentDataById = createAsyncThunk(
+  "admin/adminFetchAppointmentDataById",
+  async (appointmentId: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `${FETCHAPPOINTMENTDATA}/${appointmentId}`
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || error || "Server error";
         } else if (error.request) {
           errorMessage = "Network error. Please check your connection.";
         }

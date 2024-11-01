@@ -63,11 +63,11 @@ appointmentRoute.post(
 );
 appointmentRoute.patch(
   "/:appointmentId",
-  // authorization("user"),
+  authorization("user"),
   appointmentController.cancelAppointment.bind(appointmentController)
 );
 appointmentRoute.get(
   "/checkRefundStatus/:appointmentId",
-  // authorization("user"),
+  authorization("user"),
   appointmentController.checkRefundStatus.bind(appointmentController)
 );

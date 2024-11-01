@@ -2,6 +2,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosConfigue";
 import { LawyerSignUpData } from "../../../utils/type/userType";
 import {
+  CANCELLAPPOINTMENTLAWYER,
+  FETCHALLAPPOINTMENTS,
+  FETCHAPPOINTMENTLAWYER,
   FETCHLAWYERSLOT,
   LAWYERCREATESLOT,
   LAWYERFORGOTPASSWORD,
@@ -13,6 +16,7 @@ import {
   LAWYERUPDATESLOT,
   LAWYERVERIFYINGOTP,
   LAWYERVERIFYPROFESSIONALDATA,
+  UPDATEPROFESSIONALDATA,
 } from "../../api/lawerApi";
 import { AxiosError } from "axios";
 import { LawyerSignUpResponse, response } from "../../../utils/type/lawyerType";
@@ -93,9 +97,7 @@ export const lawyerResendOtp = createAsyncThunk(
 export const verifyProfessionalData = createAsyncThunk(
   "lawyer/verifyProfessionalData",
   async (ProfessionalData: FormData, { rejectWithValue }) => {
-    console.log(ProfessionalData, "is the lawyerdata from the service");
     try {
-      console.log("hi");
       const response = await axiosInstance.post(
         LAWYERVERIFYPROFESSIONALDATA,
         ProfessionalData,
@@ -105,7 +107,7 @@ export const verifyProfessionalData = createAsyncThunk(
           },
         }
       );
-      console.log("heppen here");
+
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
@@ -120,6 +122,35 @@ export const verifyProfessionalData = createAsyncThunk(
     }
   }
 );
+export const updateProfessionalData = createAsyncThunk(
+  "lawyer/updateProfessionalData",
+  async (ProfessionalData: FormData, { rejectWithValue }) => {
+    try {
+      console.log("hi");
+      const response = await axiosInstance.post(
+        UPDATEPROFESSIONALDATA,
+        ProfessionalData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 export const loginLawyer = createAsyncThunk(
   "lawyer/login",
   async (data: { email: string; password: string }, { rejectWithValue }) => {
@@ -296,6 +327,76 @@ export const deleteSlot = createAsyncThunk(
   }
 );
 
+export const fetchAllAppointmentLawyerSide = createAsyncThunk(
+  "lawyer/fetchAllAppointment",
+  async (
+    { page, limit, status }: { page: number; limit: number; status: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.get(`${FETCHALLAPPOINTMENTS}/`, {
+        params: {
+          page: page,
+          limit: limit,
+          status: status,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || error || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const LawyerFetchAppointmentDataById = createAsyncThunk(
+  "lawyer/LawyerFetchAppointmentDataById",
+  async (appointmentId: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `${FETCHAPPOINTMENTLAWYER}/${appointmentId}`
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || error || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const LawyerCancelAppointmentDataById = createAsyncThunk(
+  "lawyer/LawyerCancelAppointmentDataById",
+  async (appointmentId: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch(
+        `${CANCELLAPPOINTMENTLAWYER}/${appointmentId}`
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || error || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
 export const lawyerLogOut = createAsyncThunk(
   "user/lawyerLogOut",
   async (_, { rejectWithValue }) => {

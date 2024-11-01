@@ -10,6 +10,8 @@ import AdminLayout from '../../components/AdminComponents.tsx/AdminLayout';
 import { AdminDashBoard } from '../../pages/adminpages/adminDashBoard';
 import LawyerList from '../../pages/adminpages/LaywerList';
 import ApprovalLawyerList from '../../pages/adminpages/ApprovalLawyerList';
+import AppointmentListAdminSide from '../../components/AdminComponents.tsx/AppointmentList';
+import ViewAppointmentDetails from '../../components/AdminComponents.tsx/ViewAppointmentDetails';
 
 
 
@@ -27,6 +29,8 @@ const AdminRoutes: React.FC = () => {
                     <Route path='dashBoard' element={<AdminDashBoard />} />
                     <Route path='users' element={<UsersList />} />
                     <Route path='lawyers' element={< LawyerList />} />
+                    <Route path='appointments' element={<AppointmentListAdminSide />} />
+                    <Route path='view/:appointmentId' element={<ViewAppointmentDetails />} />
                     <Route path='PendingApproval' element={<ApprovalLawyerList />} />
                     <Route path='lawyers' element={<LawyerList />} />
                 </Route>

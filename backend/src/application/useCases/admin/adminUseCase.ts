@@ -56,7 +56,6 @@ class AdminInteractor implements IAdminInteractor {
       }
 
       if (!adminUser || !adminUser.password) {
-        console.log("hi");
         const error: CustomError = new Error("Failed to retrieve user data.");
         error.statusCode = 500;
         throw error;
@@ -109,7 +108,6 @@ class AdminInteractor implements IAdminInteractor {
           result: [],
         };
       }
-      console.log(allUser, "is the useCase");
 
       return {
         status: true,
@@ -132,7 +130,6 @@ class AdminInteractor implements IAdminInteractor {
       const allUser = await this.Repository.getPendingApprovalLawyers();
 
       if (!allUser) {
-        console.log("hi in here");
         return {
           statusCode: 500,
           status: false,
@@ -143,7 +140,6 @@ class AdminInteractor implements IAdminInteractor {
 
       const updatedLawyer = await Promise.all(
         allUser.map(async (lawyer: any) => {
-          console.log(lawyer, "is the map ");
           if (lawyer.profile_picture) {
             lawyer.profile_picture = await this.s3Service.fetchFile(
               lawyer.profile_picture
@@ -152,7 +148,6 @@ class AdminInteractor implements IAdminInteractor {
           return lawyer;
         })
       );
-      console.log(allUser, "is the useCase");
 
       return {
         statusCode: 200,
@@ -171,7 +166,6 @@ class AdminInteractor implements IAdminInteractor {
     result: [];
   }> {
     try {
-      console.log("controller");
       const lawyer = await this.Repository.getLawyer(id);
       if (!lawyer) {
         const error: CustomError = new Error("Lawyer not found");
@@ -182,7 +176,6 @@ class AdminInteractor implements IAdminInteractor {
       const profile_picture = lawyer.profile_picture;
 
       const getProfile = await this.s3Service.fetchFile(profile_picture);
-      console.log(getProfile, "is the profile");
 
       const certificates = await Promise.all(
         lawyer.certifications.map((certificate: any) => {
@@ -227,11 +220,10 @@ class AdminInteractor implements IAdminInteractor {
         error.statusCode = 404;
         throw error;
       }
-      const totalLawyers = await this.Repository.getTotalCount("user");
+      const totalLawyers = await this.Repository.getTotalCount("lawyer");
       const totalPages = Math.ceil(totalLawyers / limit);
       const updatedLawyer = await Promise.all(
         lawyers.map(async (lawyer: any) => {
-          console.log(lawyer, "is the map ");
           if (lawyer.profile_picture) {
             lawyer.profile_picture = await this.s3Service.fetchFile(
               lawyer.profile_picture
@@ -311,7 +303,7 @@ class AdminInteractor implements IAdminInteractor {
         error.statusCode = 404;
         throw error;
       }
-      console.log(reason, "jnfdhfhfhfhffffffffff");
+
       const sendEmail = this.emailService.sendStatusNotification(
         verifyLawyer.email,
         reason,
@@ -341,7 +333,6 @@ class AdminInteractor implements IAdminInteractor {
     result: [];
   }> {
     try {
-      console.log(blockState, "is the block state");
       const updateUserData = await this.Repository.blockorUnblock(
         id,
         blockState,
@@ -396,9 +387,9 @@ class AdminInteractor implements IAdminInteractor {
       const totalAppointment = await this.Repository.getTotalCountOfAppointment(
         status
       );
-      console.log(totalAppointment, "is the total Appointment");
+
       const totalPages = Math.ceil(totalAppointment / limit);
-      console.log(totalPages, "is the auth total page");
+
       return {
         statusCode: HttpStatusCode.OK,
         status: true,
@@ -431,7 +422,7 @@ class AdminInteractor implements IAdminInteractor {
           appointment.imageUrl
         );
       }
-      console.log("Appointment:", appointment);
+
       appointment.lawyerId.profile_picture = await this.s3Service.fetchFile(
         appointment.lawyerId.profile_picture
       );

@@ -62,7 +62,6 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
   }> {
     try {
       const decodeToken = decodeSingUpToken(token);
-      console.log(decodeToken);
 
       const currentTime = Math.floor(Date.now() / 1000);
       if (decodeToken.otpExpiresAt < currentTime)
@@ -87,10 +86,8 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         error.message = "Failed to create new user";
         throw error;
       }
-      console.log(creatingNewLawyer, "is the creatingNewLawyer");
 
       const jwtToken = this.jwt.generateToken(creatingNewLawyer._id, "lawyer");
-      console.log(jwtToken, "is the jwt token i createdfffffffffffffff");
       const { password, ...userDataWithoutPassword } =
         creatingNewLawyer.toObject();
       return {
@@ -147,7 +144,6 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         },
       ];
       data.certificate = certificates;
-      console.log(data, "is the hhhhhhhhhhhhhhhhhh data in the backend ");
       const updateLawyer = await this.Repository.updateLawyerProfessionalData(
         data,
         id as string

@@ -34,7 +34,7 @@ class LawyerAppointmentController {
         );
       if (response.status) {
         const appointment = response.result;
-        console.log(appointment);
+
         const totalPages = response.totalPages;
         return res.status(response.statusCode).json({
           status: response.status,
@@ -52,11 +52,9 @@ class LawyerAppointmentController {
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("in here");
       const { appointmentId } = req.params;
 
       if (!appointmentId) {
-        console.log("checking..");
         return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: MessageError.BadPrams,
@@ -83,7 +81,6 @@ class LawyerAppointmentController {
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("in here");
       const { appointmentId } = req.params;
 
       if (!appointmentId) {

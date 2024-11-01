@@ -10,10 +10,8 @@ export const authorization =
   (allowedRoles: string) =>
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const userToken = req.cookies.User_accessToken;
-
     const lawyerToken = req.cookies.Lawyer_AccessToken;
     const adminToken = req.cookies.auth_adminAccessToken;
-    console.log(lawyerToken, "is the parse admintoken");
     // if (!userToken && !lawyerToken) {
     //   return res.status(401).json({
     //     message: "Authorization denied. Please login. fuck in here",
@@ -66,6 +64,8 @@ export const authorization =
           });
         }
       } else if (decodeToken.role === "lawyer") {
+        console.log("decoded admin Token");
+        console.log("decoded admin TokenId", decodeToken.id);
         const lawyerRepository = new LawyerAuthRepository();
         const existLawyer = await lawyerRepository.getId(decodeToken.id);
         if (!existLawyer) {
@@ -75,7 +75,9 @@ export const authorization =
             status: false,
           });
         }
+
         if (existLawyer.block) {
+          console.log("if block statement");
           return res.status(401).json({
             message: "OOPS YOU HAVE BEEN BLOCKED BY ADMIN",
             result: {},

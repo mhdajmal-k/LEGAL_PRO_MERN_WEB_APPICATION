@@ -42,7 +42,6 @@ const Navbar: React.FC = React.memo(() => {
           </Link>
         </div>
 
-        {/* Navigation Links */}
         <div className="hidden md:flex space-x-6 text-white">
           <Link to="/">HOME</Link>
           <Link to="/findLawyers" className="hover:text-black">FIND LAWYERS</Link>
@@ -50,7 +49,6 @@ const Navbar: React.FC = React.memo(() => {
           <Link to="/contact" className="hover:text-black">BLOG</Link>
         </div>
 
-        {/* User Info and Icons */}
         <div>
           {userInfo?.userName ? (
             <div className="flex items-center space-x-4">
@@ -90,7 +88,6 @@ const Navbar: React.FC = React.memo(() => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,7 +102,7 @@ const Navbar: React.FC = React.memo(() => {
         </div>
       </div>
 
-      {/* Mobile Menu Links */}
+
       {isOpen && (
         <div className="md:hidden mt-4 space-y-2 text-white">
           <Link to="/" className="block">HOME</Link>

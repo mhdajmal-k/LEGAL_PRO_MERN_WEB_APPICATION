@@ -15,7 +15,7 @@ createRoot(document.getElementById('root')!).render(
     <ErrorBoundary>
       <Provider store={Store}>
         <PersistGate persistor={persistor}>
-          <Toaster position="top-right" toastOptions={{ duration: 2000 }} />
+          <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
           <BrowserRouter>
             <ThemeProvider>
               <App />

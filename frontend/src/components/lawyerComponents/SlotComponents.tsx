@@ -8,6 +8,7 @@ import { createSlot, deleteSlot, fetchLawyerSlots, updateSlot } from '../../serv
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store/store';
 import { SlotData } from '../../utils/type/lawyerType';
+import moment from "moment";
 
 const SlotComponents: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
@@ -38,9 +39,17 @@ const SlotComponents: React.FC = () => {
         }
     };
 
+    const getSlotForDate = (date: Date) => {
+        return fetchedSlots.find(slot =>
+            moment(slot.date).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')
+        );
+    };
+
+
     const handleDate = (DateForSlotCreation: Date) => {
         setSelectedDate(DateForSlotCreation);
-        const existingSlot = fetchedSlots.find(slot => new Date(slot.date).toDateString() === DateForSlotCreation.toDateString());
+        // fetchedSlots.find(slot => new Date(slot.date).toDateString() === DateForSlotCreation.toDateString())
+        const existingSlot = getSlotForDate(DateForSlotCreation);
         if (existingSlot) {
             setEditingSlot(existingSlot);
             setDefaultFeeAmount(existingSlot.fees);
@@ -49,10 +58,10 @@ const SlotComponents: React.FC = () => {
             setExistingTime(availableTimes);
 
 
-            const booked = existingSlot.availability
+            const bookedSlotsForDate = existingSlot.availability
                 .filter(slot => slot.status)
                 .map(slot => slot.timeSlot);
-            setBookedSlots(booked);
+            setBookedSlots(bookedSlotsForDate);
 
 
             const fees: Record<string, number> = {};
@@ -67,12 +76,19 @@ const SlotComponents: React.FC = () => {
             setDefaultFeeAmount(0);
             setSelectedTimes([]);
             setExistingTime([]);
+            setBookedSlots([]);
+            setSlotFees({});
             setEditMode(false);
         }
         // setCustomizingFee(null);
     };
 
     const handleTime = (time: string) => {
+        if (isTimeInPast(time)) {
+            toast(<CustomToast message="Cannot select a past time slot." type="error" />);
+            return;
+        }
+
         setSelectedTimes(prevTimes => {
             if (prevTimes.includes(time)) {
                 return prevTimes.filter(t => t !== time);
@@ -85,8 +101,6 @@ const SlotComponents: React.FC = () => {
             ...prevFees,
             [time]: prevFees[time] || DefaultAmount
         }));
-        // console.log(slotFees)
-        // setCustomizingFee(null);
     };
 
     const handleFeeChange = (time: string, fee: number) => {
@@ -127,13 +141,22 @@ const SlotComponents: React.FC = () => {
             toast(<CustomToast message={"Missing required data"} type="error" />);
         }
     };
+    const isTimeInPast = (time: string) => {
+        if (!selectedDate) return false;
+        const now = moment();
+        const slotDateTime = moment(selectedDate)
+            .hour(moment(time, 'hh:mm A').hour())
+            .minute(moment(time, 'hh:mm A').minute());
 
+        return slotDateTime.isBefore(now);
+    };
     const handleDelete = async () => {
         console.log(editingSlot?._id)
         try {
             const response = await dispatch(deleteSlot(editingSlot?._id)).unwrap();
             if (response.status) {
-                // fetchSlots()
+                handleReset()
+                fetchSlots();
                 toast(<CustomToast message={response.message} type="success" />);
             }
         } catch (error: any) {
@@ -169,7 +192,7 @@ const SlotComponents: React.FC = () => {
                             <div
                                 key={index}
                                 className={`text-center rounded-lg shadow-xl border border-black py-5 w-1/6 
-                            ${isSelected ? 'bg-gray-500 text-white' : hasSlot ? 'bg-green-200' : 'bg-gray-100'}
+                            ${isSelected ? 'bg-primary-500 text-white' : hasSlot ? 'bg-green-200' : 'bg-gray-100'}
                             cursor-pointer`}
                                 onClick={() => handleDate(date)}
                             >
@@ -208,27 +231,35 @@ const SlotComponents: React.FC = () => {
                         {timeSlots.map(time => {
                             const isSelected = selectedTime.includes(time);
                             const isExisting = existingTime.includes(time);
+
                             const isBooked = bookedSlots.includes(time);
+                            const isPast = isTimeInPast(time);
                             return (
                                 <div key={time} className="flex flex-col items-center">
                                     <Button
-                                        onClick={() => !isBooked && handleTime(time)}
+                                        onClick={() => !isBooked && !isPast && handleTime(time)}
                                         className={`
-                                            ${isBooked ? 'bg-red-100 text-red-600 cursor-not-allowed' :
-                                                isSelected && isExisting ? 'bg-gray-500 text-white' :
-                                                    isSelected ? 'bg-blue-500 text-white' :
-                                                        'bg-gray-100'}
+                                            ${isBooked ? 'bg-green-700 text-black cursor-not-allowed' :
+                                                isPast ? 'bg-gray-200 text-gray-400 cursor-not-allowed' :
+                                                    isSelected && isExisting ? 'bg-gray-500 text-white' :
+                                                        isSelected ? 'bg-primary-500 text-white' :
+                                                            'bg-gray-100'}
                                             transition-colors duration-200
                                         `}
                                     >
-                                        <span>{time}
-                                        </span>
+                                        <div>
+                                            <p>{time}
+                                            </p>
 
-                                        {isBooked && (
-                                            <p className="text-xs font-medium">Booked</p>
-                                        )}
+                                            {isBooked && (
+                                                <p className="text-xs font-medium">Booked</p>
+                                            )}
+
+                                            {isPast && !isBooked && <p className="text-xs font-medium">No Available</p>}
+                                        </div>
+
                                     </Button>
-                                    {!isBooked && isSelected && (
+                                    {!isBooked && isSelected && !isPast && (
                                         <div className="my-1 text-center">
 
                                             {customizingFee === time ? (

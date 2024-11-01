@@ -123,16 +123,9 @@ const SuccessPaymentAppointment: React.FC<SuccessPaymentAppointmentProps> = ({ A
                         </div>
 
                         <div className="text-sm text-muted-foreground">
-                            <p>Created At: {appointment?.createdAt
-                                ? new Date(appointment?.createdAt).toLocaleDateString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                })
-                                : 'Not available'}
-                            </p>
+                            <div className="text-right text-sm text-gray-500">
+                                Created on: {new Date(appointment?.createdAt || '').toLocaleString()}
+                            </div>
                             <p>Payment Status: <span className="font-semibold text-primary">{appointment?.paymentStatus || 'Status not available'}</span></p>
                         </div>
                     </CardBody>

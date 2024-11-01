@@ -9,6 +9,7 @@ import { createAppointment, getLawyerSlot } from '../../services/store/features/
 import { useNavigate, useParams } from 'react-router-dom';
 import { FetchedSlotData, Lawyer, Slot, TimeSlot } from '../../utils/type/lawyerType';
 import { IoMdClose } from 'react-icons/io';
+import moment from 'moment';
 
 
 
@@ -139,6 +140,15 @@ const LawyerSlot: React.FC<LawyerSlotProps> = ({ lawyerId, lawyer }) => {
         }
     }
 
+    const isTimeInPast = (time: string) => {
+        if (!selectedDate) return false;
+        const now = moment();
+        const slotDateTime = moment(selectedDate)
+            .hour(moment(time, 'hh:mm A').hour())
+            .minute(moment(time, 'hh:mm A').minute());
+
+        return slotDateTime.isBefore(now);
+    };
     return (
         <div className='container min-h-screen'>
             <div className='max-w-4xl mx-auto my-10 p-5 rounded-md shadow-md h-[80%]'>
@@ -194,36 +204,39 @@ const LawyerSlot: React.FC<LawyerSlotProps> = ({ lawyerId, lawyer }) => {
                         {selectedDate && (
                             <div className="my-5">
                                 <h3 className="text-lg font-medium mb-3">Select Time</h3>
-                                {availableSlots.length > 0 ? (
+                                {availableSlots.filter(slot => !isTimeInPast(slot.timeSlot)).length > 0 ? (
                                     <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
-                                        {availableSlots.map((slot) => (
-                                            <Button
-                                                key={slot.timeSlot}
-                                                className={`
-                                            ${slot.status ?
-                                                        'bg-red-100 text-red-600 cursor-not-allowed' :
-                                                        selectedTime === slot.timeSlot ?
-                                                            'bg-primary text-white' :
-                                                            'bg-gray-100'
-                                                    }
-                                        `}
-                                                onClick={() => !slot.status && handleTime(slot.timeSlot)}
-                                                disabled={slot.status}
-                                            >
-                                                <div className="flex flex-col items-center">
-                                                    <span>{slot.timeSlot}</span>
-                                                    {slot.status && (
-                                                        <span className="text-xs font-medium">Booked</span>
-                                                    )}
-                                                </div>
-                                            </Button>
-                                        ))}
+                                        {availableSlots
+                                            .filter((slot) => !isTimeInPast(slot.timeSlot))
+                                            .map((slot) => (
+                                                <Button
+                                                    key={slot.timeSlot}
+                                                    className={`
+                                ${slot.status
+                                                            ? 'bg-red-100 text-red-600 cursor-not-allowed'
+                                                            : selectedTime === slot.timeSlot
+                                                                ? 'bg-primary text-white'
+                                                                : 'bg-gray-100'
+                                                        }
+                            `}
+                                                    onClick={() => !slot.status && handleTime(slot.timeSlot)}
+                                                    disabled={slot.status}
+                                                >
+                                                    <div className="flex flex-col items-center">
+                                                        <span>{slot.timeSlot}</span>
+                                                        {slot.status && (
+                                                            <span className="text-xs font-medium">Booked</span>
+                                                        )}
+                                                    </div>
+                                                </Button>
+                                            ))}
                                     </div>
                                 ) : (
                                     <p>No available time slots for this date.</p>
                                 )}
                             </div>
                         )}
+
                     </div>
 
                     {selectedTime && (

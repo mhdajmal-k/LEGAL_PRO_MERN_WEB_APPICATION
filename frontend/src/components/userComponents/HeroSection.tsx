@@ -100,20 +100,33 @@ const HeroSection: React.FC = React.memo(() => {
                                 <div className='mt-4 w-full lg:w-3/5 bg-white border border-gray-300 rounded-lg shadow-lg p-4'>
                                     <h4 className='text-lg font-semibold mb-3'>Search Result:</h4>
                                     {loading ? (
-                                        // "mt-4 w-full lg:w-3/5 bg-white border border-gray-300 rounded-lg shadow-lg p-4"
                                         <div className="">
-                                            <Skeleton className="rounded-lg h-8 w-2/3 mb-4" />
+                                            <Skeleton className="rounded-md h-6 w-4/5 mb-4" />
+                                            <Skeleton className="rounded-lg h-5 w-2/5 mb-2" />
                                         </div>
                                     ) : (
-                                        result.trim() !== "" ? (
-                                            <p>{result}</p>
-                                        ) : (
-                                            <p>Not result found. Try after some time.</p>
-                                        )
+                                        <>
+                                            {result.trim() !== "" ? (
+                                                <div>
+                                                    <p>{result}</p>
+                                                    <button
+                                                        className="mt-4 py-1 px-2 bg-red-500 text-end items-end flex justify-end text-white rounded hover:bg-red-600"
+                                                        onClick={() => setResult("")}
+                                                    >
+                                                        Clear
+                                                    </button>
+                                                </div>
+
+                                            ) : (
+                                                <p>No result found. Try after some time.</p>
+                                            )}
+
+                                        </>
                                     )}
                                 </div>
                             )}
                         </div>
+
 
 
 

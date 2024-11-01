@@ -4,30 +4,29 @@ import { AppDispatch } from '../../services/store/store';
 import { Appointment } from '../../utils/type/Appointment';
 import CustomToast from '../../components/userComponents/CustomToast';
 import { toast } from 'sonner';
-import { cancelAppointmentDataById, fetchAppointmentDataById, fetchRefundStatus } from '../../services/store/features/userServices';
 import { Button, Card, CardBody, CardHeader } from '@nextui-org/react';
-import { Clock, IndianRupee, User, X, Video, CheckCircle, AlertCircle } from 'lucide-react';
+import { Clock, IndianRupee, User, X, Video } from 'lucide-react';
 import { SlCalender } from "react-icons/sl";
+import { LawyerCancelAppointmentDataById, LawyerFetchAppointmentDataById } from '../../services/store/features/lawyerServices';
 
 interface ViewOneAppointmentProps {
     AppointmentId: string | undefined;
 
 }
 
-const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }) => {
+const ViewOneAppointmentDetails: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }) => {
     const [appointment, setAppointments] = useState<Appointment>();
-    const [refundStatus, setRefundStatus] = useState<any>();
     const dispatch: AppDispatch = useDispatch();
 
     const fetchAppointment = async (appointmentId: string | undefined) => {
         try {
-            const response = await dispatch(fetchAppointmentDataById(appointmentId)).unwrap();
+            const response = await dispatch(LawyerFetchAppointmentDataById(appointmentId)).unwrap();
+            console.log(response, 'in the view Appointment');
             setAppointments(response.result);
         } catch (error: any) {
             toast(<CustomToast message={error.message || 'Error fetching appointments'} type="error" />);
         }
     };
-
     useEffect(() => {
         fetchAppointment(AppointmentId);
     }, [dispatch, AppointmentId]);
@@ -58,10 +57,11 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
                         className=" bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md"
                         onClick={async () => {
 
-                            const response = await dispatch(cancelAppointmentDataById(appointmentId)).unwrap();
+                            const response = await dispatch(LawyerCancelAppointmentDataById(appointmentId)).unwrap();
                             if (response.status) {
-                                toast(<CustomToast message={response.message || 'Error fetching appointments'} type="success" />);
                                 fetchAppointment(AppointmentId);
+                                toast(<CustomToast message={response.message || 'Error fetching appointments'} type="success" />);
+
 
 
                             } else {
@@ -86,22 +86,6 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
         );
 
     }
-    async function handileRefundStatus(appointmentId: string | undefined) {
-
-        try {
-
-            const response = await dispatch(fetchRefundStatus(appointmentId)).unwrap();
-            if (response.status) {
-                console.log(response.result, "is the result")
-                setRefundStatus(response.result);
-                // toast(<CustomToast message={response.message || 'Error fetching appointments'} type="success" />);
-
-            }
-        } catch (error: any) {
-            toast(<CustomToast message={error.message || 'Error fetching appointments'} type="error" />);
-        }
-    }
-
     return (
         <div className="container sm:min-h-screen p-6 md:p-8 lg:p-8 bg-gray-50">
             <h1 className="text-3xl font-bold text-center mb-5">Appointment Details</h1>
@@ -133,99 +117,60 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
                                 </div>
                                 <div className="flex items-center text-lg">
                                     <IndianRupee className="mr-2 h-5 w-5 text-green-500" />
-                                    <span><strong>Consultation Fee:</strong> ₹{appointment?.subTotal || 'N/A'}
-                                        <br />
-                                        <span className='font-light text-xs text-center ml-5'> (Rs {appointment?.convenienceFee} convenienceFee ) </span></span>
+                                    <span><strong>Consultation Fee:</strong> ₹{appointment?.consultationFee || 'N/A'}</span>
                                 </div>
 
                                 <div className="flex items-start w-3/5 ">
                                     <div className="w-2/3">
                                         <div className="mb-2">
                                             <User className="inline-block mr-2 h-5 w-5 text-gray-600" />
-                                            <span className="text-lg font-semibold">Advocate: {appointment?.lawyerId?.userName || 'N/A'}</span>
+                                            <span className="text-lg font-semibold">Client: {appointment?.lawyerId?.userName || 'N/A'}</span>
                                         </div>
-                                        <div className='mb-4 ml-6'>
-                                            <h5 className="text-gray-500">{appointment?.lawyerId?.designation || 'Designation not available'}</h5>
-                                            <p className="text-gray-500">{appointment?.lawyerId?.city}, {appointment?.lawyerId?.state}</p>
 
-                                            <div className="w-1/3 ">
-                                                <img
-                                                    src={appointment?.lawyerId?.profile_picture || '/placeholder.png'}
-                                                    alt="Lawyer profile"
-                                                    className="rounded-lg  object-cover h-[80%]"
-                                                />
-                                            </div>
-
-                                        </div>
                                     </div>
+                                    {appointment?.userId?.profilePicture &&
+                                        <div className="w-1/3 ">
+                                            <img
+                                                src={appointment?.userId?.profilePicture || '/placeholder.png'}
+                                                alt="image"
+                                                className="rounded-lg  object-cover h-[80%]"
+                                            />
+                                        </div>}
 
                                 </div>
 
                                 <div className='w-1/2'>
                                     <p className=" border-gray-300 w-full rounded font-semibold ">  Case Description:</p>
                                     <h6>         {appointment?.description || ''}</h6>
+                                    {appointment?.imageUrl && (
+                                        <div>
+                                            <a href={appointment?.imageUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline mt-1 block">
+                                                View Image
+                                            </a>
+                                            <img
+                                                src={appointment?.imageUrl || '/placeholder.png'}
+                                                alt="Lawyer profile"
+                                                className="rounded-lg  object-cover h-[80%]"
+                                            />
+                                        </div>
+                                    )}
+
                                 </div>
 
                                 <div className=" items-center flex justify-between">
                                     <div>
                                         <span className="text-lg font-semibold">Total:</span>
-                                        <span className="text-2xl font-bold text-gray-800">   ₹{appointment?.subTotal || 'N/A'}</span>
+                                        <span className="text-2xl font-bold text-gray-800">   ₹{appointment?.consultationFee || 'N/A'}</span>
                                     </div>
-
-
-                                    {appointment?.status !== "Cancelled" ? (<div className='flex gap-6' >
-                                        <Button className='bg-red-700 text-white rounded-md' onClick={() => handileCancel(appointment?._id)}>     <X className="h-4 w-4" />Cancel Appointment
-                                        </Button>
-                                        <div>
-
-                                            <Button className='bg-green-700 cursor-not-allowed px-10 rounded-md'>  <Video className="h-4 w-4" />Make Call</Button>
-                                        </div>
-                                    </div>) :
-                                        (<div>
-                                            {refundStatus ?
-                                                (
-                                                    <div className="space-y-4">
-
-
-
-                                                        <div className="flex items-center gap-2">
-                                                            <CheckCircle className="h-5 w-5 text-green-500" />
-                                                            <span className="font-semibold">RefundStatus:</span> {refundStatus.status}
-                                                        </div>
-                                                        <div className="flex items-center gap-2">
-                                                            <AlertCircle className="h-5 w-5 text-yellow-500" />
-                                                            <span className="font-semibold">Processing Speed:</span> {refundStatus.speed_processed}
-                                                        </div>
-                                                        <div className="flex items-center gap-2">
-                                                            <IndianRupee className="h-5 w-5 text-green-500" />
-                                                            <span className="font-semibold">Refund Amount:</span> {refundStatus.amount / 100}
-                                                        </div>
-                                                        <Button onClick={() => setRefundStatus("")} className='mx-auto bg-blue-gray-600'>hide</Button>
-                                                    </div>
-
-                                                ) :
-                                                <div className='space-y-4'>
-                                                    <h6>Appointment :<strong className='text-red-600'> {appointment?.status}</strong></h6>
-                                                    <Button onClick={() => handileRefundStatus(appointment?._id)} className='bg-blue-700 text-white'>Check Refund Status</Button>
-                                                </div>
-
-
-
-                                            }
-                                        </div>
-
-                                        )}
-
-
+                                    {appointment?.status !== "Cancelled" ? <div className='flex gap-6'>
+                                        <Button className='bg-red-700 text-white rounded-md' onClick={() => handileCancel(appointment?._id)}>     <X className="h-4 w-4" />Cancel Appointment</Button>
+                                        <Button className='bg-green-700 cursor-not-allowed px-10 rounded-md'>  <Video className="h-4 w-4" />Make Call</Button>
+                                    </div> : (<div>
+                                        <h6>Appointment :<strong className='text-red-600'> {appointment?.status}</strong></h6>
+                                    </div>)}
 
 
                                 </div>
-                                {/* {appointment?.status != "Cancelled" && <div className="bg-yellow-100 w-2/3 text-sm rounded-md ml-1 ">
-                                    <span className="text-yellow-700">
-                                        <strong>Reminder:</strong> Cancellations are not allowed within 1 hour of the consultation time.
-                                    </span>
-                                </div>} */}
-
 
                                 <div className="text-right text-sm text-gray-500">
                                     Created on: {new Date(appointment?.createdAt || '').toLocaleString()}
@@ -239,4 +184,4 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
     );
 };
 
-export default ViewOneAppointment;
+export default ViewOneAppointmentDetails;

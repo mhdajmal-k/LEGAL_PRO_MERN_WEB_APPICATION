@@ -321,6 +321,8 @@ const ProfessionalData: React.FC = () => {
                                     placeholder="About me"
                                     onChange={formik.handleChange}
                                     value={formik.values.aboutMe}
+                                    minLength={10}
+                                    maxLength={400}
                                     className="w-full p-2 border rounded bg-gray-300"
                                 />
                                 {formik.errors.aboutMe && formik.touched.aboutMe ? <div className='text-red-500 text-sm'>{formik.errors.aboutMe}</div> : null}

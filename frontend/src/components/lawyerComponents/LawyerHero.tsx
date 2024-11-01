@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { IoHomeSharp, IoPerson, IoCreateSharp, IoLogOut } from "react-icons/io5";
+import { SquarePen } from 'lucide-react';
 import { RiCalendarScheduleFill } from "react-icons/ri";
-import { FaWallet } from "react-icons/fa";
+import { FaPenToSquare } from "react-icons/fa6";
 import lawyerHero from "../../assets/images/LawyerHero.png";
 import { useNavigate } from 'react-router-dom';
 import appointmentshedule from "../../assets/images/appointment-shedule.png"
@@ -65,7 +66,7 @@ const LawyerLandingPage = () => {
 
                                 </div>
                                 <div className="bg-gray-200 w-10 h-10 rounded-lg flex items-center justify-center sm:my-5">
-                                    <FaWallet className="text-3xl" title="Wallet" />
+                                    <FaPenToSquare className="text-3xl text-black   " title='Create Blog' onClick={() => navigate("/lawyer/blog")} />
                                 </div>
                                 <div className="bg-gray-200 w-10 h-10 rounded-lg flex items-center justify-center ">
                                     <IoLogOut className="text-3xl" title="Logout" onClick={handleLogout} />

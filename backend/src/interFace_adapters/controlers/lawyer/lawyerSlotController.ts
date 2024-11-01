@@ -18,14 +18,14 @@ class LawyerSlotController {
           result: {},
         });
       }
-      console.log(time, "is the time");
+
       const response = await this.lawyerSlotInteractor.createSlot(
         id,
         date,
         feeAmount,
         time
       );
-      console.log(response, "is the response");
+
       if (response.status) {
         res.status(response.statusCode).json({
           status: response.status,
@@ -44,7 +44,7 @@ class LawyerSlotController {
   ): Promise<any> {
     try {
       const { id } = req.params;
-      console.log("in the fetch");
+
       if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({
           status: false,
@@ -54,7 +54,7 @@ class LawyerSlotController {
       }
 
       const response = await this.lawyerSlotInteractor.getLawyerSlot(id);
-      console.log(response, "is the response");
+
       if (response.status) {
         res.status(response.statusCode).json({
           status: response.status,

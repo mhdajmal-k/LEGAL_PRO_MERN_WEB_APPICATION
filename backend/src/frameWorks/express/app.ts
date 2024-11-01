@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-// app.use(apiLimiter);
+app.use(apiLimiter);
 routes(app);
 connectToDatabase();
 app.use(errorHandler);

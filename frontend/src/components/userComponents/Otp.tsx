@@ -55,7 +55,7 @@ const OtpFrom: React.FC = () => {
         }
     };
     const OtpResend = async () => {
-        console.log("hi")
+
         try {
             const response = await dispatch(resendOtp()).unwrap()
             if (response) {

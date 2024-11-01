@@ -8,7 +8,7 @@ class EmailService implements iEmailService {
     private readonly EMAIL_ID: string,
     private readonly EMAIL_PASS: string
   ) {
-    console.log(`Initializing EmailService with ID: ${this.EMAIL_ID}`);
+    // console.log(`Initializing EmailService with ID: ${this.EMAIL_ID}`);
     this.transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {

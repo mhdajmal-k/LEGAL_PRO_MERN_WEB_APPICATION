@@ -40,9 +40,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ userType }) => {
     const columns = AppointmentColumns[userType];
     return (
         <div>
-            <h2 className="text-center font-semibold text-lg "> Appointments</h2>
-
-
+            <h2 className="text-center font-semibold text-lg my-4 "> Appointments</h2>
             <div className="flex justify-center   gap-1 my-4">
                 <Button size='sm'
                     className={` px-5 rounded-md font-semibold   ${status === 'Pending' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}

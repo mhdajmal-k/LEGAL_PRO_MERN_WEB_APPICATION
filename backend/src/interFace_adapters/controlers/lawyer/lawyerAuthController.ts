@@ -64,7 +64,7 @@ class LawyerAuthController {
           .status(400)
           .json({ success: false, message: "otp is required", result: {} });
       const token = req.cookies.lawyerAuth_token;
-      console.log(token);
+
       if (!token)
         return res.status(400).json({
           success: false,
@@ -146,7 +146,7 @@ class LawyerAuthController {
   ): Promise<void> {
     try {
       const data = req.body;
-      console.log(data);
+
       const id = req.user?.id;
       const files = req.files as
         | { [fieldname: string]: Express.Multer.File[] }
@@ -172,7 +172,7 @@ class LawyerAuthController {
         files,
         id
       );
-      console.log("success");
+
       res.clearCookie("auth_lawyerAccessToken");
       res.status(response.statusCode).json({
         status: true,
@@ -191,10 +191,10 @@ class LawyerAuthController {
   ): Promise<void> {
     try {
       const data = req.body;
-      console.log(req.body);
+
       const id = req.user?.id;
       const file = req.file;
-      console.log("in here ");
+
       const validateDataError = validateProfileDataInput(data);
       if (validateDataError) {
         res
@@ -377,7 +377,6 @@ class LawyerAuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("in logout");
       res.clearCookie("auth_lawyerAccessToken");
       res.status(200).json({ message: "Logout successful" });
     } catch (error) {

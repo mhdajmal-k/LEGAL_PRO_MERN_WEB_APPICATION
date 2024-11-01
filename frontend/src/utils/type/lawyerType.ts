@@ -38,6 +38,7 @@ export interface LawyerInfo {
   designation: string;
   years_of_experience: number;
   about: string;
+  courtPracticeArea: string;
 }
 
 interface Certification {

@@ -22,8 +22,6 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
     totalPages?: number;
   }> {
     try {
-      console.log(currentPage, "is te auth");
-      console.log(limit, "is te auth");
       const getVerifiedLawyers = await this.Repository.getVerifiedLawyers(
         currentPage,
         limit,
@@ -51,7 +49,7 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
           return lawyer;
         })
       );
-      console.log(updatedVerifiedLawyers);
+
       return {
         statusCode: 200,
         status: true,

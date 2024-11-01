@@ -1,17 +1,16 @@
 import React from 'react'
 import AdminNavbar from '../../layout/AdminNavbar'
 import LegalFooter from '../../layout/footer'
-import LawyerOtpFrom from '../../components/lawyerComponents/Otp'
+import LawyerBlogListing from '../../components/lawyerComponents/LawyerBlog'
 
-
-const LawyerVerifyOtp: React.FC = () => {
+const Blog: React.FC = () => {
     return (
         <div>
             <AdminNavbar />
-            <LawyerOtpFrom />
+            <LawyerBlogListing />
             <LegalFooter />
         </div>
     )
 }
 
-export default LawyerVerifyOtp
+export default Blog

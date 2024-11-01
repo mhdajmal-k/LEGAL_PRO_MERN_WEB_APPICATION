@@ -5,7 +5,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 const LawyerProtectRoute: React.FC = () => {
     const { lawyerInfo } = useSelector((state: RootState) => state.lawyer);
-    return lawyerInfo?.verified ? <Outlet /> : <Navigate to="/lawyer" />;
+    return lawyerInfo?.verified ? <Outlet /> : <Navigate to="/lawyer/login" />;
 };
 
 export default LawyerProtectRoute;

@@ -40,35 +40,60 @@ const UsersList: React.FC = () => {
     };
 
     const { loading, } = useSelector((state: RootState) => state.admin);
-    const handleBlockorUBlock = async (id: string, block: boolean): Promise<void> => {
-        try {
 
-            const response = await dispatch(blockandUnblock({ id, state: !block, action: "user" })).unwrap();
-            // const response = await dispatch(blockandUnblock({ id, state: !block })).unwrap();
-            if (response.status) {
-                console.log(response.message, "is am looking ")
-                if (response.message == "user blocked successFully") {
-                    alert("working")
-                    dispatch(userLogout());
-                }
-                alert("hihdfdfd")
-                toast(<CustomToast message={response.message} type="success" />);
 
-                fetchUsers(currentPage);
+    const handleBlockOrUnblock = async (id: string, isCurrentlyBlocked: boolean): Promise<void> => {
+        const action = isCurrentlyBlocked ? 'Unblock' : 'Block';
+
+        toast(
+            <div>
+                <p>Are you sure you want to {action.toLowerCase()} this user?</p>
+                <div className="flex space-x-2 mt-3">
+                    <button
+                        className={`${isCurrentlyBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'} text-white px-3 py-1 rounded-md`}
+                        onClick={async () => {
+
+                            try {
+
+                                const response = await dispatch(blockandUnblock({ id, state: !isCurrentlyBlocked, action: "user" })).unwrap();
+
+                                if (response.status) {
+
+                                    if (response.message == "user blocked successFully") {
+
+                                        dispatch(userLogout());
+                                    }
+
+                                    toast(<CustomToast message={response.message} type="success" />);
+
+                                    fetchUsers(currentPage);
+                                }
+
+
+                            } catch (error: any) {
+                                console.error("Verification failed:", error);
+                                toast(<CustomToast message={error || error.message} type="error" />)
+                            }
+
+                        }}
+                    >
+                        Confirm
+                    </button>
+                    <button
+                        className="bg-gray-300 text-gray-700 px-3 py-1 rounded-md"
+                        onClick={() => toast.dismiss()}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>,
+            {
+                duration: 2000,
             }
-            // setViewModalOpen(false);
-
-        } catch (error: any) {
-            console.error("Verification failed:", error);
-            toast(<CustomToast message={error || error.message} type="error" />)
-        }
-
-
-    }
+        );
+    };
 
     const handlePageChange = (page: number) => {
-
-        // alert(page)
         setCurrentPage(page);
     };
 
@@ -80,7 +105,7 @@ const UsersList: React.FC = () => {
                 <span className='text-xl font-semibold '> {TotalUsers}</span>
             </div>
 
-            <CommonTable columns={userColumns} data={users} onAction={handleBlockorUBlock} loading={loading} Who='user' />
+            <CommonTable columns={userColumns} data={users} onAction={handleBlockOrUnblock} loading={loading} Who='user' />
 
             {users.length > 0 && (
                 <div className='text-center mx-auto flex justify-center mt-7'>
