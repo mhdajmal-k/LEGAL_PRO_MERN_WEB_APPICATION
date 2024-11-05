@@ -1,3 +1,4 @@
+// import { config } from "dotenv";
 import {
   ILawyer,
   IProfessionalData,
@@ -11,6 +12,12 @@ import { iOTPService } from "../../../domain/services/iOTPService";
 import { S3Service } from "../../../frameWorks/config/s3Setup";
 import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 import {
+  HttpStatusCode,
+  MessageError,
+  UserRole,
+} from "../../../frameWorks/utils/helpers/Enums";
+import { config } from "../../../frameWorks/config/envConfig";
+import {
   decodeSingUpToken,
   generatingSignUpToken,
 } from "../../../frameWorks/utils/jwt";
@@ -23,6 +30,9 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
     private readonly jwt: iJwtService,
     private s3Service: S3Service
   ) {}
+
+  ///////////////////
+
   async lawyerSingUp(
     data: ILawyer,
     file?: Express.Multer.File
@@ -31,7 +41,11 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
       const { email, userName, password } = data;
       const LawyerExists = await this.Repository.lawyerAlreadyExist(email);
       if (LawyerExists) {
-        return { statusCode: 409, message: "User Already Exists", result: {} };
+        return {
+          statusCode: HttpStatusCode.Forbidden,
+          message: "User Already Exists",
+          result: {},
+        };
       }
       // let uploadPromise: Promise<string> | undefined;
       if (file) {
@@ -42,16 +56,18 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
       const OTP = this.optGenerator.generateOTP();
       this.nodeMailer.sendOTP(email, OTP, userName);
       const SingUPTempToken = generatingSignUpToken(data, OTP);
-      // await Promise.all([uploadPromise, emailPromise]);
       return {
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
         message: "OTP sent successfully",
         result: SingUPTempToken,
       };
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     }
   }
+
+  /////////////////
+
   async verifyOtp(
     otp: string,
     token: string
@@ -62,22 +78,19 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
   }> {
     try {
       const decodeToken = decodeSingUpToken(token);
-
       const currentTime = Math.floor(Date.now() / 1000);
       if (decodeToken.otpExpiresAt < currentTime)
         return {
-          statusCode: 401,
+          statusCode: HttpStatusCode.Unauthorized,
           message: "OTP has expired",
           result: undefined,
         };
-
       if (otp !== decodeToken.OTP)
         return {
-          statusCode: 401,
+          statusCode: HttpStatusCode.Forbidden,
           message: "entered Invalid OTP",
           result: undefined,
         };
-
       const creatingNewLawyer = await this.Repository.createLawyer(
         decodeToken.user
       );
@@ -86,12 +99,14 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         error.message = "Failed to create new user";
         throw error;
       }
-
-      const jwtToken = this.jwt.generateToken(creatingNewLawyer._id, "lawyer");
+      const jwtToken = this.jwt.generateToken(
+        creatingNewLawyer._id,
+        UserRole.Lawyer
+      );
       const { password, ...userDataWithoutPassword } =
         creatingNewLawyer.toObject();
       return {
-        statusCode: 201,
+        statusCode: HttpStatusCode.OK,
         message: "OTP verified successfully",
         result: {
           user: userDataWithoutPassword,
@@ -102,6 +117,8 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
       throw error;
     }
   }
+
+  /////////////////////
 
   async verifyProfessionalData(
     data: IProfessionalData,
@@ -130,7 +147,6 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
           }
         }
       }
-
       const certificates = [
         {
           certificateType: "Bar Council of India",
@@ -156,7 +172,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
       }
 
       return {
-        statusCode: 201,
+        statusCode: HttpStatusCode.OK,
         message: "From submitted SuccessFully",
         result: {},
       };
@@ -164,6 +180,9 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
       throw error;
     }
   }
+
+  ////////////////
+
   async lawyerLogin(user: { email: string; password: string }): Promise<{
     status: boolean;
     message: string;
@@ -176,14 +195,12 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
       if (!validLawyer) {
         const error: CustomError = new Error();
         error.message = "invalid Email ";
-        error.statusCode = 400;
+        error.statusCode = HttpStatusCode.BadRequest;
         throw error;
       }
       if (validLawyer.block) {
-        const error: CustomError = new Error(
-          "oops you have been blocked By Admin"
-        );
-        error.statusCode = 401;
+        const error: CustomError = new Error(MessageError.Blocked);
+        error.statusCode = HttpStatusCode.Unauthorized;
         throw error;
       }
       if (validLawyer.verified === "not_verified") {
@@ -201,21 +218,19 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         error.statusCode = 400;
         throw error;
       }
-
       const profile_picture = validLawyer.profile_picture;
-
       const getProfile = await this.s3Service.fetchFile(profile_picture);
 
       validLawyer.profile_picture = getProfile;
-      const jwtToken = this.jwt.generateToken(validLawyer._id, "lawyer");
+      const jwtToken = this.jwt.generateToken(validLawyer._id, UserRole.Lawyer);
       const jwtRefreshToken = this.jwt.generateRefreshToken(
         validLawyer._id,
-        "lawyer"
+        UserRole.Lawyer
       );
       const { password: userPassword, ...DataWithoutPassword } = validLawyer;
 
       return {
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
         status: true,
         message: "logged SuccessFully",
         result: {
@@ -228,6 +243,9 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
       throw error;
     }
   }
+
+  ///////////
+
   async resendOtp(token: string): Promise<{
     statusCode: number;
     status: boolean;
@@ -241,7 +259,6 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
       const currentTime = Math.floor(Date.now() / 1000);
       console.log(decodeToken.otpExpiresAt);
       if (decodeToken.exp < currentTime) {
-        console.log("hi");
         const error: CustomError = new Error("Session is expired, try again");
         error.statusCode = 400;
         throw error;
@@ -275,8 +292,11 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         error.statusCode = 400;
         throw error;
       }
-      const resetToken = this.jwt.generateToken(lawyerExists._id, "lawyer");
-      const resetUrl = `http://localhost:3000/lawyer/lawyerforgotpassword/${resetToken}`;
+      const resetToken = this.jwt.generateToken(
+        lawyerExists._id,
+        UserRole.Lawyer
+      );
+      const resetUrl = `${config.LAWYER_ForgotPassword_Link}${resetToken}`;
 
       this.nodeMailer.sendResetLink(
         lawyerExists.email,
@@ -294,6 +314,9 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
       throw error;
     }
   }
+
+  //////////////////
+
   async resetforgotpassword(
     password: string,
     token: string | any
@@ -338,6 +361,9 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
       throw error;
     }
   }
+
+  /////////
+
   async checkRefreshToken(token: string): Promise<{
     statusCode: number;
     status: boolean;
@@ -358,7 +384,10 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
           };
         }
         console.log("existingUser._id", existUser._id);
-        const newJwtAccessToken = this.jwt.generateToken(existUser, "lawyer");
+        const newJwtAccessToken = this.jwt.generateToken(
+          existUser,
+          UserRole.Lawyer
+        );
         return {
           statusCode: 200,
           status: true,
@@ -377,6 +406,9 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
       throw error;
     }
   }
+
+  ///////////
+
   async updateProfessionalData(
     data: any,
     file?: Express.Multer.File,

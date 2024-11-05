@@ -21,6 +21,7 @@ interface IUserAppointmentInteractor {
     message: string;
     result: string | {};
   }>;
+  createPaymentTimeout(appointmentId: string): Promise<void>;
   getAllAppointmentBasedStatus(
     status: string,
     userId: string,
@@ -51,6 +52,12 @@ interface IUserAppointmentInteractor {
     result: string | {};
   }>;
   cancellingAppointment(appointmentId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }>;
+  filedPaymentAppointment(appointmentId: string): Promise<{
     statusCode: number;
     status: boolean;
     message: string;

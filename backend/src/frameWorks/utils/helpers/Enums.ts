@@ -13,12 +13,14 @@ export enum MessageError {
   cancelAppointment = "Appointment Cancelled SuccessFully Refund Initiated",
   lawyerCancelAppointment = "Appointment Cancelled SuccessFully",
   PaymentSuccessFull = "Payment Created SuccessFull",
+  paymentFiled = "Payment Filed Appointment was Cancelled ",
   RefundInitiatedFiled = "Refund initiation failed",
   InvalidPassword = "Invalid password",
   TokenExpired = "Token has expired",
   Unauthorized = "Unauthorized",
   DadRequest = "Bad Request Entered Invalid Data",
   BadPrams = "Bad Request Not Found Data",
+  ServerError = "Internal Server Error",
 }
 
 export enum HttpStatusCode {
@@ -29,4 +31,10 @@ export enum HttpStatusCode {
   Forbidden = 403,
   NotFound = 404,
   InternalServerError = 500,
+}
+
+export enum UserRole {
+  User = "user",
+  Lawyer = "lawyer",
+  Admin = "admin",
 }

@@ -15,6 +15,7 @@ import e from "express";
 import {
   HttpStatusCode,
   MessageError,
+  UserRole,
 } from "../../../frameWorks/utils/helpers/Enums";
 import {
   IAppointmentAdminSide,
@@ -67,10 +68,10 @@ class AdminInteractor implements IAdminInteractor {
         error.statusCode = 401;
         throw error;
       }
-      const jwtToken = this.jwt.generateToken(adminUser._id, "admin");
+      const jwtToken = this.jwt.generateToken(adminUser._id, UserRole.Admin);
       const jwtRefreshToken = this.jwt.generateRefreshToken(
         adminUser._id,
-        "admin"
+        UserRole.Admin
       );
       const { password: userPassword, ...userDataWithoutPassword } = adminUser;
 

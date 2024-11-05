@@ -8,6 +8,7 @@ import { S3Service } from "../../../config/s3Setup";
 import EmailService from "../../../services/mailer";
 import UserAuthRepository from "../../../../interFace_adapters/repositories/userRepositories/userAuthRepository";
 import UserLawyerRepositories from "../../../../interFace_adapters/repositories/userRepositories/userLawyerRepositoires";
+import { UserRole } from "../../../utils/helpers/Enums";
 export const lawyerAppointmentRoute = Router();
 const IS3Services = new S3Service();
 const repository = new LawyerAppointmentRepository();
@@ -29,19 +30,19 @@ const lawyerAppointmentController = new LawyerAppointmentController(interactor);
 
 lawyerAppointmentRoute.get(
   "/list",
-  authorization("lawyer"),
+  authorization(UserRole.Lawyer),
   lawyerAppointmentController.getAllAppointmentBasedStatus.bind(
     lawyerAppointmentController
   )
 );
 lawyerAppointmentRoute.get(
   "/view/:appointmentId",
-  authorization("lawyer"),
+  authorization(UserRole.Lawyer),
   lawyerAppointmentController.getAppointment.bind(lawyerAppointmentController)
 );
 lawyerAppointmentRoute.patch(
   "/cancel/:appointmentId",
-  authorization("user"),
+  authorization(UserRole.Lawyer),
   lawyerAppointmentController.cancelAppointment.bind(
     lawyerAppointmentController
   )

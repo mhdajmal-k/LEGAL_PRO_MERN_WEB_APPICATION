@@ -18,4 +18,6 @@ export const config = {
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
   RAZORPAY_ID: process.env.RAZORPAY_ID,
   RAZORPAY_SECRET: process.env.RAZORPAY_SECRET,
+  LAWYER_ForgotPassword_Link: process.env.LAWYER_ForgotPassword_Link,
+  USER_ForgotPassword_Link: process.env.USER_ForgotPassword_Link,
 };

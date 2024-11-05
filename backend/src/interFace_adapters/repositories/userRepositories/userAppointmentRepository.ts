@@ -83,20 +83,36 @@ class UserAppointmentRepositories implements IUserAppointmentRepository {
   async updateAppointmentStatus(
     appointmentId: string,
     razorpay_payment_id: string,
-    status: string
+    AppointmentStatus: string,
+    paymentStatus: string
   ): Promise<IAppointment | null> {
     try {
       const updateAppointment = await Appointment.findByIdAndUpdate(
         { _id: appointmentId },
         {
           $set: {
-            paymentStatus: status,
+            status: AppointmentStatus,
+            paymentStatus: paymentStatus,
             razorpayPaymentId: razorpay_payment_id,
           },
         },
         { new: true }
       );
       return updateAppointment;
+    } catch (error: any) {
+      throw Error(error.message);
+    }
+  }
+  async getAllPendingPaymentAppointment(
+    appointmentId: string
+  ): Promise<IAppointment | null> {
+    try {
+      const AllAppointments = await Appointment.findOne({
+        _id: appointmentId,
+        status: "Pending",
+        paymentStatus: "Pending",
+      });
+      return AllAppointments;
     } catch (error: any) {
       throw Error(error.message);
     }
@@ -109,7 +125,7 @@ class UserAppointmentRepositories implements IUserAppointmentRepository {
   ): Promise<IAppointment[] | null> {
     try {
       let filter = {};
-      if (status === "Pending") {
+      if (status === "Confirmed") {
         filter = { date: { $gte: new Date() }, status: "Pending" };
       } else if (status === "Completed") {
         filter = { date: { $lt: new Date() }, status: "Completed" };
@@ -181,6 +197,20 @@ class UserAppointmentRepositories implements IUserAppointmentRepository {
       console.log(cancelledAppointment, "in the repo");
       return cancelledAppointment;
     } catch (error: any) {
+      throw Error(error.message);
+    }
+  }
+  async updateFailedAppointmentById(appointmentId: string): Promise<any> {
+    try {
+      console.log(appointmentId, "in the fi.de");
+      const cancelledAppointment = await Appointment.findByIdAndUpdate(
+        { _id: appointmentId },
+        { $set: { status: "Cancelled", paymentStatus: "Failed" } }
+      );
+      console.log(cancelledAppointment, "in the repo failed");
+      return cancelledAppointment;
+    } catch (error: any) {
+      console.log(error, "in repo of filaed payment");
       throw Error(error.message);
     }
   }

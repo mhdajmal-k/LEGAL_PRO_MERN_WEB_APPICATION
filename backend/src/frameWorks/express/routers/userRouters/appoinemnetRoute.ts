@@ -9,6 +9,7 @@ import multer from "multer";
 import { authorization } from "../../../middleware/authMilddlewere";
 import EmailService from "../../../services/mailer";
 import UserAuthRepository from "../../../../interFace_adapters/repositories/userRepositories/userAuthRepository";
+import { UserRole } from "../../../utils/helpers/Enums";
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const IS3Services = new S3Service();
@@ -32,18 +33,18 @@ export const appointmentController = new AppointmentController(interactor);
 
 appointmentRoute.post(
   "/",
-  authorization("user"),
+  authorization(UserRole.User),
   upload.single("image"),
   appointmentController.createAppointment.bind(appointmentController)
 );
 appointmentRoute.get(
   "/list",
-  authorization("user"),
+  authorization(UserRole.User),
   appointmentController.getAllAppointmentBasedStatus.bind(appointmentController)
 );
 appointmentRoute.get(
   "/:appointmentId",
-  authorization("user"),
+  authorization(UserRole.User),
   appointmentController.getAppointment.bind(appointmentController)
 );
 // appointmentRoute.get(
@@ -53,21 +54,26 @@ appointmentRoute.get(
 // );
 appointmentRoute.post(
   "/createPayment",
-  authorization("user"),
+  authorization(UserRole.User),
   appointmentController.createPayment.bind(appointmentController)
 );
 appointmentRoute.post(
   "/verifyPayment",
-  authorization("user"),
+  authorization(UserRole.User),
   appointmentController.verifyPayment.bind(appointmentController)
+);
+appointmentRoute.post(
+  "/failedPayment/:appointmentId",
+  authorization(UserRole.User),
+  appointmentController.failedPayment.bind(appointmentController)
 );
 appointmentRoute.patch(
   "/:appointmentId",
-  authorization("user"),
+  authorization(UserRole.User),
   appointmentController.cancelAppointment.bind(appointmentController)
 );
 appointmentRoute.get(
   "/checkRefundStatus/:appointmentId",
-  authorization("user"),
+  authorization(UserRole.User),
   appointmentController.checkRefundStatus.bind(appointmentController)
 );

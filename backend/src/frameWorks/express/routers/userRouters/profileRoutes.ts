@@ -6,6 +6,7 @@ import UserProfileController from "../../../../interFace_adapters/controlers/use
 import { authorization } from "../../../middleware/authMilddlewere";
 export const profileRoute = Router();
 import multer from "multer";
+import { UserRole } from "../../../utils/helpers/Enums";
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const IS3Services = new S3Service();
@@ -17,7 +18,7 @@ const userProfileController = new UserProfileController(interactor);
 
 profileRoute.put(
   "/:id",
-  authorization("user"),
+  authorization(UserRole.User),
   upload.single("profilePic"),
   userProfileController.updateProfileData.bind(userProfileController)
 );
@@ -27,6 +28,6 @@ profileRoute.post(
 );
 profileRoute.patch(
   "/resetPassword/:id",
-  authorization("user"),
+  authorization(UserRole.User),
   userProfileController.resetPassword.bind(userProfileController)
 );

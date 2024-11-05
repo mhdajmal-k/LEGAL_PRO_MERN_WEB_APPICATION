@@ -16,10 +16,16 @@ interface IUserAppointmentRepository {
   ): Promise<any>;
 
   getAppointmentById(appointmentId: string): Promise<IAppointment | null>;
+  getAllPendingPaymentAppointment(
+    appointmentId: string
+  ): Promise<IAppointment | null>;
   cancelAppointmentById(
     appointmentId: string,
     razorPayRefundId: string,
     status: string
+  ): Promise<IAppointment | null>;
+  updateFailedAppointmentById(
+    appointmentId: string
   ): Promise<IAppointment | null>;
   getTotalCountOfAppointment(
     status: string,
@@ -34,7 +40,8 @@ interface IUserAppointmentRepository {
   updateAppointmentStatus(
     appointmentId: string,
     razorpay_payment_id: string,
-    status: string
+    AppointmentStatus: string,
+    paymentStatus: string
   ): Promise<IAppointment | null>;
   updateConsultationFee(
     appointmentId: string,

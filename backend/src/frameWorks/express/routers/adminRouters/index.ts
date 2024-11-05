@@ -7,6 +7,7 @@ import AdminRepository from "../../../../interFace_adapters/repositories/adminRe
 import { S3Service } from "../../../config/s3Setup";
 import EmailService from "../../../services/mailer";
 import { authorization } from "../../../middleware/authMilddlewere";
+import { UserRole } from "../../../utils/helpers/Enums";
 
 export const adminRouter = Router();
 
@@ -30,47 +31,47 @@ const adminController = new AdminController(interactor);
 adminRouter.post("/login", adminController.adminLogin.bind(adminController));
 adminRouter.get(
   "/users",
-  authorization("admin"),
+  authorization(UserRole.Admin),
   adminController.getUsers.bind(adminController)
 );
 adminRouter.get(
   "/pendinglawyers",
-  authorization("admin"),
+  authorization(UserRole.Admin),
   adminController.getPendingApprovalLawyer.bind(adminController)
 );
 adminRouter.get(
   "/lawyers",
-  authorization("admin"),
+  authorization(UserRole.Admin),
   adminController.getLawyers.bind(adminController)
 );
 adminRouter.get(
   "/lawyer/:id",
-  authorization("admin"),
+  authorization(UserRole.Admin),
   adminController.lawyer.bind(adminController)
 );
 adminRouter.get(
   "/appointments",
-  authorization("admin"),
+  authorization(UserRole.Admin),
   adminController.getAllAppointments.bind(adminController)
 );
 adminRouter.get(
   "/viewAppointment/:appointmentId",
-  authorization("admin"),
+  authorization(UserRole.Admin),
   adminController.getAppointmentData.bind(adminController)
 );
 adminRouter.patch(
   "/verifylawyer/:id",
-  authorization("admin"),
+  authorization(UserRole.Admin),
   adminController.updateLawyer.bind(adminController)
 );
 adminRouter.patch(
   "/unverifylawyer/:id",
-  authorization("admin"),
+  authorization(UserRole.Admin),
   adminController.unVerifyLawyer.bind(adminController)
 );
 adminRouter.patch(
   "/blockandunblock/:id",
-  authorization("admin"),
+  authorization(UserRole.Admin),
   adminController.blockOrUnblock.bind(adminController)
 );
 adminRouter.delete(

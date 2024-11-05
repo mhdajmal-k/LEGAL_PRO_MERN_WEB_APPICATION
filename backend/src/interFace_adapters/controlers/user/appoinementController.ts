@@ -9,16 +9,15 @@ import { AuthenticatedRequest } from "../../../domain/entites/imodels/iLawyer";
 class AppointmentController {
   constructor(private UserAppointmentInteractor: IUserAppointmentInteractor) {}
 
+  ////////////////////
+
   async createAppointment(
     req: AuthenticatedRequest,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("hi form the contorler");
       const userIdFromToken = req.user?.id;
-      console.log(userIdFromToken, "is user userIdFromToken");
-      console.log(req.body);
       const {
         lawyerId,
         slotId,
@@ -33,7 +32,6 @@ class AppointmentController {
       const file = req.file ?? null;
       console.log(file, "is the image file");
       if (userIdFromToken !== userId) {
-        console.log("hi");
         return res.status(HttpStatusCode.Forbidden).json({
           status: false,
           message: MessageError.Unauthorized,
@@ -75,9 +73,11 @@ class AppointmentController {
         });
       }
     } catch (error) {
-      next(error); // Pass the error to the error handler
+      next(error);
     }
   }
+
+  ////////////////////////
 
   async getAppointment(
     req: Request,
@@ -85,11 +85,8 @@ class AppointmentController {
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("in here");
       const { appointmentId } = req.params;
-
       if (!appointmentId) {
-        console.log("checking..");
         return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: MessageError.BadPrams,
@@ -110,14 +107,15 @@ class AppointmentController {
       next(error);
     }
   }
+
+  ////////////////////
+
   async getAllAppointmentBasedStatus(
     req: AuthenticatedRequest,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("called");
-      console.log(req.query);
       const { status } = req.query;
       const currentPage = req.query.page ? req.query.page : 1;
       const limit = req.query.limit ? req.query.limit : 5;
@@ -134,7 +132,6 @@ class AppointmentController {
         );
       if (response.status) {
         const appointment = response.result;
-        console.log(appointment);
         const totalPages = response.totalPages;
         return res.status(response.statusCode).json({
           status: response.status,
@@ -146,13 +143,15 @@ class AppointmentController {
       next(error);
     }
   }
+
+  ////////////////////////
+
   async createPayment(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("in here the controller");
       const { appointmentId } = req.body;
       if (!appointmentId) {
         return res.status(HttpStatusCode.BadRequest).json({
@@ -175,14 +174,15 @@ class AppointmentController {
       next(error);
     }
   }
+
+  //////////////////////
+
   async verifyPayment(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("in here the controller verify");
-      console.log(req.body);
       const {
         razorpay_payment_id,
         razorpay_order_id,
@@ -219,6 +219,41 @@ class AppointmentController {
       next(error);
     }
   }
+
+  /////////////////////////
+
+  async failedPayment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { appointmentId } = req.params;
+      if (!appointmentId) {
+        return res.status(HttpStatusCode.BadRequest).json({
+          status: false,
+          message: MessageError.BadPrams,
+          result: {},
+        });
+      }
+      const response =
+        await this.UserAppointmentInteractor.filedPaymentAppointment(
+          appointmentId
+        );
+      if (response.status) {
+        return res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  //////////////////////////
+
   async cancelAppointment(
     req: Request,
     res: Response,
@@ -228,14 +263,12 @@ class AppointmentController {
       const { appointmentId } = req.params;
 
       if (!appointmentId) {
-        console.log("checking..");
         return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: MessageError.BadPrams,
           result: {},
         });
       }
-
       const response =
         await this.UserAppointmentInteractor.cancellingAppointment(
           appointmentId
@@ -251,15 +284,16 @@ class AppointmentController {
       next(error);
     }
   }
+
+  ///////////////////////
+
   async checkRefundStatus(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("hi");
       const { appointmentId } = req.params;
-
       if (!appointmentId) {
         return res.status(HttpStatusCode.BadRequest).json({
           status: false,

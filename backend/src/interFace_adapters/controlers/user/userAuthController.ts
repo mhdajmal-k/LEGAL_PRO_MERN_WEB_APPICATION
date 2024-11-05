@@ -9,6 +9,8 @@ import {
 class UserAuthController {
   constructor(private userAuthInteractor: IUserAuthInteractor) {}
 
+  ///////////////////
+
   async signUp(req: Request, res: Response): Promise<any> {
     try {
       const data = req.body;
@@ -20,7 +22,7 @@ class UserAuthController {
           maxAge: 5 * 60 * 1000,
         });
 
-        return res.status(200).json({
+        return res.status(HttpStatusCode.OK).json({
           status: response.status,
           message: response.message,
           result: {},
@@ -35,7 +37,7 @@ class UserAuthController {
     } catch (error: any) {
       return res.status(500).json({
         status: false,
-        message: error.message || "Internal Server Error",
+        message: error.message || MessageError.ServerError,
         result: {},
       });
     }
@@ -47,12 +49,12 @@ class UserAuthController {
 
       if (!otp || otp.trim() == "")
         return res
-          .status(400)
+          .status(HttpStatusCode.BadRequest)
           .json({ status: false, message: "otp is required", result: {} });
       const token = req.cookies.auth_token;
 
       if (!token)
-        return res.status(400).json({
+        return res.status(HttpStatusCode.Unauthorized).json({
           status: false,
           message: "session is expired try again",
           result: {},
@@ -64,13 +66,18 @@ class UserAuthController {
         const data = result as IUserResult;
         // auth_accessToken
 
-        res.cookie("User_accessToken", data.tokenJwt, {
+        res.cookie("User_AccessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 20 * 60 * 1000,
         });
+        res.cookie("User_RefreshToken", data.jwtRefreshToken, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
         res.clearCookie("auth_token");
-        return res.status(200).json({
+        return res.status(HttpStatusCode.OK).json({
           status: status,
           message: response.message,
           result: data.user,
@@ -86,6 +93,9 @@ class UserAuthController {
       console.log(error);
     }
   }
+
+  ////////////////
+
   async loginUser(
     req: Request,
     res: Response,
@@ -94,7 +104,7 @@ class UserAuthController {
     try {
       const { email, password } = req.body;
       if (!email || email.trim() == "" || !password || password.trim() == "") {
-        return res.status(400).json({
+        return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: "Email and password are required",
           result: {},
@@ -105,25 +115,25 @@ class UserAuthController {
       const { status, message, result } = response;
       if (status) {
         const data = result as IUserResult;
-        res.cookie("User_accessToken", data.tokenJwt, {
+        res.cookie("User_AccessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 60 * 60 * 1000,
         });
-        res.cookie("User_refreshToken", data.jwtRefreshToken, {
+        res.cookie("User_RefreshToken", data.jwtRefreshToken, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
         res.clearCookie("auth_token");
-        res.status(200).json({
+        res.status(HttpStatusCode.OK).json({
           status: status,
           message: response.message,
           result: data.user,
         });
       } else {
-        res.status(400).json({
+        res.status(HttpStatusCode.InternalServerError).json({
           status: status,
           message: response.message,
           result: {},
@@ -131,10 +141,10 @@ class UserAuthController {
       }
       return res.status;
     } catch (error) {
-      console.log(error, "in here rate limit");
       next(error);
     }
   }
+
   async googleSignUp(
     req: Request,
     res: Response,
@@ -144,7 +154,7 @@ class UserAuthController {
       console.log(req.body);
       const { email, userName } = req.body;
       if (!email || email.trim() == "" || !userName || userName.trim() == "") {
-        return res.status(400).json({
+        return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: "Error accrued need to Login",
           result: {},
@@ -155,13 +165,13 @@ class UserAuthController {
       const { status, message, result } = response;
       if (status) {
         const data = result as IUserResult;
-        res.cookie("User_accessToken", data.tokenJwt, {
+        res.cookie("User_AccessToken", data.tokenJwt, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 15 * 60 * 1000,
         });
         res.clearCookie("auth_token");
-        res.status(200).json({
+        res.status(HttpStatusCode.OK).json({
           status: status,
           message: response.message,
           result: data.user,
@@ -179,6 +189,9 @@ class UserAuthController {
       next(error);
     }
   }
+
+  ///////////////////
+
   async resendOtp(
     req: Request,
     res: Response,
@@ -186,9 +199,9 @@ class UserAuthController {
   ): Promise<any> {
     try {
       const token = req.cookies.auth_token;
-      console.log(token, "is the token");
+
       if (!token) {
-        return res.status(400).json({
+        return res.status(HttpStatusCode.Forbidden).json({
           status: false,
           message: "Session is expired, please try again",
           result: {},
@@ -202,7 +215,7 @@ class UserAuthController {
           sameSite: "strict",
           maxAge: 5 * 60 * 1000,
         });
-        return res.status(200).json({
+        return res.status(HttpStatusCode.OK).json({
           status: response.status,
           message: response.message,
           result: {},
@@ -213,17 +226,18 @@ class UserAuthController {
     }
   }
 
+  /////////////////////
+
   async forgotpassword(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("hi in forgot");
       const { email } = req.body;
       console.log(email);
       if (email.trim() == "") {
-        return res.status(400).json({
+        return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: "email is Required",
           result: {},
@@ -233,7 +247,7 @@ class UserAuthController {
         email
       );
       if (response.status) {
-        res.status(200).json({
+        res.status(HttpStatusCode.OK).json({
           status: response.status,
           message: response.message,
           result: {},
@@ -243,17 +257,19 @@ class UserAuthController {
       next(error);
     }
   }
+
+  ///////
+
   async resetforgotpassword(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("in the reset");
       const token = req.params.token as string | undefined;
-      console.log(token, "is the extracted");
+
       if (!token) {
-        return res.status(401).json({
+        return res.status(HttpStatusCode.Unauthorized).json({
           status: false,
           message: "Invalid token",
           result: {},
@@ -269,14 +285,13 @@ class UserAuthController {
           result: {},
         });
       }
-      console.log("hi");
       const response = await this.userAuthInteractor.resetforgotpassword(
         password,
         token
       );
 
       if (response.status) {
-        res.status(200).json({
+        res.status(HttpStatusCode.OK).json({
           status: response.status,
           message: response.message,
           result: {},
@@ -286,15 +301,18 @@ class UserAuthController {
       next(error);
     }
   }
+
+  /////////////////////
+
   async checkRefreshToken(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      const refreshToken = req.cookies.User_refreshToken;
+      const refreshToken = req.cookies.User_RefreshToken;
       if (!refreshToken) {
-        return res.status(401).json({
+        return res.status(HttpStatusCode.Unauthorized).json({
           status: false,
           message: "Bad Parameters - Refresh token missing.",
           result: {},
@@ -306,12 +324,12 @@ class UserAuthController {
       );
 
       if (response.status) {
-        res.cookie("User_accessToken", response.result, {
+        res.cookie("User_AccessToken", response.result, {
           httpOnly: true,
           sameSite: "strict",
           maxAge: 15 * 60 * 1000,
         });
-        return res.status(200).json({
+        return res.status(HttpStatusCode.OK).json({
           status: true,
           message: "Access token refreshed successfully.",
           result: {},
@@ -328,10 +346,11 @@ class UserAuthController {
     }
   }
 
+  //////////////////
+
   async logOut(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      console.log("in logout");
-      res.clearCookie("User_accessToken");
+      res.clearCookie("User_AccessToken");
       res.status(200).json({ message: "Logout successful" });
     } catch (error) {
       next(error);

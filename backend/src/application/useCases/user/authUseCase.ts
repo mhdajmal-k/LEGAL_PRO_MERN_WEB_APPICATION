@@ -15,6 +15,12 @@ import {
 } from "../../../frameWorks/utils/jwt";
 import { validatePassword } from "../../../frameWorks/utils/validatePassword";
 import { IS3Service } from "../../../domain/services/Is3";
+import {
+  MessageError,
+  UserRole,
+} from "../../../frameWorks/utils/helpers/Enums";
+import { config } from "../../../frameWorks/config/envConfig";
+// import { config } from "dotenv";
 
 class userAuthInteractor implements IUserAuthInteractor {
   constructor(
@@ -24,6 +30,9 @@ class userAuthInteractor implements IUserAuthInteractor {
     private readonly jwt: iJwtService,
     private readonly s3Service: IS3Service
   ) {}
+
+  ///////////////////
+
   async userSingUp(
     data: IUser
   ): Promise<{ status: boolean; message: string; result: {} }> {
@@ -35,7 +44,11 @@ class userAuthInteractor implements IUserAuthInteractor {
       }
       const userExists = await this.Repository.userAlreadyExist(email);
       if (userExists) {
-        return { status: false, message: "user Already Exists", result: {} };
+        return {
+          status: false,
+          message: MessageError.UserAlreadyExists,
+          result: {},
+        };
       }
       const OTP = this.optGenerator.generateOTP();
       this.nodeMailer.sendOTP(email, OTP, userName);
@@ -53,6 +66,9 @@ class userAuthInteractor implements IUserAuthInteractor {
       };
     }
   }
+
+  ////////////////////
+
   async verifyOtp(
     otp: string,
     token: string
@@ -90,7 +106,11 @@ class userAuthInteractor implements IUserAuthInteractor {
         message: "Failed to create new user",
         result: undefined,
       };
-    const jwtToken = this.jwt.generateToken(creatingNewUser._id, "user");
+    const jwtToken = this.jwt.generateToken(creatingNewUser._id, UserRole.User);
+    const jwtRefreshToken = this.jwt.generateRefreshToken(
+      creatingNewUser._id,
+      UserRole.User
+    );
     const { password, ...userDataWithoutPassword } = creatingNewUser.toObject();
     return {
       status: true,
@@ -98,9 +118,13 @@ class userAuthInteractor implements IUserAuthInteractor {
       result: {
         user: userDataWithoutPassword,
         tokenJwt: jwtToken,
+        jwtRefreshToken: jwtRefreshToken,
       },
     };
   }
+
+  //////////////////
+
   async userLogin(
     user: IUser
   ): Promise<{ status: boolean; message: string; result: IUserResult | null }> {
@@ -129,10 +153,13 @@ class userAuthInteractor implements IUserAuthInteractor {
           result: null,
         };
       }
-      const jwtAccessToken = this.jwt.generateToken(validUser._id, "user");
+      const jwtAccessToken = this.jwt.generateToken(
+        validUser._id,
+        UserRole.User
+      );
       const jwtRefreshToken = this.jwt.generateRefreshToken(
         validUser._id,
-        "user"
+        UserRole.User
       );
       console.log(validUser, "is the valid user");
       validUser.profilePicture
@@ -167,10 +194,10 @@ class userAuthInteractor implements IUserAuthInteractor {
         console.log(validUser, "is the auth");
         validUser = await this.Repository.createUserFromGoogle(user);
       }
-      const jwtToken = this.jwt.generateToken(validUser._id, "user");
+      const jwtToken = this.jwt.generateToken(validUser._id, UserRole.User);
       const jwtRefreshToken = this.jwt.generateRefreshToken(
         validUser._id,
-        "user"
+        UserRole.User
       );
       const { ...userDataWithoutPassword } = validUser;
 
@@ -192,6 +219,9 @@ class userAuthInteractor implements IUserAuthInteractor {
       };
     }
   }
+
+  /////////////////
+
   async resendOtp(
     token: string
   ): Promise<{ status: boolean; message: string; result: string | null }> {
@@ -221,6 +251,9 @@ class userAuthInteractor implements IUserAuthInteractor {
       throw error;
     }
   }
+
+  /////////////////
+
   async sendForgotPasswordLink(
     email: string
   ): Promise<{ status: boolean; message: string; result: string | null }> {
@@ -231,8 +264,9 @@ class userAuthInteractor implements IUserAuthInteractor {
         error.statusCode = 400;
         throw error;
       }
-      const resetToken = this.jwt.generateToken(userExists._id, "user");
-      const resetUrl = `http://localhost:3000/forgotpassword/${resetToken}`;
+      const resetToken = this.jwt.generateToken(userExists._id, UserRole.User);
+      //env
+      const resetUrl = `${config.USER_ForgotPassword_Link}${resetToken}`;
       this.nodeMailer.sendResetLink(
         userExists.email,
         resetUrl,
@@ -248,13 +282,14 @@ class userAuthInteractor implements IUserAuthInteractor {
       throw error;
     }
   }
+
+  ///////////////
   async resetforgotpassword(
     password: string,
     token: string | any
   ): Promise<{ status: boolean; message: string; result: string | null }> {
     try {
       const decoded = this.jwt.verifyToken(token);
-      console.log(decoded?.id, "is the decoded token");
       if (!decoded) {
         const error: CustomError = new Error("invalid Token");
         error.statusCode = 401;
@@ -284,6 +319,9 @@ class userAuthInteractor implements IUserAuthInteractor {
       throw error;
     }
   }
+
+  ////////////////
+
   async checkRefreshToken(
     token: string
   ): Promise<{ status: boolean; message: string; result: string | null }> {
@@ -309,7 +347,10 @@ class userAuthInteractor implements IUserAuthInteractor {
           };
         }
 
-        const newJwtAccessToken = this.jwt.generateToken(existUser._id, "user");
+        const newJwtAccessToken = this.jwt.generateToken(
+          existUser._id,
+          UserRole.User
+        );
         return {
           status: true,
           message: "Access token refreshed successfully.",

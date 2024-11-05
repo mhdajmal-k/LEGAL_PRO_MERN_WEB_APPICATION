@@ -5,6 +5,7 @@ import {
   CHECKREFUNDSTATUS,
   CREATEAPPOINTMENT,
   CREATEPAYMENT,
+  FAILEDPAYMENT,
   FETCHALLAPPOINTMENT,
   FETCHLAWYERBYID,
   FETCHLAWYERS,
@@ -556,9 +557,31 @@ export const verifyPayment = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      console.log(verifyData, "is the verify DAtat");
       const response = await axiosInstance.post<response>(
         VERIFYPAYMENT,
         verifyData
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const filedPayment = createAsyncThunk(
+  "user/filedPayment",
+  async (appointmentId: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post<response>(
+        `${FAILEDPAYMENT}/${appointmentId}`
       );
       return response.data;
     } catch (error) {

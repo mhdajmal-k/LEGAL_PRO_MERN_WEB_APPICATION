@@ -3,9 +3,12 @@ import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 import IUsersLawyerInteractor from "../../../domain/entites/iuseCase/IUserLawyerList";
 import mongoose from "mongoose";
 import { LawyerQuery } from "../../../domain/entites/imodels/iLawyer";
+import { HttpStatusCode } from "../../../frameWorks/utils/helpers/Enums";
 
 class UserLawyerController {
   constructor(private UserLawyerInteractor: IUsersLawyerInteractor) {}
+
+  ///////////////////
 
   async getVerifiedLawyers(
     req: Request,
@@ -13,7 +16,6 @@ class UserLawyerController {
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log(req.query, "is the qurey");
       const {
         searchText,
         experience,
@@ -55,7 +57,6 @@ class UserLawyerController {
           $options: "i",
         };
       }
-
       if (languagesSpoken) {
         const languageArray = Array.isArray(languagesSpoken)
           ? languagesSpoken.map(String)
@@ -65,16 +66,14 @@ class UserLawyerController {
           $in: languageArray,
         };
       }
-      console.log(query);
       const response = await this.UserLawyerInteractor.getVerifiedLawyers(
         Number(page),
         Number(limit),
         query
       );
-
       const lawyers = response.result;
       const totalPages = response.totalPages;
-      return res.status(200).json({
+      return res.status(HttpStatusCode.OK).json({
         status: response.status,
         message: response.message,
         result: { lawyers, totalPages },
@@ -83,6 +82,9 @@ class UserLawyerController {
       next(error);
     }
   }
+
+  ///////////////////////
+
   async getLawyerById(
     req: Request,
     res: Response,
@@ -91,7 +93,7 @@ class UserLawyerController {
     try {
       let { id } = req.params;
       if (!id) {
-        return res.status(400).json({
+        return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: "invalid Id",
         });
@@ -109,6 +111,9 @@ class UserLawyerController {
       next(error);
     }
   }
+
+  /////////////
+
   async lawyerSlot(
     req: Request,
     res: Response,
@@ -117,7 +122,7 @@ class UserLawyerController {
     try {
       let { id } = req.params;
       if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({
+        return res.status(HttpStatusCode.OK).json({
           status: false,
           message: "invalid Lawyer Id ",
           result: {},
@@ -137,4 +142,5 @@ class UserLawyerController {
     }
   }
 }
+
 export default UserLawyerController;

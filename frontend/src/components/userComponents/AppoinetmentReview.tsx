@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Appointment } from "../../utils/type/Appointment";
 import CustomToast from "./CustomToast";
 import { toast } from "sonner";
-import { createPayment, fetchAppointmentDataById, verifyPayment } from "../../services/store/features/userServices";
+import { createPayment, fetchAppointmentDataById, filedPayment, verifyPayment } from "../../services/store/features/userServices";
 import { useNavigate } from "react-router-dom";
 
 
@@ -89,8 +89,21 @@ export const AppointmentDetails: React.FC<AppointmentReviewProps> = ({ appointme
                     }
                 };
 
-                const rzp1 = new window.Razorpay(options);;
+                const rzp1 = new window.Razorpay(options);
+                rzp1.on('payment.failed', async function (response: any) {
+                    // Handle payment failure
+                    // toast(<CustomToast message={response.error.description} type="error" />);
+                    console.log(response, "is the payment failed response");
+
+                    response = await dispatch(filedPayment(appointmentId as string)).unwrap();
+                    if (response.status) {
+                        // const AppointmentId = response.result._id as string;
+                        // navigate(`/paymentSuccess/${AppointmentId}`);
+                        toast(<CustomToast message={response.error.description} type="error" />);
+                    }
+                });
                 rzp1.open();
+
             }
         } catch (error: any) {
             console.log(error, "is the error")

@@ -10,6 +10,7 @@ import multer from "multer";
 import { S3Service } from "../../../config/s3Setup";
 import { authorization } from "../../../middleware/authMilddlewere";
 import { apiLimiter } from "../../../config/rateLimit";
+import { UserRole } from "../../../utils/helpers/Enums";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -53,7 +54,7 @@ lawyerAuthRouter.get(
 
 lawyerAuthRouter.post(
   "/verify-professionalData",
-  authorization("lawyer"),
+  authorization(UserRole.Lawyer),
   upload.fields([
     { name: "imageIndia", maxCount: 1 },
     { name: "imageKerala", maxCount: 1 },
@@ -62,7 +63,7 @@ lawyerAuthRouter.post(
 );
 lawyerAuthRouter.post(
   "/updateProfessionalData",
-  authorization("lawyer"),
+  authorization(UserRole.Lawyer),
   upload.single("profilePicture"),
   lawyerAuthController.updateProfileData.bind(lawyerAuthController)
 );

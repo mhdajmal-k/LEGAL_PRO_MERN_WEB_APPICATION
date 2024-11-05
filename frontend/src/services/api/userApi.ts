@@ -17,5 +17,6 @@ export const FETCHLAWYERSLOT = "/api/user/lawyers/slots";
 export const FETCHLAWYERBYID = "/api/user/lawyers/profile";
 export const CREATEPAYMENT = "/api/user/appointment/createPayment";
 export const VERIFYPAYMENT = "/api/user/appointment/VERIFYPAYMENT";
+export const FAILEDPAYMENT = "/api/user/appointment/FAILEDPAYMENT";
 export const RESETPASSWORD = "api/user/Profile/resetPassword";
 export const GOOGLESIGNUP = "/api/user/googlesignup";

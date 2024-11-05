@@ -2,6 +2,7 @@ import { ILawyer } from "../../domain/entites/imodels/iLawyer";
 import { IUser } from "../../domain/entites/imodels/Iuser";
 import { iJwtService } from "../../domain/services/ijwtService";
 import jwt from "jsonwebtoken";
+import { UserRole } from "../utils/helpers/Enums";
 
 class JwtToken implements iJwtService {
   constructor(
@@ -9,18 +10,18 @@ class JwtToken implements iJwtService {
     private readonly jwtRefreshTokenSecret: string
   ) {}
 
-  generateToken(id: IUser | ILawyer, role: string): string {
+  generateToken(id: IUser | ILawyer, role: UserRole): string {
     const token = jwt.sign({ id, role }, this.jwtSecret, {
       expiresIn: "1h",
     });
     return token;
   }
 
-  verifyToken(token: string): { id: string; role: string } | null {
+  verifyToken(token: string): { id: string; role: UserRole } | null {
     try {
       const decodedToken = jwt.verify(token, this.jwtSecret) as {
         id: string;
-        role: string;
+        role: UserRole;
       };
       return decodedToken;
     } catch (error) {
@@ -28,11 +29,11 @@ class JwtToken implements iJwtService {
       return null;
     }
   }
-  VerifyTokenRefresh(token: string): { id: string; role: string } | null {
+  VerifyTokenRefresh(token: string): { id: string; role: UserRole } | null {
     try {
       const decodedToken = jwt.verify(token, this.jwtRefreshTokenSecret) as {
         id: string;
-        role: string;
+        role: UserRole;
       };
       return decodedToken;
     } catch (error) {

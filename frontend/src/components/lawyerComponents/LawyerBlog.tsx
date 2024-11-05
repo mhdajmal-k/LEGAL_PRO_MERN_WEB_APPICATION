@@ -18,50 +18,57 @@ const LawyerBlogListing = () => {
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 placement="top-center"
+                className='max-w-4xl bg-white'
             >
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1 text-center">Create Your On Blog</ModalHeader>
                             <ModalBody>
-                                <Input
-                                    autoFocus
-                                    // endContent={
-                                    //     <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                                    // }
-                                    label="Email"
-                                    placeholder="Enter your email"
-                                    variant="bordered"
-                                />
-                                <Input
-                                    // endContent={
-                                    //     <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                                    // }
-                                    label="Password"
-                                    placeholder="Enter your password"
-                                    type="password"
-                                    variant="bordered"
-                                />
-                                <div className="flex py-2 px-1 justify-between">
-                                    <Checkbox
-                                        classNames={{
-                                            label: "text-small",
-                                        }}
-                                    >
-                                        Remember me
-                                    </Checkbox>
-                                    <Link color="primary" href="#" size="sm">
-                                        Forgot password?
-                                    </Link>
+                                <div className='w-full m-4 flex gap-8 my-4'>
+                                    <div className='w-1/2 '>
+                                        <label>
+                                            Main Title
+                                        </label>
+                                        <Input
+                                            className='my-2'
+                                            placeholder="Enter your Blog Title"
+                                            variant="bordered"
+                                        />
+                                    </div>
+                                    <div className='w-2/3 '>
+                                        <label>
+                                            Blog Category
+                                        </label>
+                                        <Input
+                                            className='my-2'
+                                            placeholder="Enter your  Blog Category(Real Estate,Family Law)"
+                                            variant="bordered"
+
+                                        />
+                                    </div>
+
+
                                 </div>
+                                <div className='m-4'>
+                                    <input type='file'></input>
+
+                                </div>
+                                <div className='flex flex-col  m-4 h-full'>
+                                    <label className='mb-5'>Main Text</label>
+                                    <textarea placeholder='Write Down here About the Topic  ' minLength={100}
+                                        maxLength={1000} className=' w-[80%] border rounded bg-gray-300 p-5    ' />
+                                </div>
+
+
+
                             </ModalBody>
                             <ModalFooter>
-                                <Button color="danger" variant="flat" onPress={onClose}>
-                                    Close
+                                <Button color="warning" variant="flat" onPress={onClose}>
+                                    close
                                 </Button>
-                                <Button color="primary" onPress={onClose}>
-                                    Sign in
-                                </Button>
+                                <Button color="success" onPress={onClose}>
+                                    Create                                </Button>
                             </ModalFooter>
                         </>
                     )}

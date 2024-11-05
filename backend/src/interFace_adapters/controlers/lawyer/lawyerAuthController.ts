@@ -10,9 +10,13 @@ import {
   validateProfileDataInput,
 } from "../../../frameWorks/utils/helpers/validateProffesionalData";
 import IUserResult from "../../../domain/entites/imodels/IUserResult";
-import { Console } from "console";
+import { HttpStatusCode } from "../../../frameWorks/utils/helpers/Enums";
+
 class LawyerAuthController {
   constructor(private lawyerAuthInteractor: ILawyerAuthInteractor) {}
+
+  /////////////////////////////////
+
   async lawyerSignUp(
     req: Request,
     res: Response,
@@ -21,31 +25,27 @@ class LawyerAuthController {
     try {
       const data = req.body;
       const file = req.file;
-
       const validateDataError = validateLawyerInput(data);
       if (validateDataError) {
         res
-          .status(400)
+          .status(HttpStatusCode.BadRequest)
           .json({ status: false, message: validateDataError, result: {} });
         return;
       }
       if (!file) {
-        res.status(400).json({
+        res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: "profile image is required",
           result: {},
         });
         return;
       }
-
       const response = await this.lawyerAuthInteractor.lawyerSingUp(data, file);
-
       res.cookie("lawyerAuth_token", response.result, {
         httpOnly: true,
         sameSite: "strict",
         maxAge: 5 * 60 * 1000,
       });
-
       res.status(response.statusCode).json({
         status: true,
         message: response.message,
@@ -55,18 +55,20 @@ class LawyerAuthController {
       next(error);
     }
   }
+
+  /////////////////////////////
+
   async lawyerVerifyOtp(req: Request, res: Response): Promise<any> {
     try {
       const { otp } = req.body;
 
       if (!otp || otp.trim() == "")
         return res
-          .status(400)
+          .status(HttpStatusCode.BadRequest)
           .json({ success: false, message: "otp is required", result: {} });
       const token = req.cookies.lawyerAuth_token;
-
       if (!token)
-        return res.status(400).json({
+        return res.status(HttpStatusCode.BadRequest).json({
           success: false,
           message: "session is expired try again",
           result: {},
@@ -88,14 +90,13 @@ class LawyerAuthController {
           sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-
         res.status(statusCode).json({
           status: true,
           message: message,
           result: result,
         });
       } else {
-        res.status(400).json({
+        res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: response.message,
           result: {},
@@ -106,6 +107,8 @@ class LawyerAuthController {
     }
   }
 
+  ////////////////////////////
+
   async resendOtp(
     req: Request,
     res: Response,
@@ -114,7 +117,7 @@ class LawyerAuthController {
     try {
       const token = req.cookies.lawyerAuth_token;
       if (!token) {
-        return res.status(400).json({
+        return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: "Session is expired, please try again",
           result: {},
@@ -128,7 +131,7 @@ class LawyerAuthController {
           sameSite: "strict",
           maxAge: 60 * 60 * 1000,
         });
-        return res.status(200).json({
+        return res.status(HttpStatusCode.OK).json({
           status: response.status,
           message: response.message,
           result: {},
@@ -138,6 +141,8 @@ class LawyerAuthController {
       next(error);
     }
   }
+
+  ////////////////////
 
   async verifyProfessionalData(
     req: AuthenticatedRequest,
@@ -155,12 +160,12 @@ class LawyerAuthController {
       const validateDataError = validateProfessionalDataInput(data);
       if (validateDataError) {
         res
-          .status(400)
+          .status(HttpStatusCode.BadRequest)
           .json({ status: false, message: validateDataError, result: {} });
         return;
       }
       if (!req.files) {
-        res.status(400).json({
+        res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: "certificate is required image is required",
           result: {},
@@ -172,7 +177,6 @@ class LawyerAuthController {
         files,
         id
       );
-
       res.clearCookie("auth_lawyerAccessToken");
       res.status(response.statusCode).json({
         status: true,
@@ -184,6 +188,9 @@ class LawyerAuthController {
       next(error);
     }
   }
+
+  //////////////////////
+
   async updateProfileData(
     req: AuthenticatedRequest,
     res: Response,
@@ -198,7 +205,7 @@ class LawyerAuthController {
       const validateDataError = validateProfileDataInput(data);
       if (validateDataError) {
         res
-          .status(400)
+          .status(HttpStatusCode.BadRequest)
           .json({ status: false, message: validateDataError, result: {} });
         return;
       }
@@ -208,7 +215,6 @@ class LawyerAuthController {
         file,
         id
       );
-      console.log("success");
       res.clearCookie("auth_lawyerAccessToken");
       res.status(response.statusCode).json({
         status: true,
@@ -220,6 +226,9 @@ class LawyerAuthController {
       next(error);
     }
   }
+
+  ////////////////////
+
   async loginLawyer(
     req: Request,
     res: Response,
@@ -228,7 +237,7 @@ class LawyerAuthController {
     try {
       const { email, password } = req.body;
       if (!email || email.trim() == "" || !password || password.trim() == "") {
-        return res.status(400).json({
+        return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: "Email and password are required",
           result: {},
@@ -262,6 +271,8 @@ class LawyerAuthController {
     }
   }
 
+  ////////////////////////
+
   async forgotpassword(
     req: Request,
     res: Response,
@@ -271,7 +282,7 @@ class LawyerAuthController {
       const { email } = req.body;
 
       if (email.trim() == "") {
-        return res.status(400).json({
+        return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: "email is Required",
           result: {},
@@ -291,6 +302,9 @@ class LawyerAuthController {
       next(error);
     }
   }
+
+  //////////////////////////////
+
   async resetforgotpassword(
     req: Request,
     res: Response,
@@ -299,7 +313,7 @@ class LawyerAuthController {
     try {
       const token = req.params.token as string | undefined;
       if (!token) {
-        return res.status(401).json({
+        return res.status(HttpStatusCode.Unauthorized).json({
           status: false,
           message: "Invalid token",
           result: {},
@@ -308,7 +322,7 @@ class LawyerAuthController {
       const { password } = req.body;
 
       if (!password || password.trim() === "") {
-        return res.status(400).json({
+        return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: "Password is required",
           result: {},
@@ -329,26 +343,26 @@ class LawyerAuthController {
       next(error);
     }
   }
+
+  ////////////////////////
+
   async checkRefreshToken(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
       const refreshToken = req.cookies.Lawyer_refreshToken;
       if (!refreshToken) {
-        return res.status(401).json({
+        return res.status(HttpStatusCode.BadRequest).json({
           status: false,
           message: "Bad Parameters - Refresh token missing.",
           result: {},
         });
       }
-      console.log(refreshToken, "jdfjdjf");
       const response = await this.lawyerAuthInteractor.checkRefreshToken(
         refreshToken
       );
-      console.log(response, "is the possible REsponnce");
       if (response.status) {
         res.cookie("Lawyer_AccessToken", response.result, {
           httpOnly: true,
@@ -371,14 +385,17 @@ class LawyerAuthController {
       next(error);
     }
   }
+
+  ////////////////////
+
   async LawyerLogOut(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      res.clearCookie("auth_lawyerAccessToken");
-      res.status(200).json({ message: "Logout successful" });
+      res.clearCookie("Lawyer_AccessToken");
+      res.status(HttpStatusCode.OK).json({ message: "Logout successful" });
     } catch (error) {
       next(error);
     }

@@ -22,7 +22,7 @@ export class S3Service implements IS3Service {
       region: config.BUCKET_REGION,
     });
   }
-
+  //check this later
   async uploadFile(file: Express.Multer.File, key: string): Promise<string> {
     const buffer = await sharp(file.buffer)
       .resize({

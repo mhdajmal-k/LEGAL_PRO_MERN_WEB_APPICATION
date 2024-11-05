@@ -5,94 +5,64 @@ import UserAuthRepository from "../../interFace_adapters/repositories/userReposi
 import LawyerAuthRepository from "../../interFace_adapters/repositories/lawyerRepositories/lawyerAuthRepository";
 import { AuthenticatedRequest } from "../../domain/entites/imodels/iLawyer";
 import AdminRepository from "../../interFace_adapters/repositories/adminRepositories/adminRepositories";
+import { HttpStatusCode, MessageError, UserRole } from "../utils/helpers/Enums";
 
 export const authorization =
-  (allowedRoles: string) =>
+  (allowedRoles: UserRole) =>
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const userToken = req.cookies.User_accessToken;
+    const userToken = req.cookies.User_AccessToken;
     const lawyerToken = req.cookies.Lawyer_AccessToken;
     const adminToken = req.cookies.auth_adminAccessToken;
-    // if (!userToken && !lawyerToken) {
-    //   return res.status(401).json({
-    //     message: "Authorization denied. Please login. fuck in here",
-    //     result: {},
-    //     status: false,
-    //   });
-    // }
 
     const jwt = new JwtToken(config.JWT_SECRET, config.JWT_REFRESH_SECRET);
     let decodeToken;
 
     try {
-      if (userToken && allowedRoles === "user") {
+      if (userToken && allowedRoles === UserRole.User) {
         decodeToken = jwt.verifyToken(userToken);
-      } else if (lawyerToken && allowedRoles === "lawyer") {
+      } else if (lawyerToken && allowedRoles === UserRole.Lawyer) {
         decodeToken = jwt.verifyToken(lawyerToken);
-        console.log(decodeToken);
-      } else if (adminToken && allowedRoles === "admin") {
-        console.log("in here");
+      } else if (adminToken && allowedRoles === UserRole.Admin) {
         decodeToken = jwt.verifyToken(adminToken);
       }
 
       if (!decodeToken || decodeToken.role !== allowedRoles) {
-        console.log(decodeToken, "is the decoded Token");
-        // console.log(allowedRoles, "this is the allowed Role");
-        // console.log(decodeToken?.role, "is the role");
-        return res.status(401).json({
+        return res.status(HttpStatusCode.Unauthorized).json({
           message: `Authorization denied. Invalid token`,
           result: allowedRoles,
           status: false,
         });
       }
 
-      if (decodeToken.role === "user") {
+      if (decodeToken.role === UserRole.User) {
         const userRepository = new UserAuthRepository();
         const existUser = await userRepository.getId(decodeToken.id);
-        if (!existUser) {
-          return res.status(401).json({
-            message: "Authorization denied. User does not exist.",
+        if (!existUser || existUser.block) {
+          return res.status(HttpStatusCode.Unauthorized).json({
+            message: existUser
+              ? "Authorization denied. User does not exist."
+              : "OOPS YOU HAVE BEEN BLOCKED BY ADMIN",
             result: {},
             status: false,
           });
         }
-
-        if (existUser.block) {
-          return res.status(401).json({
-            message: "OOPS YOU HAVE BEEN BLOCKED BY ADMIN",
-            result: {},
-            status: false,
-          });
-        }
-      } else if (decodeToken.role === "lawyer") {
-        console.log("decoded admin Token");
-        console.log("decoded admin TokenId", decodeToken.id);
+      } else if (decodeToken.role === UserRole.Lawyer) {
         const lawyerRepository = new LawyerAuthRepository();
         const existLawyer = await lawyerRepository.getId(decodeToken.id);
-        if (!existLawyer) {
-          return res.status(401).json({
-            message: "Authorization denied. Lawyer does not exist.",
+        if (!existLawyer || existLawyer.block) {
+          return res.status(HttpStatusCode.Unauthorized).json({
+            message: existLawyer
+              ? "Authorization denied. Lawyer does not exist."
+              : MessageError.Blocked,
             result: {},
             status: false,
           });
         }
-
-        if (existLawyer.block) {
-          console.log("if block statement");
-          return res.status(401).json({
-            message: "OOPS YOU HAVE BEEN BLOCKED BY ADMIN",
-            result: {},
-            status: false,
-          });
-        }
-      } else if (decodeToken.role === "admin") {
+      } else if (decodeToken.role === UserRole.Admin) {
         const adminRepo = new AdminRepository();
         const existAdmin = await adminRepo.getAdmin(decodeToken.id);
-        console.log(
-          existAdmin,
-          "is hteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-        );
         if (!existAdmin) {
-          return res.status(401).json({
+          return res.status(HttpStatusCode.Unauthorized).json({
             message: "Authorization denied,admin does not exist.",
             result: {},
             status: false,
@@ -104,7 +74,7 @@ export const authorization =
       next();
     } catch (error) {
       console.error("Authorization Error:", error);
-      return res.status(500).json({
+      return res.status(HttpStatusCode.InternalServerError).json({
         message: "Authorization failed due to server error.",
         result: {},
         status: false,

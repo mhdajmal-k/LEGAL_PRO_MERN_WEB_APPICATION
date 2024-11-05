@@ -49,7 +49,7 @@ const AppointmentListAdminSide: React.FC = () => {
                     <Button size='sm'
                         className={` px-5 rounded-md font-semibold   ${status === 'Pending' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
                         onClick={() => {
-                            setStatus('Pending');
+                            setStatus('Confirmed');
                             setCurrentPage(1);
                         }}
                     >
