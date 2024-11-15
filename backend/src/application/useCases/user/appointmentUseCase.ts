@@ -68,13 +68,11 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
           selectedTime
         );
       if (!specificSlot) {
-        console.log("hi testing in here");
         const error: CustomError = new Error(MessageError.SlotNotFound);
         error.statusCode = HttpStatusCode.Forbidden;
         throw error;
       }
       if (specificSlot.availability[0].fee != fee) {
-        console.log(specificSlot.availability[0].fee, "sssssssssssssss");
         const error: CustomError = new Error(MessageError.FeeChanged);
         error.statusCode = HttpStatusCode.BadRequest;
         throw error;
@@ -140,6 +138,9 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       throw error;
     }
   }
+
+  ////////////////////
+
   async getAppointment(appointmentId: string): Promise<{
     statusCode: number;
     status: boolean;
@@ -170,6 +171,9 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       throw error;
     }
   }
+
+  /////////////////////////////////
+
   async createPayment(appointmentId: string): Promise<{
     statusCode: number;
     status: boolean;
@@ -177,21 +181,16 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
     result: string | {};
   }> {
     try {
-      console.log("hi");
       const appointment = await this.AppointmentRepository.getAppointmentById(
         appointmentId
       );
-      // console.log(
-      //   appointment,
-      //   "is the apointment ...................................................."
-      // );
+
       if (!appointment) {
         const error: CustomError = new Error(MessageError.AppointmentNotFound);
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
       const LawyerId = appointment.lawyerId._id;
-      // console.log(LawyerId, "is the laywer Id");
       const validLawyer = await this.UserLawyerRepository.getLawyerById(
         LawyerId.toString()
       );
@@ -232,10 +231,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       if (specificSlot.availability[0].fee != fee) {
         const newConsolationFee = specificSlot.availability[0].fee;
         const newSpecifSlotId = specificSlot.availability[0]._id;
-        // console.log(
-        //   newSpecifSlotId,
-        //   "is sthe idshfihseoihfoisldjfiuiaeofsfo;ififius"
-        // );
         const newConvenienceFee = Math.ceil(newConsolationFee * 0.03);
         const subTotal = Number(newConvenienceFee) + Number(newConsolationFee);
         // console.log(subTotal, "is the subtotal");
@@ -286,7 +281,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       };
 
       const order = await razorpayInstance.orders.create(options);
-      console.log("order:", order);
       await this.createPaymentTimeout(appointmentId);
       return {
         statusCode: 200,
@@ -305,17 +299,19 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       throw error;
     }
   }
+
+  ////Payment Time out
+
   async createPaymentTimeout(appointmentId: string): Promise<void> {
     setTimeout(async () => {
-      console.log("called");
       const PendingPaymentAppointment =
         await this.AppointmentRepository.getAllPendingPaymentAppointment(
           appointmentId
         );
-      console.log(PendingPaymentAppointment);
+      if (!PendingPaymentAppointment) {
+        return;
+      }
       const slot = PendingPaymentAppointment?.slotId;
-      console.log(slot, "is the useCase");
-
       const bookedSpecificSlot = PendingPaymentAppointment?.appointmentTime;
       const updateSlot =
         await this.UserLawyerRepository.updateStatusSlotBySpecifSlotId(
@@ -335,8 +331,11 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       console.log(
         `Appointment ${PendingPaymentAppointment?._id} was cancelled due to payment timeout.`
       );
-    }, 1 * 60 * 1000);
+    }, 2 * 60 * 1000);
   }
+
+  //////verify Payment
+
   async verifyRazorPayPayment(
     razorpay_order_id: string,
     razorpay_payment_id: string,
@@ -421,6 +420,9 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       throw error;
     }
   }
+
+  ///get All appointment
+
   async getAllAppointmentBasedStatus(
     status: string,
     userId: string,
@@ -464,6 +466,9 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       throw error;
     }
   }
+
+  ////cancel Appointment
+
   async cancellingAppointment(appointmentId: string): Promise<{
     statusCode: number;
     status: boolean;
@@ -521,6 +526,9 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       throw error;
     }
   }
+
+  /////refund Function
+
   async getCancelledRefundStatus(appointmentId: string): Promise<{
     statusCode: number;
     status: boolean;
@@ -551,6 +559,9 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       throw error;
     }
   }
+
+  ////filed Payment Appointment
+
   async filedPaymentAppointment(appointmentId: string): Promise<{
     statusCode: number;
     status: boolean;
@@ -558,7 +569,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
     result: string | {};
   }> {
     try {
-      console.log(appointmentId, "is the appontment id i have expecting");
       const getAppointment =
         await this.AppointmentRepository.getAppointmentById(appointmentId);
       if (!getAppointment) {

@@ -175,7 +175,7 @@ const LawyerSlot: React.FC<LawyerSlotProps> = ({ lawyerId, lawyer }) => {
 
                 <div className='my-6 bg-gray-50 rounded-lg shadow-lg h-auto'>
                     <h3 className="text-lg font-medium mb-2 text-center">Select Date</h3>
-                    <div className="flex items-center justify-between w-full bg-white p-5 gap-3 cursor-pointer rounded-lg">
+                    <div className=" grid grid-cols-2 sm:flex sm:flex-row items-center justify-between w-full bg-white p-5 gap-3 cursor-pointer rounded-lg">
                         {[...Array(7)].map((_, index) => {
                             const date = new Date();
                             date.setDate(date.getDate() + index);
@@ -205,7 +205,7 @@ const LawyerSlot: React.FC<LawyerSlotProps> = ({ lawyerId, lawyer }) => {
                             <div className="my-5">
                                 <h3 className="text-lg font-medium mb-3">Select Time</h3>
                                 {availableSlots.filter(slot => !isTimeInPast(slot.timeSlot)).length > 0 ? (
-                                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
+                                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                                         {availableSlots
                                             .filter((slot) => !isTimeInPast(slot.timeSlot))
                                             .map((slot) => (
@@ -250,22 +250,22 @@ const LawyerSlot: React.FC<LawyerSlotProps> = ({ lawyerId, lawyer }) => {
                 </div>
 
                 {selectedTime && (
-                    <div>
+                    <div className=''>
                         <h3>Consultation Subject</h3>
-                        <div className="m-4 text-center w-full gap-3 sm:flex  ">
+                        <div className="m-4 text-center sm:w-full gap-3 flex flex-col flex-grow sm:flex sm:flex-row  ">
 
                             <textarea
                                 name="Description"
                                 placeholder="Description of Your Legal Concern"
                                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
                                 value={description}
-                                className=" p-2 h-40 border  w-1/2  rounded bg-gray-300"
+                                className=" p-2 h-40 border  sm:w-1/2  rounded bg-gray-300"
                             />
 
 
 
 
-                            <div className='ml-5'>
+                            <div className='sm:ml-5'>
                                 <input
                                     type='file'
                                     onChange={handleImage}

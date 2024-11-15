@@ -1,39 +1,41 @@
-import React, { lazy, Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import SignUp from '../../pages/userPages/SignUp'
-import OtpVerify from '../../pages/userPages/OtpVerify'
-const Home = lazy(() => import('../../pages/userPages/Home'));
-import LoginPage from '../../pages/userPages/LoginPage'
-import PublicRoute from '../UserpublicRoute'
-import UserProfileLayout from '../../components/userComponents/UserProfileLayout'
-import ProfileData from '../../components/userComponents/ProfileData'
-import ProtectRoute from '../UserProtectRoute'
-import ForgotPasswordFrom from '../../components/ForgotPasswordFrom'
-import ResetPassword from '../../components/userComponents/ResetPassword'
-import LawyersList from '../../pages/userPages/LawyersList'
-import LawyerProfile from '../../pages/userPages/LawyerProfile';
-import LawyerSlots from '../../pages/userPages/LawyerSlots';
-import AppointmentReviewAndPayment from '../../pages/userPages/AppointmentReviewAndPayment';
-import AppointmentSuccess from '../../pages/userPages/AppoitnmentSuccess';
-import AppointmentList from '../../components/userComponents/Appoinement';
-import ViewAppointment from '../../pages/userPages/ViewAppontment';
+import React, { lazy, Suspense } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import LoadingFallback from '../../components/LoadingFallback';
 
+// Lazy loaded components
+const SignUp = lazy(() => import('../../pages/userPages/SignUp'));
+const OtpVerify = lazy(() => import('../../pages/userPages/OtpVerify'));
+const Home = lazy(() => import('../../pages/userPages/Home'));
+const LoginPage = lazy(() => import('../../pages/userPages/LoginPage'));
+const PublicRoute = lazy(() => import('../UserpublicRoute'));
+const UserProfileLayout = lazy(() => import('../../components/userComponents/UserProfileLayout'));
+const ProfileData = lazy(() => import('../../components/userComponents/ProfileData'));
+const ProtectRoute = lazy(() => import('../UserProtectRoute'));
+const ForgotPasswordForm = lazy(() => import('../../components/ForgotPasswordFrom'));
+const ResetPassword = lazy(() => import('../../components/userComponents/ResetPassword'));
+const LawyersList = lazy(() => import('../../pages/userPages/LawyersList'));
+const LawyerProfile = lazy(() => import('../../pages/userPages/LawyerProfile'));
+const LawyerSlots = lazy(() => import('../../pages/userPages/LawyerSlots'));
+const AppointmentReviewAndPayment = lazy(() => import('../../pages/userPages/AppointmentReviewAndPayment'));
+const AppointmentSuccess = lazy(() => import('../../pages/userPages/AppoitnmentSuccess'));
+const AppointmentList = lazy(() => import('../../components/userComponents/Appoinement'));
+const ViewAppointment = lazy(() => import('../../pages/userPages/ViewAppontment'));
+const UserVideoCall = lazy(() => import('../../pages/userPages/UserVideoCall'));
 
 const UserRouters: React.FC = () => {
   return (
-    <div>
+    <Suspense fallback={<LoadingFallback />}>
       <Routes>
         <Route element={<PublicRoute />}>
           <Route path='/signup' element={<SignUp />} />
           <Route path='/otpVerify' element={<OtpVerify />} />
           <Route path='/login' element={<LoginPage />} />
-          <Route path='/forgotpassword/:token' element={<ForgotPasswordFrom />} />
+          <Route path='/forgotpassword/:token' element={<ForgotPasswordForm />} />
         </Route>
 
-        <Route path='/' element={<Suspense fallback={<h1>loading</h1>}>
-          <Home />
-        </Suspense>} />
+        <Route path='/' element={<Home />} />
         <Route path='/findLawyers' element={<LawyersList />} />
+
         <Route element={<ProtectRoute />}>
           <Route path="/viewLawyer/:id" element={<LawyerProfile />} />
           <Route path="/slots/:id" element={<LawyerSlots />} />
@@ -47,14 +49,11 @@ const UserRouters: React.FC = () => {
             <Route path='changePassword' element={<ResetPassword />} />
           </Route>
         </Route>
+
         <Route path='*' element={<div className='text-center'>404 Not Found</div>} />
       </Routes>
-    </div>
-  )
+    </Suspense>
+  );
 }
 
-export default UserRouters
-
-
-
-
+export default UserRouters;

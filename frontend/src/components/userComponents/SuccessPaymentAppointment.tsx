@@ -36,13 +36,13 @@ const SuccessPaymentAppointment: React.FC<SuccessPaymentAppointmentProps> = ({ A
     }, [dispatch, AppointmentId]);
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-primary/10 to-background">
+        <div className="sm:min-h-screen bg-gradient-to-b  from-primary/10 to-background">
             <div className="container mx-auto px-4 py-8">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="text-center mb-12"
+                    className="text-center my-12"
                 >
                     <CheckCircle className="w-20 h-20 text-primary mx-auto mb-4" />
                     <h1 className="text-4xl font-bold text-primary">Appointment Successful</h1>
@@ -82,7 +82,7 @@ const SuccessPaymentAppointment: React.FC<SuccessPaymentAppointmentProps> = ({ A
 
                         <div className="flex items-center space-x-4 bg-secondary/20 p-4 rounded-lg">
 
-                            <img src={appointment?.lawyerId.profile_picture} alt={appointment?.lawyerId.userName} className='w-52 rounded-full object-contain' />
+                            <img src={appointment?.lawyerId.profile_picture} alt={appointment?.lawyerId.userName} className='w-28 sm:w-52 rounded-full object-contain' />
                             {/* <AvatarFallb>{appointment?.lawyerId.userName?.charAt(0)}</AvatarFallb> */}
 
                             <div>

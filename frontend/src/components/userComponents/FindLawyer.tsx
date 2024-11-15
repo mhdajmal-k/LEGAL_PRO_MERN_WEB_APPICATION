@@ -98,13 +98,13 @@ const FindLawyer: React.FC = () => {
 
     return (
         <div className='container p-5 min-h-screen'>
-            <div className='my-5 max-w-[65%] h-16 rounded-lg shadow-lg bg-primary mx-auto flex justify-evenly items-center'>
+            <div className='my-5 sm:max-w-[65%]     h-16 rounded-lg shadow-lg bg-primary mx-auto flex justify-evenly items-center'>
                 <div className='flex justify-between w-2/3 space-x-4 '>
                     <Input type="text" placeholder="Lawyer Name Or legal Issue..." className='w-full' onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)} />
                     <Input type="text" placeholder="City" className='w-2/3' onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCity(e.target.value)} />
                 </div>
 
-                <Button className='bg-white text-base font-medium' onClick={() => handileSearch(currentPage)}>Search</Button>
+                <Button className='bg-white text-base font-normal sm:font-medium' onClick={() => handileSearch(currentPage)}>Search</Button>
 
             </div>
             <div className='my-7 text-center'>

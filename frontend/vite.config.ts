@@ -7,4 +7,7 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  define: {
+    global: {}, // Add this line to define `global` as an empty object
+  },
 });

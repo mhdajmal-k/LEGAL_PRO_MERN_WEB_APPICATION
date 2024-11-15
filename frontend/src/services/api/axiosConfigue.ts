@@ -19,8 +19,7 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     const requestedApi = error.config;
-    console.log(requestedApi);
-    console.log(error);
+
     if (
       error.response.status === 401 &&
       error.response.data?.message === "Authorization denied. Invalid token"
@@ -32,6 +31,7 @@ axiosInstance.interceptors.response.use(
             return axiosInstance(requestedApi);
           }
         } else if (error.response.data.result == "lawyer") {
+          // alert("lawyer accessToken");
           const response = await axiosInstance.post("/api/lawyer/refreshToken");
 
           if (response.status == 200) {

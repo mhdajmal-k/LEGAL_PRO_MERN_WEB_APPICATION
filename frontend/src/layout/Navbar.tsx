@@ -109,16 +109,31 @@ const Navbar: React.FC = React.memo(() => {
           <Link to="/findLawyers" className="block">FIND LAWYERS</Link>
           <Link to="/services" className="block">ABOUT</Link>
           <Link to="/contact" className="block">BLOG</Link>
-          <div>
-            <Button size="sm" className="bg-secondary text-black font-bold hover:bg-slate-200">
-              <Link to="/signup">SIGNUP</Link>
-            </Button>
-            <Button size="sm" className="bg-secondary text-black font-bold hover:bg-slate-200 ml-2">
-              <Link to="/lawyer/signup" className="uppercase">Become a Lawyer</Link>
-            </Button>
-          </div>
+
+          {!userInfo ? (
+            <div>
+              <Link to="/signup">
+                <Button size="sm" className="bg-secondary text-black font-bold hover:bg-slate-200">
+                  SIGNUP
+                </Button>
+              </Link>
+              <Link to="/lawyer/signup" className="uppercase ml-2">
+                <Button size="sm" className="bg-secondary text-black font-bold hover:bg-slate-200">
+                  Become a Lawyer
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            <div>
+              {/* Add any additional content for logged-in users here */}
+              <Button size="sm" className="bg-secondary text-black font-bold hover:bg-slate-200">
+                Welcome, {userInfo?.userName}
+              </Button>
+            </div>
+          )}
         </div>
       )}
+
     </nav>
   );
 });

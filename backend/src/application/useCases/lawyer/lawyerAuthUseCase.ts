@@ -385,7 +385,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         }
         console.log("existingUser._id", existUser._id);
         const newJwtAccessToken = this.jwt.generateToken(
-          existUser,
+          existUser._id,
           UserRole.Lawyer
         );
         return {

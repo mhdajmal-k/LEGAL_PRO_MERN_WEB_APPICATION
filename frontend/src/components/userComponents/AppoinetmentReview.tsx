@@ -124,8 +124,8 @@ export const AppointmentDetails: React.FC<AppointmentReviewProps> = ({ appointme
 
     return (
 
-        <div className="container mx-auto min-h-screen p-4 md:p-6 lg:p-8 sm:max-w-4xl">
-            <h1 className="text-3xl font-bold mb-6">Appointment Details</h1>
+        <div className="container mx-auto my-6 sm:min-h-screen max-w-sm p-4 md:p-6 lg:p-8 sm:max-w-4xl">
+            <h1 className="text-3xl font-bold mb-6 text-center">Appointment Details</h1>
             <div className="flex flex-col md:flex-row gap-4">
 
                 <Card className="w-full md:w-1/2 h-full">

@@ -1,4 +1,3 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
@@ -9,9 +8,10 @@ import { ThemeProvider } from "@material-tailwind/react";
 import { Toaster } from 'sonner';
 import ErrorBoundary from './components/erroBoundary.tsx';
 import { PersistGate } from 'redux-persist/integration/react';
+import { SocketProvider } from './contextAPI/useSocket.tsx';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  <SocketProvider>
     <ErrorBoundary>
       <Provider store={Store}>
         <PersistGate persistor={persistor}>
@@ -24,5 +24,5 @@ createRoot(document.getElementById('root')!).render(
         </PersistGate>
       </Provider>
     </ErrorBoundary>
-  </StrictMode>,
+  </SocketProvider>,
 )

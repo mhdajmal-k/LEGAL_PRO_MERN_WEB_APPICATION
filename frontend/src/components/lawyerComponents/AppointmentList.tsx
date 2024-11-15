@@ -18,7 +18,7 @@ const AppointmentListLawyerSide: React.FC<AppointmentListProps> = ({ userType })
     const [totalPages, setTotalPages] = useState<number>(1);
     const [appointmentsPerPage] = useState<number>(4);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [status, setStatus] = useState<string>("Pending");
+    const [status, setStatus] = useState<string>("Confirmed");
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate()
     const fetchAppointments = async (page: number) => {

@@ -37,7 +37,7 @@ const ViewLawyerProfile: React.FC<LawyerProfile> = ({ id }) => {
     }, [dispatch, id]);
 
     return (
-        <div className="sm:max-w-3xl md:max-w-5xl my-16 container h-auto mx-auto p-4 sm:p-6 md:p-8 bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="sm:max-w-3xl max-w-sm  md:max-w-5xl my-16 container h-auto mx-auto sm:p-6 md:p-8 bg-white shadow-lg rounded-lg overflow-hidden ">
             <div className="flex flex-col sm:flex-row items-center justify-center">
 
                 <div className="w-full sm:w-1/3 p-4">
