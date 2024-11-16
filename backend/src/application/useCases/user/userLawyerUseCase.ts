@@ -4,11 +4,18 @@ import IUsersLawyerInteractor from "../../../domain/entites/iuseCase/IUserLawyer
 import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 import { ILawyer, LawyerQuery } from "../../../domain/entites/imodels/iLawyer";
 import { IUpdateResponse } from "../../../domain/entites/imodels/iUserProfle";
+import IUserAppointmentRepository from "../../../domain/entites/irepositories/IUserAppointmentRepository";
+import {
+  HttpStatusCode,
+  MessageError,
+} from "../../../frameWorks/utils/helpers/Enums";
+import { IReview } from "../../../domain/entites/imodels/iReview";
 
 class UserLawyerInteractor implements IUsersLawyerInteractor {
   constructor(
     private readonly Repository: IUserLawyerRepository,
-    private readonly s3Service: IS3Service
+    private readonly s3Service: IS3Service,
+    private readonly AppointmentRepository: IUserAppointmentRepository
   ) {}
   async getVerifiedLawyers(
     currentPage: number,
@@ -29,7 +36,7 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
       );
       if (!getVerifiedLawyers) {
         const error: CustomError = new Error();
-        error.message = "Incorrect Password";
+        error.message = "Error Fetching";
         error.statusCode = 400;
         throw error;
       }
@@ -125,6 +132,77 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         },
         status: true,
         statusCode: 200,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async creatingLawyerReview(
+    appointmentId: string,
+    rating: number,
+    review: string
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }> {
+    try {
+      const validAppointmentId =
+        await this.AppointmentRepository.getAppointmentById(appointmentId);
+      if (!validAppointmentId) {
+        const error: CustomError = new Error(MessageError.AppointmentNotFound);
+        error.statusCode = HttpStatusCode.NotFound;
+        throw error;
+      }
+      const addReview = await this.Repository.createRating(
+        validAppointmentId.lawyerId._id,
+        String(validAppointmentId.userId),
+        rating,
+        review
+      );
+      if (!addReview) {
+        const error: CustomError = new Error(MessageError.ServerError);
+        error.statusCode = HttpStatusCode.InternalServerError;
+        throw error;
+      }
+      return {
+        message: "Review Added SuccessFully",
+        result: "",
+        status: true,
+        statusCode: HttpStatusCode.OK,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getLawyerReview(
+    lawyerId: string,
+    currentPage: number,
+    limit: number
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IReview[];
+  }> {
+    try {
+      const getReviews = await this.Repository.getReview(
+        lawyerId,
+        currentPage,
+        limit
+      );
+      if (!getReviews) {
+        const error: CustomError = new Error();
+        error.message = "Error Fetching";
+        error.statusCode = 400;
+        throw error;
+      }
+      return {
+        message: "Review Added SuccessFully",
+        result: getReviews,
+        status: true,
+        statusCode: HttpStatusCode.OK,
       };
     } catch (error) {
       throw error;

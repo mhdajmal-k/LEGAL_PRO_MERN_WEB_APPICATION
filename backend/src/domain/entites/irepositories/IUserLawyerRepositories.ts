@@ -1,4 +1,5 @@
 import { LawyerQuery } from "../imodels/iLawyer";
+import { IReview } from "../imodels/iReview";
 
 interface IUserLawyerRepository {
   getVerifiedLawyers(
@@ -16,6 +17,17 @@ interface IUserLawyerRepository {
     specificSlotId: string,
     status: boolean
   ): Promise<any>;
+  createRating(
+    lawyerId: string,
+    userId: string,
+    rating: number,
+    review: string
+  ): Promise<any>;
+  getReview(
+    lawyerId: string,
+    currentPage: number,
+    limit: number
+  ): Promise<IReview[]>;
 }
 
 export default IUserLawyerRepository;

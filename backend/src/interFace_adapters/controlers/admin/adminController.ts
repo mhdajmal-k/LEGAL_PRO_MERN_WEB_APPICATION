@@ -248,6 +248,22 @@ class AdminController {
           result: response.result,
         });
       }
+    } catch (error) {}
+  }
+  async getStaticsData(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const response = await this.adminInteractor.getAllCounts();
+      if (response.status) {
+        return res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
     } catch (error) {
       next(error);
     }

@@ -1,5 +1,6 @@
 import { IUser } from "../../../domain/entites/imodels/Iuser";
 import { ILawyer, LawyerQuery } from "../imodels/iLawyer";
+import { IReview } from "../imodels/iReview";
 import { IProfileUpdateData, IUpdateResponse } from "../imodels/iUserProfle";
 
 interface IUsersLawyerInteractor {
@@ -20,6 +21,26 @@ interface IUsersLawyerInteractor {
     status: boolean;
     message: string;
     result: string | {};
+  }>;
+  creatingLawyerReview(
+    appointmentId: string,
+    rating: number,
+    review: string
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }>;
+  getLawyerReview(
+    lawyerId: string,
+    currentPage: number,
+    limit: number
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IReview[];
   }>;
 }
 export default IUsersLawyerInteractor;

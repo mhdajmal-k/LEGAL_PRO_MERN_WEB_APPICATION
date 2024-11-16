@@ -88,7 +88,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
 
         const uploadPromise = await this.s3Service.uploadFile(file, key);
       }
-      const convenienceFee = Math.ceil(fee * 0.03);
+      const convenienceFee = Math.ceil(fee * Number(config.CONVINEANCEFEE));
       const subTotal = Number(convenienceFee) + Number(fee);
 
       const createdAppointment =
@@ -211,10 +211,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         error.statusCode = HttpStatusCode.Forbidden;
         throw error;
       }
-      // console.log(
-      //   validSlot,
-      //   "is the valid slot 888888888888888888888888888888888888888888888888888888888888888"
-      // );
       const specificSlotId = appointment.appointmentTime;
       const specificSlot =
         await this.UserLawyerRepository.getSlotBySpecifSlotId(
@@ -233,7 +229,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         const newSpecifSlotId = specificSlot.availability[0]._id;
         const newConvenienceFee = Math.ceil(newConsolationFee * 0.03);
         const subTotal = Number(newConvenienceFee) + Number(newConsolationFee);
-        // console.log(subTotal, "is the subtotal");
         const updateAppointment =
           await this.AppointmentRepository.updateConsultationFee(
             appointmentId,
@@ -331,7 +326,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       console.log(
         `Appointment ${PendingPaymentAppointment?._id} was cancelled due to payment timeout.`
       );
-    }, 2 * 60 * 1000);
+    }, 5 * 60 * 1000);
   }
 
   //////verify Payment
@@ -356,7 +351,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       if (expectedSign !== razorpay_signature) {
         throw new Error("Invalid payment Done");
       }
-      console.log(razorpay_order_id);
       const updatedAppointment =
         await this.AppointmentRepository.updateAppointmentStatus(
           appointmentId,
@@ -526,6 +520,51 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       throw error;
     }
   }
+  async cancellingAppointmentWithOutRefund(appointmentId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }> {
+    try {
+      const getAppointment =
+        await this.AppointmentRepository.getAppointmentById(appointmentId);
+      if (!getAppointment) {
+        const error: CustomError = new Error(MessageError.AppointmentNotFound);
+        error.statusCode = HttpStatusCode.NotFound;
+        throw error;
+      }
+
+      const canceledAppointment =
+        await this.AppointmentRepository.cancelAppointmentById(
+          appointmentId,
+          "",
+          "Cancelled"
+        );
+      const slot = canceledAppointment?.slotId;
+      const bookedSpecificSlot = canceledAppointment?.appointmentTime;
+      const updateSlot =
+        await this.UserLawyerRepository.updateStatusSlotBySpecifSlotId(
+          slot as string,
+          bookedSpecificSlot as string,
+          false
+        );
+      if (!updateSlot) {
+        const error: CustomError = new Error(MessageError.SlotNotFound);
+        error.statusCode = HttpStatusCode.NotFound;
+        throw error;
+      }
+      return {
+        statusCode: HttpStatusCode.OK,
+        status: true,
+        message: MessageError.cancelAppointment,
+        result: {},
+      };
+    } catch (error) {
+      console.log(error, "is the cancelling Appointment Error");
+      throw error;
+    }
+  }
 
   /////refund Function
 
@@ -606,6 +645,39 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         status: true,
         message: MessageError.paymentFiled,
         result: updatedAppointment,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async completeAppointment(appointmentId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }> {
+    try {
+      const getAppointment =
+        await this.AppointmentRepository.getAppointmentById(appointmentId);
+      if (!getAppointment) {
+        console.log("In here not found");
+        const error: CustomError = new Error(MessageError.AppointmentNotFound);
+        error.statusCode = HttpStatusCode.NotFound;
+        throw error;
+      }
+      console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+      const updatedAppointment =
+        await this.AppointmentRepository.updateAppointmentStatus(
+          appointmentId,
+          "",
+          "Completed",
+          "Success"
+        );
+      return {
+        statusCode: HttpStatusCode.OK,
+        status: true,
+        message: MessageError.AppointmentCompleted,
+        result: "",
       };
     } catch (error) {
       throw error;

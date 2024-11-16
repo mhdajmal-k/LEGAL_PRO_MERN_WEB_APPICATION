@@ -284,6 +284,36 @@ class AppointmentController {
       next(error);
     }
   }
+  async cancelAppointmentWithOutFee(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { appointmentId } = req.params;
+
+      if (!appointmentId) {
+        return res.status(HttpStatusCode.BadRequest).json({
+          status: false,
+          message: MessageError.BadPrams,
+          result: {},
+        });
+      }
+      const response =
+        await this.UserAppointmentInteractor.cancellingAppointmentWithOutRefund(
+          appointmentId
+        );
+      if (response.status) {
+        return res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 
   ///////////////////////
 
@@ -305,6 +335,35 @@ class AppointmentController {
         await this.UserAppointmentInteractor.getCancelledRefundStatus(
           appointmentId
         );
+      if (response.status) {
+        return res.status(response.statusCode).json({
+          status: response.status,
+          message: response.message,
+          result: response.result,
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async completedAppointment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { appointmentId } = req.params;
+      console.log(appointmentId, "isn the compleat appointment");
+      if (!appointmentId) {
+        return res.status(HttpStatusCode.BadRequest).json({
+          status: false,
+          message: MessageError.BadPrams,
+          result: {},
+        });
+      }
+      const response = await this.UserAppointmentInteractor.completeAppointment(
+        appointmentId
+      );
       if (response.status) {
         return res.status(response.statusCode).json({
           status: response.status,

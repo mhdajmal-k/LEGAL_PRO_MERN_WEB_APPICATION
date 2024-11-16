@@ -83,6 +83,12 @@ interface IAdminInteractor {
     message: string;
     result: string | {};
   }>;
+  getAllCounts(): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: any;
+  }>;
 }
 
 export default IAdminInteractor;

@@ -440,5 +440,33 @@ class AdminInteractor implements IAdminInteractor {
       throw error;
     }
   }
+  async getAllCounts(): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: any;
+  }> {
+    try {
+      const countDocuments = await this.Repository.getTotalCountOfAppointment(
+        "Confirmed"
+      );
+      const totalLawyers = await this.Repository.getTotalCount("lawyer");
+      const totalUsers = await this.Repository.getTotalCount("user");
+      const result = {
+        totalLawyers: totalLawyers,
+        countDocuments: countDocuments,
+        totalUsers: totalUsers,
+      };
+      console.log(result, "is the stats result");
+      return {
+        statusCode: HttpStatusCode.OK,
+        status: true,
+        message: "",
+        result,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export default AdminInteractor;

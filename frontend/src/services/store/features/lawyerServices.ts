@@ -397,6 +397,7 @@ export const LawyerCancelAppointmentDataById = createAsyncThunk(
     }
   }
 );
+
 export const lawyerLogOut = createAsyncThunk(
   "user/lawyerLogOut",
   async (_, { rejectWithValue }) => {

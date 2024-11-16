@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 export const config = {
   PORT: process.env.PORT || 3002,
+  CONVINEANCEFEE: process.env.CONVINEANCEFEE,
   DB_URL: process.env.DATABASE_URL || "",
   JWT_SECRET: process.env.JWT_SECRET || "your_jwt_secret",
   JWT_REFRESH_SECRET:

@@ -4,7 +4,7 @@ import { AppDispatch } from '../../services/store/store';
 import { Appointment } from '../../utils/type/Appointment';
 import CustomToast from '../../components/userComponents/CustomToast';
 import { toast } from 'sonner';
-import { cancelAppointmentDataById, fetchAppointmentDataById, fetchRefundStatus } from '../../services/store/features/userServices';
+import { cancelAppointmentDataById, cancelingAppointmentWithOurFeeDById, fetchAppointmentDataById, fetchRefundStatus } from '../../services/store/features/userServices';
 import { Button, Card, CardBody, CardHeader } from '@nextui-org/react';
 import { Clock, IndianRupee, User, X, Video, CheckCircle, AlertCircle } from 'lucide-react';
 import { SlCalender } from "react-icons/sl";
@@ -18,15 +18,24 @@ interface ViewOneAppointmentProps {
 }
 
 const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }) => {
+    const [isCallAllowed, setIsCallAllowed] = useState(false);
     const [appointment, setAppointments] = useState<Appointment>();
     const [refundStatus, setRefundStatus] = useState<any>();
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate()
     const [showVideoCall, setShowVideoCall] = useState(false);
-    const socket = useSocket();
+    const { socket } = useSocket();
 
     const handleVideoCallClick = () => {
-        // socket?.emit("joinChatRoom", appointment?._id);
+        // if (!isCallAllowed) {
+        //     toast(
+        //         <CustomToast
+        //             message="Video call is only available 5 minutes before and up to 1 hour minutes after the scheduled time"
+        //             type="error"
+        //         />
+        //     );
+        //     return;
+        // }
 
         socket?.emit("joinRoom", AppointmentId);
         setShowVideoCall(true)
@@ -54,31 +63,74 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
         const currentTime = Date.now();
         const oneHourInMs = 60 * 60 * 1000;
         if (appointmentTime - currentTime <= oneHourInMs) {
+            // Case: Cancellation within 1 hour of appointment time
             toast(
-                <span className="text-yellow-700">
-                    <strong>Reminder:</strong> Cancellations are not allowed within 1 hour of the consultation time.
-                </span>,
+                <div>
+                    <p className="text-yellow-700">
+                        <strong>Reminder:</strong> Cancellations are not allowed within 1 hour of the consultation time If you go On you will did not get refund.
+                    </p>
+                    <div className="flex space-x-2 mt-3">
+                        <button
+                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md"
+                            onClick={async () => {
+                                const response = await dispatch(cancelingAppointmentWithOurFeeDById(appointmentId)).unwrap();
+                                if (response.status) {
+                                    toast(
+                                        <CustomToast
+                                            message={response.message || "Cancellation successful. No charges applied."}
+                                            type="success"
+                                        />
+                                    );
+                                    fetchAppointment(appointmentId); // Fetch updated appointments
+                                } else {
+                                    toast(
+                                        <CustomToast
+                                            message={response.message || "Error processing cancellation"}
+                                            type="error"
+                                        />
+                                    );
+                                }
+                            }}
+                        >
+                            Confirm - No Refund
+                        </button>
+                        <button
+                            className="bg-gray-300 text-gray-700 px-3 py-1 rounded-md"
+                            onClick={() => toast.dismiss()}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>,
                 { duration: 3000 }
             );
             return;
         }
-        toast(
-            <div >
-                <p>Are you sure you want  Cancel this Appointment?</p>
-                <div className="flex space-x-2 mt-3 ">
-                    <button
-                        className=" bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md"
-                        onClick={async () => {
 
+
+        toast(
+            <div>
+                <p>Are you sure you want to cancel this appointment?</p>
+                <div className="flex space-x-2 mt-3">
+                    <button
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md"
+                        onClick={async () => {
                             const response = await dispatch(cancelAppointmentDataById(appointmentId)).unwrap();
                             if (response.status) {
-                                toast(<CustomToast message={response.message || 'Error fetching appointments'} type="success" />);
-                                fetchAppointment(AppointmentId);
-
-
+                                toast(
+                                    <CustomToast
+                                        message={response.message || "Appointment canceled successfully."}
+                                        type="success"
+                                    />
+                                );
+                                fetchAppointment(appointmentId); // Fetch updated appointments
                             } else {
-                                toast(<CustomToast message={response.message || 'Error fetching appointments'} type="error" />);
-
+                                toast(
+                                    <CustomToast
+                                        message={response.message || "Error canceling appointment."}
+                                        type="error"
+                                    />
+                                );
                             }
                         }}
                     >
@@ -92,12 +144,9 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
                     </button>
                 </div>
             </div>,
-            {
-                duration: 2000,
-            }
+            { duration: 2000 }
         );
-
-    }
+    };
     async function handileRefundStatus(appointmentId: string | undefined) {
 
         try {
@@ -119,8 +168,7 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
             {showVideoCall ? (
                 <VideoCallPage
                     appointmentId={appointment?._id}
-                    // lawyerId={appointment?.lawyerId?._id}
-                    userId={appointment?.userId?._id?.toString()}
+                    who="user"
 
                 />
             ) : (
@@ -128,7 +176,7 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
                 <div> <h1 className="text-3xl font-bold text-center mb-5">Appointment Details</h1>
 
 
-                    <div className="flex flex-col md:flex-row gap-5 items-start">
+                    <div className="flex flex-col sm:flex-row md:flex-row  gap-5 items-start">
                         <div className="w-full md:w-2/3 mx-auto">
                             <Card className="w-full shadow-lg rounded-lg overflow-hidden">
                                 <CardHeader className="bg-primary p-4">
@@ -164,20 +212,23 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
                                         <div className="flex items-start w-3/5 ">
                                             <div className="w-2/3">
                                                 <div className="mb-2">
-                                                    <User className="inline-block mr-2 h-5 w-5 text-gray-600" />
+                                                    {/* <User className="inline-block mr-2 h-5 w-5 text-gray-600" /> */}
+                                                    <div>
+
+                                                        <img
+                                                            src={appointment?.lawyerId?.profile_picture || '/placeholder.png'}
+                                                            alt="Lawyer profile"
+                                                            className=" w-/4"
+                                                        />
+                                                    </div>
+
+
                                                     <span className="text-lg font-semibold">Advocate: {appointment?.lawyerId?.userName || 'N/A'}</span>
                                                 </div>
                                                 <div className='mb-4 ml-6'>
                                                     <h5 className="text-gray-500">{appointment?.lawyerId?.designation || 'Designation not available'}</h5>
                                                     <p className="text-gray-500">{appointment?.lawyerId?.city}, {appointment?.lawyerId?.state}</p>
 
-                                                    <div className="w-1/3 ">
-                                                        <img
-                                                            src={appointment?.lawyerId?.profile_picture || '/placeholder.png'}
-                                                            alt="Lawyer profile"
-                                                            className="rounded-lg  object-cover h-[80%]"
-                                                        />
-                                                    </div>
 
                                                 </div>
                                             </div>
@@ -189,23 +240,25 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
                                             <h6>         {appointment?.description || ''}</h6>
                                         </div>
 
-                                        <div className=" items-center sm:flex-row sm:flex justify-between">
+                                        <div className=" items-center lg:flex-row lg:flex justify-between">
                                             <div className='m-6'>
                                                 <span className="text-lg font-semibold">Total:</span>
                                                 <span className="text-2xl font-bold text-gray-800">   ₹{appointment?.subTotal || 'N/A'}</span>
                                             </div>
 
 
-                                            {appointment?.status !== "Cancelled" ? (<div className=' flex flex-col sm:flex sm:flex-row gap-3 sm:gap-6' >
-                                                <Button className='bg-red-700 text-white rounded-md' onClick={() => handileCancel(appointment?._id)}>     <X className="h-4 w-4" />Cancel Appointment
-                                                </Button>
+                                            {appointment?.status !== "Cancelled" ? (<div className=' flex flex-col lg:flex lg:flex-row gap-3 lg:gap-6' >
                                                 <div className=' flex flex-col gap-3 sm:flex sm:flex-row sm:gap-6'>
+                                                    <Button className='bg-red-700 text-white rounded-md' onClick={() => handileCancel(appointment?._id)}>     <X className="h-4 w-4" />Cancel Appointment
+                                                    </Button>
 
-                                                    <Button className='bg-green-700 px-10 rounded-md' onClick={handleVideoCallClick}>
+
+                                                    <Button className='bg-green-700 px-10 rounded-md disabled' onClick={handleVideoCallClick}>
                                                         <Video className="h-4 w-4" />Make Call
                                                     </Button>                                        </div>
                                             </div>) :
                                                 (<div>
+
                                                     {refundStatus ?
                                                         (
                                                             <div className="space-y-4">

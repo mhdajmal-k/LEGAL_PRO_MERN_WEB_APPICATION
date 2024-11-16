@@ -3,7 +3,10 @@ import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 import IUsersLawyerInteractor from "../../../domain/entites/iuseCase/IUserLawyerList";
 import mongoose from "mongoose";
 import { LawyerQuery } from "../../../domain/entites/imodels/iLawyer";
-import { HttpStatusCode } from "../../../frameWorks/utils/helpers/Enums";
+import {
+  HttpStatusCode,
+  MessageError,
+} from "../../../frameWorks/utils/helpers/Enums";
 
 class UserLawyerController {
   constructor(private UserLawyerInteractor: IUsersLawyerInteractor) {}
@@ -137,6 +140,68 @@ class UserLawyerController {
           result: response.result,
         });
       }
+    } catch (error) {
+      next(error);
+    }
+  }
+  async createReview(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      let { id } = req.params;
+      console.log(id, "is the params");
+      let { rating, review } = req.body;
+      if (!id) {
+        return res.status(HttpStatusCode.OK).json({
+          status: false,
+          message: MessageError.BadPrams,
+          result: {},
+        });
+      }
+      const response = await this.UserLawyerInteractor.creatingLawyerReview(
+        id,
+        rating,
+        review
+      );
+      res.status(response.statusCode).json({
+        status: response.status,
+        message: response.message,
+        result: response.result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getReviews(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      console.log("hi in the getReviews");
+      let { id } = req.params;
+
+      const { page = 1, limit = 10 } = req.query;
+      if (!id) {
+        return res.status(HttpStatusCode.OK).json({
+          status: false,
+          message: MessageError.BadPrams,
+          result: {},
+        });
+      }
+      const response = await this.UserLawyerInteractor.getLawyerReview(
+        id,
+        Number(String(page)),
+        Number(String(limit))
+      );
+      console.log(response, "in the revewis ");
+      res.status(response.statusCode).json({
+        status: response.status,
+        message: response.message,
+        result: response.result,
+      });
     } catch (error) {
       next(error);
     }

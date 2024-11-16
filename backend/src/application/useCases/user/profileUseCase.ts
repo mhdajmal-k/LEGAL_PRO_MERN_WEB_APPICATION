@@ -70,8 +70,10 @@ class userProfileInteractor implements IUserProfileInteractor {
     prompt: string
   ): Promise<{ status: boolean; message: string; result: string }> {
     try {
+      console.log("in the ai search ser");
       const response = await run(prompt);
-      const filteredResult = response.replace(/\*\*(.*?)\*\*/g, "$1");
+      console.log("ai response", response);
+      const filteredResult = response?.replace(/\*\*(.*?)\*\*/g, "$1");
       return {
         status: true,
         message: "",

@@ -13,10 +13,14 @@ import {
   FETCHONEAPPOINTMENT,
   FORGOTPASSWORD,
   GETAPPOINTMENT,
+  GETREVIEWANDRATING,
   GOOGLESIGNUP,
+  POSTREVIEWANDRATING,
   RESENDOTP,
   RESETFORGOTPASSWORD,
   RESETPASSWORD,
+  UPDATEAPPOINTMENTSTATUS,
+  UPDATEAPPOINTMENTWITHOUTFEE,
   UPDATEPROFILEDATA,
   USERLOGIN,
   USERLOGOUT,
@@ -432,6 +436,27 @@ export const cancelAppointmentDataById = createAsyncThunk(
     }
   }
 );
+export const cancelingAppointmentWithOurFeeDById = createAsyncThunk(
+  "user/cancelingAppointmentWithOurFeeDById",
+  async (appointmentId: string | undefined, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch(
+        `${UPDATEAPPOINTMENTWITHOUTFEE}/${appointmentId}`
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || error || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
 export const fetchRefundStatus = createAsyncThunk(
   "user/RefundStatus",
   async (appointmentId: string | undefined, { rejectWithValue }) => {
@@ -582,6 +607,82 @@ export const filedPayment = createAsyncThunk(
     try {
       const response = await axiosInstance.post<response>(
         `${FAILEDPAYMENT}/${appointmentId}`
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const PostReviewAndRating = createAsyncThunk(
+  "user/PostReviewAndRating",
+  async (
+    verifyData: {
+      appointmentId: string;
+      rating: number;
+      review: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const { appointmentId, rating, review } = verifyData;
+      const response = await axiosInstance.post(
+        `${POSTREVIEWANDRATING}/${appointmentId}`,
+        {
+          rating,
+          review,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || error || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const getReviews = createAsyncThunk(
+  "user/getReviews",
+  async (appointmentId: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get<response>(
+        `${GETREVIEWANDRATING}/${appointmentId}`
+      );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const updateAppointmentStatus = createAsyncThunk(
+  "user/updateAppointmentStatus",
+  async (appointmentId: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch<response>(
+        `${UPDATEAPPOINTMENTSTATUS}/${appointmentId}`
       );
       return response.data;
     } catch (error) {

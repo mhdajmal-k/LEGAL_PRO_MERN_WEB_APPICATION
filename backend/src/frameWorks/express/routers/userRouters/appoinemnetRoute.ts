@@ -47,11 +47,7 @@ appointmentRoute.get(
   authorization(UserRole.User),
   appointmentController.getAppointment.bind(appointmentController)
 );
-// appointmentRoute.get(
-//   "/view",
-//   // authorization("user"),
-//   appointmentController.verifyPayment.bind(appointmentController)
-// );
+
 appointmentRoute.post(
   "/createPayment",
   authorization(UserRole.User),
@@ -71,6 +67,16 @@ appointmentRoute.patch(
   "/:appointmentId",
   authorization(UserRole.User),
   appointmentController.cancelAppointment.bind(appointmentController)
+);
+appointmentRoute.patch(
+  "/cancelWithOutFee/:appointmentId",
+  authorization(UserRole.User),
+  appointmentController.cancelAppointmentWithOutFee.bind(appointmentController)
+);
+appointmentRoute.patch(
+  "/compleat/:appointmentId",
+  authorization(UserRole.User),
+  appointmentController.completedAppointment.bind(appointmentController)
 );
 appointmentRoute.get(
   "/checkRefundStatus/:appointmentId",

@@ -9,3 +9,4 @@ export const BLOCKANDUNBLOCK = "api/admin/blockandunblock";
 export const FETCHAPPOINTMENTS = "api/admin/appointments";
 export const ADMINLOGOUT = "/api/admin/logout";
 export const FETCHAPPOINTMENTDATA = "/api/admin/viewAppointment";
+export const FETCHASTATICSDATA = "/api/admin/statics";

@@ -37,6 +37,18 @@ export interface LawyerSignUpData {
   password?: string;
   image?: string;
 }
+export interface Review {
+  _id: string;
+  lawyerId: string;
+  rating: number;
+  userId: {
+    _id: string;
+    userName: string;
+  };
+  review: string;
+  createdAt: Date;
+  updatedAt: string;
+}
 
 export interface LawyerProfessionalData {
   practiceArea: string[] | any;

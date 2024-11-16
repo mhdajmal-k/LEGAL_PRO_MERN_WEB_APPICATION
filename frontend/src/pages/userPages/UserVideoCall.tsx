@@ -1,39 +1,52 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Button, Card, CardBody, Input } from "@nextui-org/react";
+import { Avatar, Button, Card, CardBody, Input } from "@nextui-org/react";
 import { Mic, MicOff, Video, VideoOff, PhoneOff, Send, PhoneIncoming } from 'lucide-react';
 import { useSocket } from "../../contextAPI/useSocket";
 import RingTone from "../../assets/RingTone.mp3"
 import { toast } from "sonner";
 import CustomToast from "../../components/userComponents/CustomToast";
+import AddReview from "../../components/ReviewPosting";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../services/store/store";
+import { cancelAppointmentDataById, updateAppointmentStatus } from "../../services/store/features/userServices";
 
 interface VideoCallPageProps {
     appointmentId: string | undefined;
-    userId: string | undefined;
+    who: string | undefined;
 }
 
-const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) => {
+const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => {
     const [isMuted, setIsMuted] = useState(false);
     const [isCameraOff, setIsCameraOff] = useState(false);
     const [socketId, setSocketId] = useState("");
     const [isTyping, setIsTyping] = useState<boolean>(false);
-    const [mySocketId, setMySocketId] = useState<string | undefined>("");
+    const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
+    const [appointmentStatusChanged, GetappointmentStatusChanged] = useState<boolean>(false);
     const [newMessage, setNewMessage] = useState("");
-    const [messages, setMessages] = useState<any[]>([]);
+    const [messages, setMessages] = useState<{ sender: string; message: string, time: string }[]>([]);
+    const dispatch: AppDispatch = useDispatch();
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
     const [isCallStarted, setIsCallStarted] = useState(false);
     const [incomingCall, setIncomingCall] = useState(false);
+    const [typing, setTyping] = useState(false);
+
+    const [WhoTyping, setWhoTyping] = useState("");
+    const navigate = useNavigate()
+
 
 
     const myVideo = useRef<HTMLVideoElement>(null);
     const userVideo = useRef<HTMLVideoElement>(null);
     const peerConnection = useRef<RTCPeerConnection | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
-    const socket = useSocket();
-
+    // const  = useSocket();
+    const { socket, currentSocketId } = useSocket();
 
 
     useEffect(() => {
+
         if (!socket) return;
 
         const initializeSocketEvents = () => {
@@ -44,7 +57,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
                 toast(<CustomToast message={"New contact online! You Can Call."} type="success" />, {
                     duration: 3000
                 });
-                alert(socketId)
+                // alert(socketId)
                 setSocketId(socketId)
             })
 
@@ -82,7 +95,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
             });
 
             socket.on("candidate", async ({ candidate }) => {
-                // alert("in candidate")
+
                 try {
                     if (peerConnection.current?.remoteDescription) {
                         await peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
@@ -93,10 +106,16 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
             });
 
             socket.on("message", (message: any) => {
-                setMessages(prev => [...prev, message]);
+                setMessages(prev => [...prev, { ...message, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
+                setTyping(false)
+                setIsTyping(false)
             });
-            socket.on("isTyping", () => {
-                console.log("is Typing working...")
+            socket.on("isTyping", (typingAction: any) => {
+                setTyping(true)
+                setWhoTyping(typingAction.sender)
+                // alert(WhoTyping)
+
+
             });
         };
 
@@ -110,6 +129,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
             socket.off("answer");
             socket.off("candidate");
             socket.off("message");
+            socket.off("isTyping");
             setIsCallStarted(false);
         };
     }, [socket,]);
@@ -142,7 +162,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
                     socket?.emit("candidate", {
                         roomId: appointmentId,
                         candidate: event.candidate,
-                        userId: socketId
+                        userId: currentSocketId
                     });
                 }
             };
@@ -155,6 +175,8 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
             };
 
         } catch (error) {
+            toast(<CustomToast message={"Oops! SomeThing Happened Try Again Later"} type="error" />)
+
             console.error("Error initializing peer connection:", error);
         }
     };
@@ -168,7 +190,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
             socket?.emit("offer", {
                 roomId: appointmentId,
                 offer,
-                userId: socketId
+                userId: currentSocketId
             });
 
             setIsCallStarted(true);
@@ -184,9 +206,9 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
             const answer = await peerConnection.current?.createAnswer();
 
             await peerConnection.current?.setLocalDescription(answer);
-            console.log("in the answerCall fn")
-            console.log(answer, "is the answer in the fn")
-            console.log(userId, "is the userId in the fn")
+            // console.log("in the answerCall fn")
+            // console.log(answer, "is the answer in the fn")
+            // console.log(userId, "is the userId in the fn")
             socket?.emit("answer", { roomId: appointmentId, answer, userId: socketId }); //userId: userId 
             setIncomingCall(false);
             setIsCallStarted(true);
@@ -213,12 +235,26 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
                                 peerConnection.current?.close();
                                 setStream(null);
                                 setRemoteStream(null);
-                                setIsCallStarted(false);
-                                await navigator.mediaDevices.getUserMedia({
-                                    video: false,
-                                    audio: false
-                                });
 
+
+                                toast.dismiss();
+                                if (!appointmentStatusChanged) {
+                                    const response = await dispatch(updateAppointmentStatus(String(appointmentId))).unwrap();
+                                    if (response.status) {
+                                        toast(<CustomToast message={response.message || 'Error fetching appointments'} type="success" />);
+                                        GetappointmentStatusChanged(true);
+
+
+                                    } else {
+                                        toast(<CustomToast message={response.message || 'Error fetching appointments'} type="error" />);
+
+                                    }
+                                }
+                                setIsCallStarted(false);
+                                setShowReviewModal(true)
+                                if (who == "lawyer") {
+                                    navigate("/lawyer")
+                                }
                             } catch (error: any) {
                                 toast(<CustomToast message={error.message} type="error" />);
                             }
@@ -262,33 +298,44 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
     };
 
     useEffect(() => {
-        if (newMessage.trim() == "") {
-            setIsTyping(false)
-        } else {
-            setIsTyping(true)
-        }
-        if (isTyping) {
-            socket?.emit("isTyping", {
-                roomId: appointmentId,
-            })
-        }
-    }, [newMessage]);
+        const debounce = setTimeout(() => {
+            if (newMessage.trim() == "") {
+                setIsTyping(false)
+                setTyping(false)
+            } else {
+                setIsTyping(true)
+            }
+            if (isTyping) {
+                socket?.emit("isTyping", {
+                    roomId: appointmentId,
+                    userId: socketId
+                })
+            }
+        }, 500);
+        return () => clearTimeout(debounce);
+    }, [newMessage, isTyping]);
 
     const sendMessage = () => {
         if (newMessage.trim()) {
             socket?.emit("message", {
                 roomId: appointmentId,
                 message: newMessage,
-                userId: mySocketId
+                userId: currentSocketId
             });
             setNewMessage("");
+            setTyping(false)
+            setIsTyping(false)
         }
     };
 
     return (
         <div className="container mx-auto p-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
                 <div className="lg:col-span-2 space-y-4">
+                    {showReviewModal && who == "user" && <AddReview isOpen={showReviewModal}
+                        onClose={() => setShowReviewModal(false)} appointmentId={appointmentId!}
+                    />}
                     <div className="relative w-full aspect-video bg-gray-900 rounded-lg overflow-hidden">
                         <video
                             ref={userVideo}
@@ -339,14 +386,42 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-md p-4 flex flex-col h-[600px]">
+                <div className="bg-gray-100 rounded-lg shadow-md p-4 flex flex-col h-[500px]">
                     <h2 className="text-xl font-semibold mb-4">Chat</h2>
                     <div className="flex-1 overflow-y-auto mb-4 space-y-2">
+
                         {messages.map((message, index) => (
-                            <div key={index} className={`p-2 rounded-lg ${message.sender != mySocketId ? "bg-gray-100" : "bg-gray-500"}`}>
-                                {message.message}
+                            <div key={index} className={`flex items-start mb-4 ${message.sender === currentSocketId ? 'justify-end' : ""}`}>
+                                {message.sender !== currentSocketId && (
+                                    <Avatar className="w-8 h-8 mr-2">
+                                        <span>you</span>
+                                        {/* <AvatarImage src="/placeholder-avatar.jpg" alt="User Avatar" />
+                                <AvatarFallback>U</AvatarFallback> */}
+                                    </Avatar>
+                                )}
+                                <div className={`rounded-lg px-3 pt-1  ${message.sender === currentSocketId ? 'bg-black text-white' : 'bg-white text-black'}`}>
+                                    <p className="text-sm">{message.message}</p>
+                                    <p className="text-sm">{message.time}</p>
+                                </div>
+                                {message.sender === currentSocketId && (
+                                    <div className="flex flex-col">   <Avatar className="w-8 h-8 ml-2">
+                                    </Avatar>
+                                        <span className="ml-2">You</span>
+                                    </div>
+
+                                )}
                             </div>
                         ))}
+                        {typing && (
+                            <div className={`flex items-start mb-4 ${WhoTyping !== currentSocketId ? 'justify-end' : 'justify-start'}`}>
+                                <Avatar className="w-8 h-8 mr-2">
+                                    <span>...</span>
+                                </Avatar>
+                                <div className="rounded-lg px-3 pt-1 bg-gray-200 text-black">
+                                    <p className="text-sm italic">typing...</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className="flex gap-2">
                         <Input
@@ -355,8 +430,8 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, userId }) 
                             placeholder="Type a message..."
                             onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
                         />
-                        <Button onClick={sendMessage}>
-                            <Send />
+                        <Button onClick={sendMessage} className="bg-black">
+                            <Send className="text-white text-xl" />
                         </Button>
                     </div>
                 </div>

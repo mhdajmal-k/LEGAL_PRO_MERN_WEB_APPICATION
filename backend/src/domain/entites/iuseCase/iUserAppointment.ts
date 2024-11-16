@@ -57,6 +57,12 @@ interface IUserAppointmentInteractor {
     message: string;
     result: string | {};
   }>;
+  cancellingAppointmentWithOutRefund(appointmentId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }>;
   filedPaymentAppointment(appointmentId: string): Promise<{
     statusCode: number;
     status: boolean;
@@ -64,6 +70,12 @@ interface IUserAppointmentInteractor {
     result: string | {};
   }>;
   getCancelledRefundStatus(appointmentId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }>;
+  completeAppointment(appointmentId: string): Promise<{
     statusCode: number;
     status: boolean;
     message: string;

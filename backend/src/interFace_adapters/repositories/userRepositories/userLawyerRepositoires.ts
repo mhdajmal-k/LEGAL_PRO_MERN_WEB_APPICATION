@@ -8,6 +8,8 @@ import {
   MessageError,
 } from "../../../frameWorks/utils/helpers/Enums";
 import { LawyerQuery } from "../../../domain/entites/imodels/iLawyer";
+import Review from "../../../frameWorks/database/models/reviews";
+import { IReview } from "../../../domain/entites/imodels/iReview";
 class UserLawyerRepositories implements IUserLawyerRepository {
   async getVerifiedLawyers(
     currentPage: number,
@@ -138,6 +140,47 @@ class UserLawyerRepositories implements IUserLawyerRepository {
       return updateSlot;
     } catch (error) {
       throw error;
+    }
+  }
+  async createRating(
+    lawyerId: string,
+    userId: string,
+    rating: number,
+    review: string
+  ): Promise<any> {
+    try {
+      const newReview = new Review({
+        lawyerId,
+        userId,
+        rating,
+        review,
+      });
+
+      await newReview.save();
+      return newReview;
+    } catch (error: any) {
+      throw error.message;
+    }
+  }
+  async getReview(
+    lawyerId: string,
+    currentPage: number,
+    limit: number
+  ): Promise<IReview[]> {
+    try {
+      console.log(lawyerId, "in the respo");
+      console.log(currentPage, "in the respo");
+      console.log(limit, "in the respo");
+      const reviews = await Review.find({ lawyerId })
+        .sort({ createdAt: -1 })
+        .skip((currentPage - 1) * limit)
+        .limit(limit)
+        .populate("userId", "userName profile_picture");
+
+      console.log(reviews, "in the repo");
+      return reviews;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 }

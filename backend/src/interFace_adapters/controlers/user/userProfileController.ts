@@ -92,7 +92,9 @@ class UserProfileController {
     next: NextFunction
   ): Promise<any> {
     try {
+      console.log("this is the ai serch");
       const { prompt } = req.body;
+      console.log(prompt, "is the prompt");
       if (!prompt) {
         const error: CustomError = new Error("Bad Request");
         error.statusCode = 400;

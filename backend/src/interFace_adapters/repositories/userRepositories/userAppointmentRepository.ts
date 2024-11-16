@@ -87,6 +87,8 @@ class UserAppointmentRepositories implements IUserAppointmentRepository {
     paymentStatus: string
   ): Promise<IAppointment | null> {
     try {
+      console.log(AppointmentStatus, "is the appointment Status");
+      console.log(paymentStatus, "is the appointment Status");
       const updateAppointment = await Appointment.findByIdAndUpdate(
         { _id: appointmentId },
         {

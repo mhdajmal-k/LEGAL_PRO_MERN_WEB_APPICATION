@@ -9,6 +9,8 @@ import { FaLocationDot } from "react-icons/fa6";
 import { Button, Skeleton } from '@nextui-org/react';
 import { FaHeart } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { ReviewCard } from './ReveiwsList';
+
 
 interface LawyerProfile {
     id: string | undefined;
@@ -17,10 +19,12 @@ interface LawyerProfile {
 const ViewLawyerProfile: React.FC<LawyerProfile> = ({ id }) => {
     const navigate = useNavigate()
     const dispatch: AppDispatch = useDispatch();
+    const [showReview, setShowReview] = useState<boolean>(false)
     const [lawyer, setLawyer] = useState<Lawyer | null>(null);
     const { loading } = useSelector((state: RootState) => state.user)
 
     useEffect(() => {
+
         const fetchLawyerData = async () => {
             if (id) {
                 try {
@@ -36,8 +40,10 @@ const ViewLawyerProfile: React.FC<LawyerProfile> = ({ id }) => {
         fetchLawyerData();
     }, [dispatch, id]);
 
+
+
     return (
-        <div className="sm:max-w-3xl max-w-sm  md:max-w-5xl my-16 container h-auto mx-auto sm:p-6 md:p-8 bg-white shadow-lg rounded-lg overflow-hidden ">
+        <div className="sm:max-w-md max-w-sm  md:max-w-3xl lg:max-w-5xl my-16 container h-auto mx-auto sm:p-6 md:p-8 bg-white shadow-lg rounded-lg overflow-hidden ">
             <div className="flex flex-col sm:flex-row items-center justify-center">
 
                 <div className="w-full sm:w-1/3 p-4">
@@ -145,16 +151,21 @@ const ViewLawyerProfile: React.FC<LawyerProfile> = ({ id }) => {
                             <Button className="bg-primary text-white px-4 py-2 rounded transition" onClick={() => navigate(`/slots/${id}`)}>
                                 Book a Consultant
                             </Button>
-                            <Button className="bg-primary text-white px-4 py-2 rounded">
-                                <FaHeart className="text-xl font-semibold text-secondary" />
-                            </Button>
-                            <Button className="bg-primary text-white px-4 py-2 rounded">
+                            <Button className="bg-primary text-white px-4 py-2 rounded" onClick={() => setShowReview((show) => !show)}>
                                 Review
                             </Button>
                         </div>
                     )}
                 </div>
+
+
             </div>
+            {showReview && <div className="  my-8">
+                <ReviewCard appointmentId={id} />
+
+            </div>}
+
+            {/* grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 */}
         </div>
     );
 };

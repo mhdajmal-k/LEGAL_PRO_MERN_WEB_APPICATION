@@ -11,6 +11,8 @@ export const CREATEAPPOINTMENT = "/api/user/appointment/";
 export const FETCHALLAPPOINTMENT = "/api/user/appointment/list";
 export const FETCHONEAPPOINTMENT = "/api/user/appointment/view";
 export const GETAPPOINTMENT = "/api/user/appointment/";
+export const UPDATEAPPOINTMENTWITHOUTFEE =
+  "/api/user/appointment/cancelWithOutFee";
 export const CHECKREFUNDSTATUS = "api/user/appointment/checkRefundStatus";
 export const FETCHLAWYERS = "/api/user/lawyers/";
 export const FETCHLAWYERSLOT = "/api/user/lawyers/slots";
@@ -20,3 +22,6 @@ export const VERIFYPAYMENT = "/api/user/appointment/VERIFYPAYMENT";
 export const FAILEDPAYMENT = "/api/user/appointment/FAILEDPAYMENT";
 export const RESETPASSWORD = "api/user/Profile/resetPassword";
 export const GOOGLESIGNUP = "/api/user/googlesignup";
+export const POSTREVIEWANDRATING = "/api/user/lawyers/review";
+export const GETREVIEWANDRATING = "/api/user/lawyers/reviews";
+export const UPDATEAPPOINTMENTSTATUS = "/api/user/appointment/compleat";

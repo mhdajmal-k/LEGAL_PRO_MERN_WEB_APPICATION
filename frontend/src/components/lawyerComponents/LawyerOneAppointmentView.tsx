@@ -17,11 +17,12 @@ interface ViewOneAppointmentProps {
 }
 
 const ViewOneAppointmentDetails: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }) => {
-    const socket = useSocket();
+    const { socket } = useSocket();
     const [appointment, setAppointments] = useState<Appointment>();
     const dispatch: AppDispatch = useDispatch();
     const [showVideoCall, setShowVideoCall] = useState(false);
     const handleVideoCallClick = () => {
+        console.log(socket)
         socket?.emit("joinRoom", AppointmentId);
         setShowVideoCall(true)
     }
@@ -100,7 +101,7 @@ const ViewOneAppointmentDetails: React.FC<ViewOneAppointmentProps> = ({ Appointm
                 <VideoCallPage
                     appointmentId={appointment?._id}
                     // lawyerId={appointment?.lawyerId?._id}
-                    userId={appointment?.userId?._id?.toString()}
+                    who="lawyer"
                 // videoCallLink={appointment?.videoCallLink}
                 />
             ) : (<div>
@@ -170,26 +171,22 @@ const ViewOneAppointmentDetails: React.FC<ViewOneAppointmentProps> = ({ Appointm
                                                 />
                                             </div>
                                         )}
-
                                     </div>
-
-                                    <div className=" items-center flex justify-between">
+                                    <div className="md:flex flex-col gap-2 justify-between">
                                         <div>
                                             <span className="text-lg font-semibold">Total:</span>
                                             <span className="text-2xl font-bold text-gray-800">   ₹{appointment?.consultationFee || 'N/A'}</span>
                                         </div>
+                                        {appointment?.status !== "Cancelled" ? (<div className='flex flex-col lg:flex lg:flex-row gap-3 lg:gap-6'>
+                                            <div className=' flex flex-col gap-3 sm:flex sm:flex-row sm:gap-6'>
 
-                                        {appointment?.status !== "Cancelled" ? <div className='flex gap-6'>
-                                            <Button className='bg-red-700 text-white rounded-md' onClick={() => handileCancel(appointment?._id)}>     <X className="h-4 w-4" />Cancel Appointment</Button>
-                                            <Button className='bg-green-700 px-10 rounded-md' onClick={handleVideoCallClick}>
-                                                <Video className="h-4 w-4" />Make Call
-                                            </Button>                                                                    </div> : (<div>
-                                                <h6>Appointment :<strong className='text-red-600'> {appointment?.status}</strong></h6>
-                                            </div>)}
-
-
+                                                <Button className='bg-red-700 text-white rounded-md' onClick={() => handileCancel(appointment?._id)}>     <X className="h-4 w-4" />Cancel Appointment</Button>
+                                                <Button className='bg-green-700 px-10 rounded-md' onClick={handleVideoCallClick}>
+                                                    <Video className="h-4 w-4" />Make Call
+                                                </Button>                                                                    </div> </div>) : (<div>
+                                                    <h6>Appointment :<strong className='text-red-600'> {appointment?.status}</strong></h6>
+                                                </div>)}
                                     </div>
-
                                     <div className="text-right text-sm text-gray-500">
                                         Created on: {new Date(appointment?.createdAt || '').toLocaleString()}
                                     </div>
@@ -199,7 +196,6 @@ const ViewOneAppointmentDetails: React.FC<ViewOneAppointmentProps> = ({ Appointm
                     </div>
                 </div>
             </div>)}
-
         </div>
     );
 };

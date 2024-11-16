@@ -74,6 +74,11 @@ adminRouter.patch(
   authorization(UserRole.Admin),
   adminController.blockOrUnblock.bind(adminController)
 );
+adminRouter.get(
+  "/statics",
+  authorization(UserRole.Admin),
+  adminController.getStaticsData.bind(adminController)
+);
 adminRouter.delete(
   "/logout",
   adminController.adminLogOut.bind(adminController)

@@ -9,10 +9,16 @@ import UserLawyerController from "../../../../interFace_adapters/controlers/user
 import { S3Service } from "../../../config/s3Setup";
 import { authorization } from "../../../middleware/authMilddlewere";
 import { UserRole } from "../../../utils/helpers/Enums";
+import UserAppointmentRepositories from "../../../../interFace_adapters/repositories/userRepositories/userAppointmentRepository";
 const IS3Services = new S3Service();
 const repository = new UserLawyerRepositories();
+const appointmentRepository = new UserAppointmentRepositories();
 
-const interactor = new UserLawyerInteractor(repository, IS3Services);
+const interactor = new UserLawyerInteractor(
+  repository,
+  IS3Services,
+  appointmentRepository
+);
 
 const userLawyerController = new UserLawyerController(interactor);
 
@@ -29,4 +35,14 @@ userLawyerRoute.get(
   "/slots/:id",
   authorization(UserRole.User),
   userLawyerController.lawyerSlot.bind(userLawyerController)
+);
+userLawyerRoute.post(
+  "/review/:id",
+  authorization(UserRole.User),
+  userLawyerController.createReview.bind(userLawyerController)
+);
+userLawyerRoute.get(
+  "/reviews/:id",
+  // authorization(UserRole.User),
+  userLawyerController.getReviews.bind(userLawyerController)
 );

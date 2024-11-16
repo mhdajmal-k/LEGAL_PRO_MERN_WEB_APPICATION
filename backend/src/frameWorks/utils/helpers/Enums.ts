@@ -14,6 +14,7 @@ export enum MessageError {
   lawyerCancelAppointment = "Appointment Cancelled SuccessFully",
   PaymentSuccessFull = "Payment Created SuccessFull",
   paymentFiled = "Payment Filed Appointment was Cancelled ",
+  AppointmentCompleted = "Appointment Has been completed SuccessFully",
   RefundInitiatedFiled = "Refund initiation failed",
   InvalidPassword = "Invalid password",
   TokenExpired = "Token has expired",

@@ -49,6 +49,7 @@ export class S3Service implements IS3Service {
       throw error;
     }
   }
+
   async fetchFile(key: string): Promise<string> {
     try {
       const command = new GetObjectCommand({

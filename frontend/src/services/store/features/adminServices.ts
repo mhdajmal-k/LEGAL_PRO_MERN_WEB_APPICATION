@@ -11,6 +11,7 @@ import {
   BLOCKANDUNBLOCK,
   FETCHAPPOINTMENTDATA,
   FETCHAPPOINTMENTS,
+  FETCHASTATICSDATA,
   FETCHLAWYER,
   FETCHLAWYERS,
   FETCHPENDINGAPPROVALLAWYERS,
@@ -250,6 +251,25 @@ export const adminFetchAppointmentDataById = createAsyncThunk(
       const response = await axiosInstance.get(
         `${FETCHAPPOINTMENTDATA}/${appointmentId}`
       );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || error || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const getStaticData = createAsyncThunk(
+  "admin/getStaticData",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`${FETCHASTATICSDATA}`);
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
