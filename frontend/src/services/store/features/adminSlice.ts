@@ -37,7 +37,7 @@ const adminSlice = createSlice({
       .addCase(getUsers.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getUsers.fulfilled, (state, actions) => {
+      .addCase(getUsers.fulfilled, (state) => {
         // state.adminInfo = actions.payload.result;
         state.error = "";
         state.loading = false;

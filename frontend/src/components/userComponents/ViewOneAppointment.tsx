@@ -6,9 +6,9 @@ import CustomToast from '../../components/userComponents/CustomToast';
 import { toast } from 'sonner';
 import { cancelAppointmentDataById, cancelingAppointmentWithOurFeeDById, fetchAppointmentDataById, fetchRefundStatus } from '../../services/store/features/userServices';
 import { Button, Card, CardBody, CardHeader } from '@nextui-org/react';
-import { Clock, IndianRupee, User, X, Video, CheckCircle, AlertCircle } from 'lucide-react';
+import { Clock, IndianRupee, X, Video, CheckCircle, AlertCircle } from 'lucide-react';
 import { SlCalender } from "react-icons/sl";
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import VideoCallPage from '../../pages/userPages/UserVideoCall';
 import { useSocket } from '../../contextAPI/useSocket';
 
@@ -22,7 +22,7 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
     const [appointment, setAppointments] = useState<Appointment>();
     const [refundStatus, setRefundStatus] = useState<any>();
     const dispatch: AppDispatch = useDispatch();
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const [showVideoCall, setShowVideoCall] = useState(false);
     const { socket } = useSocket();
 
@@ -191,7 +191,7 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
 
             const response = await dispatch(fetchRefundStatus(appointmentId)).unwrap();
             if (response.status) {
-                console.log(response.result, "is the result")
+
                 setRefundStatus(response.result);
                 // toast(<CustomToast message={response.message || 'Error fetching appointments'} type="success" />);
 

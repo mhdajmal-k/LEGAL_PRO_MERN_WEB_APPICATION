@@ -24,7 +24,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
         // Set socketId when connection is established
         newSocket.on("connect", () => {
             if (newSocket.id) { // Ensure newSocket.id is defined
-                // alert(newSocket.id);
+
                 setSocketId(newSocket.id);
             }
         });

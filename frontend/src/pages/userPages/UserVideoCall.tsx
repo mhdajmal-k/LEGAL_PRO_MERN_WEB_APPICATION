@@ -27,7 +27,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
     const [messages, setMessages] = useState<{ sender: string; message: string, time: string }[]>([]);
     const dispatch: AppDispatch = useDispatch();
     const [stream, setStream] = useState<MediaStream | null>(null);
-    const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+    const [, setRemoteStream] = useState<MediaStream | null>(null);
     const [isCallStarted, setIsCallStarted] = useState(false);
     const [incomingCall, setIncomingCall] = useState(false);
     const [typing, setTyping] = useState(false);
@@ -61,10 +61,6 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
                 setSocketId(socketId)
             })
 
-            // socket.on("userJoined", (newUserId: string) => {
-            //     alert("hi")
-            //     console.log(`User joined: ${newUserId}`);
-            // });
 
             socket.on("offer", async ({ offer, userId }) => {
 
@@ -214,9 +210,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
             const answer = await peerConnection.current?.createAnswer();
 
             await peerConnection.current?.setLocalDescription(answer);
-            // console.log("in the answerCall fn")
-            // console.log(answer, "is the answer in the fn")
-            // console.log(userId, "is the userId in the fn")
+
             socket?.emit("answer", { roomId: appointmentId, answer, userId: socketId }); //userId: userId 
             setIncomingCall(false);
             setIsCallStarted(true);

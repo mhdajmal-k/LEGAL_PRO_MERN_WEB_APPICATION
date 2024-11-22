@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import Logo from '../assets/images/logo.png';
 import { Button } from "@nextui-org/button";
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../services/store/store';
+import { useSelector } from 'react-redux';
+import { RootState, } from '../services/store/store';
 import { IoIosNotifications } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
 // import { Tooltip, Avatar } from "@nextui-org/react";
@@ -15,7 +15,7 @@ import { FaHeart } from "react-icons/fa";
 
 const AdminNavbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const dispatch: AppDispatch = useDispatch()
+    // const dispatch: AppDispatch = useDispatch()
     const { lawyerInfo } = useSelector((state: RootState) => state.lawyer)
     return (
         <nav className="bg-primary p-2 ">

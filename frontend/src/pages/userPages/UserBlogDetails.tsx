@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import AdminNavbar from '../../layout/AdminNavbar'
 import LegalFooter from '../../layout/footer'
 import ViewOneBlog from '../../components/ViewOneBlog'
 import { useParams } from 'react-router-dom'
@@ -9,8 +8,9 @@ import CustomToast from '../../components/userComponents/CustomToast'
 import { toast } from 'sonner'
 import { BlogType } from '../../utils/type/lawyerType'
 import { fetchOneBlogUserSide } from '../../services/store/features/userServices'
+import Navbar from '../../layout/Navbar'
 
-const ViewBlogUserSide = () => {
+const ViewBlogUserSide: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
     const { blogId } = useParams()
     const [blogs, setBlogs] = useState<BlogType>();
@@ -33,7 +33,7 @@ const ViewBlogUserSide = () => {
 
     return (
         <div>
-            <AdminNavbar />
+            <Navbar />
             <ViewOneBlog blogs={blogs} />
             <LegalFooter />
         </div>
