@@ -1,10 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosConfigue";
-import {
-  LawyerSignUpResponse,
-  LoginType,
-  response,
-} from "../../../utils/type/lawyerType";
+import { LoginType, response } from "../../../utils/type/lawyerType";
 import { AxiosError } from "axios";
 import {
   ADMINLOGOUT,
