@@ -13,7 +13,7 @@ import CommonPagination from '../Pagination'
 const LawyerBlogListing = () => {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     let [currentPage, setCurrentPage] = useState<number>(1);
-    const [totalPages, setTotalPages] = useState<number>(1);
+    // const [totalPages, setTotalPages] = useState<number>(1);
     const [lawyerPerPage] = useState<number>(6);
     const dispatch: AppDispatch = useDispatch();
     const [blogs, setBlogs] = useState<BlogType[]>([]);
@@ -177,7 +177,7 @@ const LawyerBlogListing = () => {
             {blogs.length > 0 && (
                 <div className='mt-10 flex justify-center'>
                     <CommonPagination
-                        totalPage={totalPages}
+                        totalPage={0}
                         initialPage={currentPage}
                         onChange={handlePageChange}
                     />

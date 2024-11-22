@@ -16,7 +16,7 @@ const UsersList: React.FC = () => {
     const [TotalUsers, setTotalUsers] = useState<number>(1);
     const [usersPerPage] = useState<number>(5);
     const [users, setUsers] = useState<any[]>([]);
-    const { userInfo } = useSelector((state: RootState) => state.user)
+    // const { userInfo } = useSelector((state: RootState) => state.user)
 
     const fetchUsers = async (page: number) => {
         try {
@@ -35,9 +35,9 @@ const UsersList: React.FC = () => {
         fetchUsers(currentPage);
     }, [dispatch, currentPage, usersPerPage]);
 
-    const refreshUsers = () => {
-        fetchUsers(currentPage);
-    };
+    // const refreshUsers = () => {
+    //     fetchUsers(currentPage);
+    // };
 
     const { loading, } = useSelector((state: RootState) => state.admin);
 

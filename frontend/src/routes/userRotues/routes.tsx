@@ -23,7 +23,7 @@ const AppointmentReviewAndPayment = lazy(() => import('../../pages/userPages/App
 const AppointmentSuccess = lazy(() => import('../../pages/userPages/AppoitnmentSuccess'));
 const AppointmentList = lazy(() => import('../../components/userComponents/Appoinement'));
 const ViewAppointment = lazy(() => import('../../pages/userPages/ViewAppontment'));
-const UserVideoCall = lazy(() => import('../../pages/userPages/UserVideoCall'));
+// const UserVideoCall = lazy(() => import('../../pages/userPages/UserVideoCall'));
 
 const UserRouters: React.FC = () => {
   return (

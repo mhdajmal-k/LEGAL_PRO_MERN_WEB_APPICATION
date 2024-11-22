@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse, ResponseType } from "axios";
+import axios from "axios";
 // import dotenv from "dotenv";
 // dotenv.config();
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -31,7 +31,6 @@ axiosInstance.interceptors.response.use(
             return axiosInstance(requestedApi);
           }
         } else if (error.response.data.result == "lawyer") {
-          // alert("lawyer accessToken");
           const response = await axiosInstance.post("/api/lawyer/refreshToken");
 
           if (response.status == 200) {
@@ -39,18 +38,14 @@ axiosInstance.interceptors.response.use(
           }
         }
       } catch (error: any) {
-        // alert(error);
-        // console.log(error);
-
         if (error?.response.data.result.user == "user") {
-          // alert("in the user accessToken");
         }
 
-        return Promise.reject(error);
+        return Promise.reject(error || error?.response.data.message);
       }
     }
 
-    return Promise.reject(error);
+    return Promise.reject(error || error?.response.data.message);
   }
 );
 

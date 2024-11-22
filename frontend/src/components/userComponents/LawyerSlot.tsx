@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import CustomToast from './CustomToast';
 import { createAppointment, getLawyerSlot } from '../../services/store/features/userServices';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FetchedSlotData, Lawyer, Slot, TimeSlot } from '../../utils/type/lawyerType';
+import { FetchedSlotData, Lawyer } from '../../utils/type/lawyerType';
 import { IoMdClose } from 'react-icons/io';
 import moment from 'moment';
 

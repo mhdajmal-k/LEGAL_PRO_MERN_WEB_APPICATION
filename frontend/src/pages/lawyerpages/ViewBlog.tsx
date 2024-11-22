@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 import { BlogType } from '../../utils/type/lawyerType'
 import { fetchOneBlog } from '../../services/store/features/lawyerServices'
 
-const ViewBlog = () => {
+const ViewBlog: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
     const { blogId } = useParams()
     const [blogs, setBlogs] = useState<BlogType>();

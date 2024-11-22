@@ -6,9 +6,9 @@ import { AppDispatch, RootState } from '../../services/store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from "react";
 import { blockandUnblock, getLawyer } from "../../services/store/features/adminServices";
-import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from '@nextui-org/react';
+import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, } from '@nextui-org/react';
 import CustomToast from "../userComponents/CustomToast";
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 import { logout } from "../../services/store/features/lawyerSlilce";
 interface LawyerTableListProps {
     columns: string[];
@@ -37,8 +37,6 @@ const LawyerTableList: React.FC<LawyerTableListProps> = ({ columns, data, onRefr
 
     async function handleBlockorUBlock(id: string, isCurrentlyBlocked: boolean): Promise<void> {
         const action = isCurrentlyBlocked ? 'Unblock' : 'Block';
-
-        // Show confirmation toast
         toast(
             <div >
                 <p>Are you sure you want to {action.toLowerCase()} this lawyer?</p>
@@ -81,7 +79,6 @@ const LawyerTableList: React.FC<LawyerTableListProps> = ({ columns, data, onRefr
 
     return (
         <div className="overflow-x-auto mx-auto sm:max-w-6xl shadow-md rounded-lg ">
-
             <table className="min-w-full border border-gray-200 divide-y divide-gray-200 bg-white">
                 <thead className="bg-gray-400 border-gray-300 text-white text-center">
                     <tr>

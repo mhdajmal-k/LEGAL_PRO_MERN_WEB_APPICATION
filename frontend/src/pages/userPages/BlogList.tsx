@@ -12,7 +12,7 @@ import CommonPagination from '../../components/Pagination'
 
 const Blogs: React.FC = () => {
     let [currentPage, setCurrentPage] = useState<number>(1);
-    const [totalPages, setTotalPages] = useState<number>(1);
+    // const [totalPages, setTotalPages] = useState<number>(1);
     const [lawyerPerPage] = useState<number>(6);
     const dispatch: AppDispatch = useDispatch();
     const [blogs, setBlogs] = useState<BlogType[]>([]);
@@ -27,7 +27,7 @@ const Blogs: React.FC = () => {
                     currentPage,
                     limit: lawyerPerPage,
                 })).unwrap();
-                alert(response)
+
                 setBlogs(response.result);
             } catch (error) {
                 console.error("Failed to fetch blogs:", error);
@@ -43,7 +43,7 @@ const Blogs: React.FC = () => {
             {blogs.length > 0 && (
                 <div className='mt- flex justify-center'>
                     <CommonPagination
-                        totalPage={totalPages}
+                        totalPage={0}
                         initialPage={currentPage}
                         onChange={handlePageChange}
                     />

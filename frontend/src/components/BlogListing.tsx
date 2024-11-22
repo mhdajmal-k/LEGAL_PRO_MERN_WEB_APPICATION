@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
 import { Button } from "@nextui-org/react";
 import { BlogType } from "../utils/type/lawyerType";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 interface BlogListingProps {

@@ -7,8 +7,8 @@ import { Appointment } from '../../utils/type/Appointment';
 import { fetchAppointmentDataById } from '../../services/store/features/userServices';
 import { AppDispatch } from '../../services/store/store';
 import CustomToast from './CustomToast';
-import { Calendar, Clock, IndianRupee, User, CheckCircle, MapPin } from 'lucide-react';
-import { Avatar, Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react';
+import { Calendar, Clock, IndianRupee, CheckCircle, MapPin } from 'lucide-react';
+import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/react';
 
 interface SuccessPaymentAppointmentProps {
     AppointmentId: string | undefined;

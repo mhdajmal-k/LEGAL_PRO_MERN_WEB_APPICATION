@@ -5,7 +5,6 @@ import { Button, Input, Textarea } from '@nextui-org/react';
 import { useFormik } from 'formik';
 import Select, { MultiValue } from "react-select";
 import { practiceAreas } from '../../utils/constants/PracticeAreas';
-import { lawyerProfileValidator } from '../../utils/validator/LawyerProfileProfessional';
 import { updateProfessionalData } from '../../services/store/features/lawyerServices';
 import CustomToast from '../userComponents/CustomToast';
 import { toast } from 'sonner';
@@ -19,7 +18,7 @@ interface OptionType {
 
 const LawyerProfile: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
-    const { lawyerInfo, error, loading } = useSelector((state: RootState) => state.lawyer);
+    const { lawyerInfo, } = useSelector((state: RootState) => state.lawyer);
     const [editMode, setEditMode] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null)
 

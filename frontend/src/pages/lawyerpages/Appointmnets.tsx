@@ -1,5 +1,4 @@
 import AppointmentListLawyerSide from "../../components/lawyerComponents/AppointmentList"
-import AppointmentListAdminSide from "../../components/lawyerComponents/AppointmentList"
 import AdminNavbar from "../../layout/AdminNavbar"
 import LegalFooter from "../../layout/footer"
 

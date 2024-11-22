@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { ArrowDownIcon, ArrowUpIcon, DollarSign, PlusIcon, SendIcon } from "lucide-react";
-import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, ScrollShadow } from "@nextui-org/react";
+import { ArrowDownIcon, ArrowUpIcon, } from "lucide-react";
+import { Card, CardBody, CardHeader, ScrollShadow } from "@nextui-org/react";
 import { WalletCards } from 'lucide-react';
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../services/store/store";
@@ -8,19 +8,12 @@ import { getWalletDetails } from "../services/store/features/userServices";
 import CustomToast from "./userComponents/CustomToast";
 import { toast } from "sonner";
 import { ITransaction } from "../utils/type/userType";
-// Mock data for recent transactions
-const recentTransactions = [
-    { id: 1, type: "received", amount: 150, from: "Alice", date: "2024-11-18" },
-    { id: 2, type: "sent", amount: 200, to: "Bob", date: "2024-11-17" },
-    { id: 3, type: "received", amount: 80, from: "Charlie", date: "2024-11-16" },
-    { id: 4, type: "sent", amount: 50, to: "David", date: "2024-11-15" },
-    { id: 5, type: "received", amount: 220, from: "Eve", date: "2024-11-14" },
-];
+
 
 export default function Wallet() {
     const [transactions, setTransactions] = useState<ITransaction[]>([]);
     const dispatch: AppDispatch = useDispatch();
-    const [balance, setBalance] = useState(0);
+    const [balance, setBalance] = useState<number>(0);
     useEffect(() => {
         async function getWalletAmountTransaction() {
             try {
@@ -85,11 +78,6 @@ export default function Wallet() {
                     </ScrollShadow>
                 </div>
             </CardBody>
-            {/* <CardFooter>
-                <Button className="w-full">
-                    View All Transactions
-                </Button>
-            </CardFooter> */}
         </Card>
     );
 }

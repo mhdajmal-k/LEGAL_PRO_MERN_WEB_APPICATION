@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { IoHomeSharp, IoPerson, IoCreateSharp, IoLogOut } from "react-icons/io5";
-import { SquarePen } from 'lucide-react';
+import { IoHomeSharp, IoPerson, IoLogOut } from "react-icons/io5";
 import { RiCalendarScheduleFill } from "react-icons/ri";
 import { FaPenToSquare } from "react-icons/fa6";
 import lawyerHero from "../../assets/images/LawyerHero.png";

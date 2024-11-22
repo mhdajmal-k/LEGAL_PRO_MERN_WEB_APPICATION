@@ -24,7 +24,7 @@ interface CommonTableProps {
     Who: 'user' | 'lawyer';
 }
 
-const CommonTable: React.FC<CommonTableProps> = ({ columns, data, onAction, loading, Who }) => {
+const CommonTable: React.FC<CommonTableProps> = ({ columns, data, onAction, loading, }) => {
 
 
     // const dispatch: AppDispatch = useDispatch();

@@ -51,7 +51,7 @@ const LoginForm: React.FC = () => {
         }
     }, [error])
 
-    const handleGoogle = async (e: any) => {
+    const handleGoogle = async () => {
         const provider = await new GoogleAuthProvider()
 
         const result = await signInWithPopup(auth, provider)

@@ -136,7 +136,7 @@ const OtpFrom: React.FC = () => {
                         </button>
                     )}
                 </div>
-                {error && <span className='mt-3 text-red-500'>{error}</span>}
+                {error && <span className='mt-3 text-red-500'>{error || otpError}</span>}
             </div>
         </div>
     );

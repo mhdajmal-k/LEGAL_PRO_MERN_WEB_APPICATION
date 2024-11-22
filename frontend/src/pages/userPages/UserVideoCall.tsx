@@ -9,7 +9,7 @@ import AddReview from "../../components/ReviewPosting";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../services/store/store";
-import { cancelAppointmentDataById, updateAppointmentStatus } from "../../services/store/features/userServices";
+import { updateAppointmentStatus } from "../../services/store/features/userServices";
 
 interface VideoCallPageProps {
     appointmentId: string | undefined;
@@ -57,7 +57,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
                 toast(<CustomToast message={"New contact online! You Can Call."} type="success" />, {
                     duration: 3000
                 });
-                // alert(socketId)
+
                 setSocketId(socketId)
             })
 
@@ -113,7 +113,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
             socket.on("isTyping", (typingAction: any) => {
                 setTyping(true)
                 setWhoTyping(typingAction.sender)
-                // alert(WhoTyping)
+
 
 
             });
@@ -264,7 +264,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
                                 setIsCallStarted(false);
                                 setShowReviewModal(true)
                                 if (who == "lawyer") {
-                                    alert(who)
+
                                     navigate("/lawyer")
                                 }
                             } catch (error: any) {

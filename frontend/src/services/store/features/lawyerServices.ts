@@ -22,7 +22,6 @@ import {
 } from "../../api/lawerApi";
 import { AxiosError } from "axios";
 import { LawyerSignUpResponse, response } from "../../../utils/type/lawyerType";
-import { number } from "yup";
 
 export const signUpLawyer = createAsyncThunk(
   "lawyer/singUpUser",
@@ -37,7 +36,7 @@ export const signUpLawyer = createAsyncThunk(
           },
         }
       );
-      console.log(response.data, "//////////////////////////////////");
+
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
@@ -57,10 +56,7 @@ export const lawyerVerifyOtp = createAsyncThunk(
   async (otp: string, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(LAWYERVERIFYINGOTP, { otp });
-      console.log(
-        response,
-        "is the responcejfffffffffffffffffffffffffffffffffffffff"
-      );
+
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
@@ -80,7 +76,6 @@ export const lawyerResendOtp = createAsyncThunk(
   "lawyer/resenedOtp",
   async (_, { rejectWithValue }) => {
     try {
-      console.log("hi");
       const response = await axiosInstance.post(LAWYERRESENDOTP);
       return response.data;
     } catch (error) {
@@ -129,7 +124,6 @@ export const updateProfessionalData = createAsyncThunk(
   "lawyer/updateProfessionalData",
   async (ProfessionalData: FormData, { rejectWithValue }) => {
     try {
-      console.log("hi");
       const response = await axiosInstance.post(
         UPDATEPROFESSIONALDATA,
         ProfessionalData,
@@ -157,9 +151,7 @@ export const updateProfessionalData = createAsyncThunk(
 export const loginLawyer = createAsyncThunk(
   "lawyer/login",
   async (data: { email: string; password: string }, { rejectWithValue }) => {
-    console.log("hi in here");
     try {
-      console.log(data, "from the userLogin thunk");
       const response = await axiosInstance.post(LAWYERLOGIN, data);
       return response.data;
     } catch (error) {
@@ -237,7 +229,6 @@ export const createSlot = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      console.log(data, "is the final data");
       const response = await axiosInstance.post<response>(
         LAWYERCREATESLOT,
         data
@@ -405,7 +396,6 @@ export const crateBlog = createAsyncThunk(
   "lawyer/crateBlog",
   async (blogData: FormData, { rejectWithValue }) => {
     try {
-      alert("in here the blog creation");
       const response = await axiosInstance.post(LAWYERCREATEBLOG, blogData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -479,7 +469,6 @@ export const lawyerLogOut = createAsyncThunk(
   "user/lawyerLogOut",
   async (_, { rejectWithValue }) => {
     try {
-      console.log("hi");
       const response = await axiosInstance.delete<response>(LAWYERLOGOUT);
       return response.data;
     } catch (error) {

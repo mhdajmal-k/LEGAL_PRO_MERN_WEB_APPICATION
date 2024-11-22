@@ -1,5 +1,5 @@
-import { Avatar, Badge, Image } from '@nextui-org/react';
-import React, { useEffect } from 'react'
+import { Image } from '@nextui-org/react';
+import React from 'react'
 import { BlogType } from '../utils/type/lawyerType';
 
 interface BlogListingProps {

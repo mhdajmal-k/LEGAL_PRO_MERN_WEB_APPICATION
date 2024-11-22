@@ -7,7 +7,7 @@ import {
   fetchLawyerById,
   googleSignup,
   loginUser,
-  logOut,
+  // logOut,
   resendOtp,
   signUpUser,
   updateUserProfileData,
