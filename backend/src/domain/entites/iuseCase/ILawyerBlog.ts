@@ -1,0 +1,33 @@
+import { IBlog, IBlogOne } from "../imodels/iBlog";
+
+interface ILawyerBlogInteractor {
+  createBlog(
+    title: string,
+    content: string,
+    author: string,
+    category: string,
+    file?: Express.Multer.File
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: string | {};
+  }>;
+  getBlogs(
+    page?: number,
+    limit?: number,
+    author?: string
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IBlog[];
+  }>;
+  getOneBlogById(id: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IBlogOne;
+  }>;
+}
+export default ILawyerBlogInteractor;

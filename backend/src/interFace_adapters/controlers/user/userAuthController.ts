@@ -43,6 +43,8 @@ class UserAuthController {
     }
   }
 
+  ////////////
+
   async verifyOtp(req: Request, res: Response): Promise<any> {
     try {
       const { otp } = req.body;
@@ -144,6 +146,8 @@ class UserAuthController {
       next(error);
     }
   }
+
+  ////////////
 
   async googleSignUp(
     req: Request,
@@ -315,7 +319,7 @@ class UserAuthController {
         return res.status(HttpStatusCode.Unauthorized).json({
           status: false,
           message: "Bad Parameters - Refresh token missing.",
-          result: {},
+          result: { user: "user" },
         });
       }
 

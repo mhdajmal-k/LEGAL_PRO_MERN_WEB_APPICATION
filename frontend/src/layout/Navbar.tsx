@@ -46,7 +46,7 @@ const Navbar: React.FC = React.memo(() => {
           <Link to="/">HOME</Link>
           <Link to="/findLawyers" className="hover:text-black">FIND LAWYERS</Link>
           <Link to="/services" className="hover:text-black">ABOUT</Link>
-          <Link to="/contact" className="hover:text-black">BLOG</Link>
+          <Link to="/blogs" className="hover:text-black">BLOG</Link>
         </div>
 
         <div>

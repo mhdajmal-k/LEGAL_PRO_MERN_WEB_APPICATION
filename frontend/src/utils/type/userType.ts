@@ -62,3 +62,13 @@ export interface LawyerProfessionalData {
   selectedImageIndia?: File;
   selectedImageKerala?: File;
 }
+
+export interface ITransaction {
+  _id: string;
+  userId: string;
+  amount: number;
+  type: "credit" | "debit";
+  description: string;
+  timestamp: string; // ISO string format
+  __v: number;
+}

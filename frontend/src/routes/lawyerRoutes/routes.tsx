@@ -16,6 +16,7 @@ const Blog = lazy(() => import('../../pages/lawyerpages/Blog'));
 import LawyerProtectRoute from '../LaywerProtectRoute';
 import LawyerPublicRoute from '../LawyerPublicRotute';
 import LoadingFallback from '../../components/LoadingFallback';
+import ViewBlog from '../../pages/lawyerpages/ViewBlog';
 
 
 
@@ -36,6 +37,7 @@ const LawyerRoutes: React.FC = () => {
                 <Route element={<LawyerProtectRoute />}>
                     <Route path='/profile' element={<ProfilePage />} />
                     <Route path='/blog' element={<Blog />} />
+                    <Route path='/blog/:blogId' element={<ViewBlog />} />
                     <Route path='/slot' element={<SlotCreation />} />
                     <Route path='/appointments' element={<Appointments />} />
                     <Route path='/view/:AppointmentId' element={<LawyerViewAppointment />} />

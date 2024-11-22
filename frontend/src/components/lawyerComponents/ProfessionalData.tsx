@@ -240,8 +240,7 @@ const ProfessionalData: React.FC = () => {
                                                 className="w-full"
                                             />
                                         </div>
-
-
+                                        {/* chack later */}
                                         <div className='py-2'>
                                             <input
                                                 type='file'

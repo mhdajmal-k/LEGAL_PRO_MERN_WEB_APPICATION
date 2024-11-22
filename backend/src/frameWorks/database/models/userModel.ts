@@ -19,6 +19,10 @@ const userSchema = new Schema<IUser>(
     phoneNumber: {
       type: Number,
     },
+    walletBalance: {
+      type: Number,
+      default: 0,
+    },
     profilePicture: {
       type: String,
     },

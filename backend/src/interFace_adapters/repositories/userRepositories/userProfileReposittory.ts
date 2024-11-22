@@ -1,4 +1,6 @@
+import { ITransaction } from "../../../domain/entites/imodels/ITransaction";
 import IUserProfileRepository from "../../../domain/entites/irepositories/iuserProfileRepostiry";
+import Transaction from "../../../frameWorks/database/models/transactionModel";
 import User from "../../../frameWorks/database/models/userModel";
 import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 import {
@@ -59,6 +61,31 @@ class UserProfileRepository implements IUserProfileRepository {
     } catch (error) {
       console.log(error);
       throw error;
+    }
+  }
+  async getWalletBalance(id: string): Promise<string | number> {
+    try {
+      const user = await User.findById(id, { walletBalance: 1 });
+      if (!user) {
+        throw new Error("User not found");
+      }
+      return user.walletBalance;
+    } catch (error) {
+      console.error("Error fetching wallet balance:", error);
+      throw new Error("Failed to retrieve wallet balance.");
+    }
+  }
+
+  async getTransactionDetails(id: string): Promise<ITransaction[]> {
+    try {
+      const transactions = await Transaction.find({ userId: id });
+      if (!transactions || transactions.length === 0) {
+        throw new Error("No transactions found for this user");
+      }
+      return transactions;
+    } catch (error) {
+      console.error("Error fetching transaction details:", error);
+      throw new Error("Failed to retrieve transaction details.");
     }
   }
 }

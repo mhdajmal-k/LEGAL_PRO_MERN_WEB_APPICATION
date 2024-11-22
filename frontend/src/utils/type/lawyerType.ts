@@ -100,3 +100,16 @@ export interface FetchedSlotData {
   lawyerDetails: BasicLawyerDetails;
   slots: Slot[];
 }
+
+export interface BlogType {
+  _id: string;
+  title: string;
+  category: string;
+  content: string;
+  image?: string;
+  author: {
+    userName: string;
+    profile_picture: string;
+  };
+  createdAt: string;
+}

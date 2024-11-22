@@ -32,22 +32,16 @@ const rooms = new Map();
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
-  //Creating Room and joining
-
   socket.on("joinRoom", (roomId: string) => {
     if (!rooms.has(roomId)) {
       rooms.set(roomId, new Set());
     }
     rooms.get(roomId)?.add(socket.id);
     socket.join(roomId);
-    // console.log(roomId, "is hte join Room id");
-    // console.log(socket.id, "is hte join socket id");
     socket.to(roomId).emit("userJoined", socket.id);
     console.log(rooms);
     console.log(`User ${socket.id} joined room ${roomId}`);
   });
-
-  //offer from the rooms
 
   socket.on("offer", ({ roomId, offer, userId }) => {
     socket.to(roomId).emit("offer", { offer, userId: socket.id });
@@ -58,27 +52,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("candidate", ({ roomId, candidate, userId }) => {
-    // console.log("on candidate :", candidate);
     const otherUsers = [...(rooms.get(roomId) || new Set())].filter(
       (id) => id !== userId
     );
-
-    // console.log(
-    //   String(otherUsers),
-    //   "is hte other  ddddddddddddddddddd suer id"
-    // );
     const otherUser = String(otherUsers);
-    // console.log("on candidate :", roomId);
-    // console.log("on candidate :", userId);
-    // console.log(rooms, "is the rooms");
     socket.to(roomId).emit("candidate", { candidate, otherUser });
   });
 
   socket.on("message", ({ roomId, message, userId }) => {
-    // console.log("roomId", roomId);
-    // console.log("message", message);
-    // console.log("userId", userId);
-
     console.log("message:", message);
     const messageData = {
       message: message,
@@ -86,6 +67,7 @@ io.on("connection", (socket) => {
     };
     io.to(roomId).emit("message", messageData);
   });
+
   socket?.on("isTyping", ({ roomId, userId }) => {
     const typingAction = {
       action: "message",
@@ -93,6 +75,11 @@ io.on("connection", (socket) => {
     };
     io.to(roomId).emit("isTyping", typingAction);
   });
+
+  socket?.on("cutCall", ({ roomId, userId }) => {
+    socket.to(roomId).emit("callHungUp", { userId });
+  });
+
   socket.on("disconnect", () => {
     rooms.forEach((participants, roomId) => {
       if (participants.has(socket.id)) {

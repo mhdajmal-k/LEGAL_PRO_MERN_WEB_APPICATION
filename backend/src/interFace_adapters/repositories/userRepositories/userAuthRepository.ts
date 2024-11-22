@@ -3,6 +3,7 @@ import { IUser } from "../../../domain/entites/imodels/Iuser";
 import iUserRepository from "../../../domain/entites/irepositories/iuserRepositories";
 import User from "../../../frameWorks/database/models/userModel";
 import { hashPassword } from "../../../frameWorks/utils/helpers/passwordHelper";
+import Transaction from "../../../frameWorks/database/models/transactionModel";
 
 class UserAuthRepository implements iUserRepository {
   async userAlreadyExist(email: string): Promise<boolean> {
@@ -80,6 +81,35 @@ class UserAuthRepository implements iUserRepository {
     } catch (error) {
       console.log(error);
       throw error;
+    }
+  }
+  async addToWallet(id: string, money: string | number): Promise<boolean> {
+    try {
+      const user = await User.findById(id);
+      if (user) {
+        user.walletBalance += Number(money);
+        await user.save();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  async createTransaction(data: {
+    userId: string;
+    amount: number;
+    type: "credit" | "debit";
+    description: string;
+  }): Promise<boolean> {
+    try {
+      const transaction = new Transaction(data);
+      await transaction.save();
+      return true;
+    } catch (error) {
+      console.error("Error creating transaction:", error);
+      return false;
     }
   }
 }

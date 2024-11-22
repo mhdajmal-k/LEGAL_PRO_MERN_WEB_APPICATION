@@ -22,6 +22,11 @@ profileRoute.put(
   upload.single("profilePic"),
   userProfileController.updateProfileData.bind(userProfileController)
 );
+profileRoute.get(
+  "/walletDetails",
+  authorization(UserRole.User),
+  userProfileController.walletDetails.bind(userProfileController)
+);
 profileRoute.post(
   "/search",
   userProfileController.AISearch.bind(userProfileController)

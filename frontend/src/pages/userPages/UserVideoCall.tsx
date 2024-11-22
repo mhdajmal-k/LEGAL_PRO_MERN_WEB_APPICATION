@@ -117,6 +117,14 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
 
 
             });
+            socket.on("callHungUp", () => {
+                toast(<CustomToast message={"Call has been ended by the other user"} type="error" />);
+                stream?.getTracks().forEach(track => track.stop())
+                peerConnection.current?.close()
+                setStream(null);
+                setRemoteStream(null);
+                setIsCallStarted(false);
+            })
         };
 
         initializeSocketEvents();
@@ -235,7 +243,10 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
                                 peerConnection.current?.close();
                                 setStream(null);
                                 setRemoteStream(null);
-
+                                socket?.emit("cutCall", {
+                                    roomId: appointmentId,
+                                    userId: socketId
+                                });
 
                                 toast.dismiss();
                                 if (!appointmentStatusChanged) {
@@ -253,6 +264,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
                                 setIsCallStarted(false);
                                 setShowReviewModal(true)
                                 if (who == "lawyer") {
+                                    alert(who)
                                     navigate("/lawyer")
                                 }
                             } catch (error: any) {
@@ -298,21 +310,21 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
     };
 
     useEffect(() => {
-        const debounce = setTimeout(() => {
-            if (newMessage.trim() == "") {
-                setIsTyping(false)
-                setTyping(false)
-            } else {
-                setIsTyping(true)
-            }
-            if (isTyping) {
-                socket?.emit("isTyping", {
-                    roomId: appointmentId,
-                    userId: socketId
-                })
-            }
-        }, 500);
-        return () => clearTimeout(debounce);
+
+        if (newMessage.trim() == "") {
+            setIsTyping(false)
+            setTyping(false)
+        } else {
+            setIsTyping(true)
+        }
+        if (isTyping) {
+            socket?.emit("isTyping", {
+                roomId: appointmentId,
+                userId: socketId
+            })
+        }
+
+
     }, [newMessage, isTyping]);
 
     const sendMessage = () => {

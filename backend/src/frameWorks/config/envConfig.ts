@@ -4,6 +4,7 @@ export const config = {
   PORT: process.env.PORT || 3002,
   CONVINEANCEFEE: process.env.CONVINEANCEFEE,
   DB_URL: process.env.DATABASE_URL || "",
+  DB_URLLOCAL: process.env.DATABASE_URLLOCAL || "",
   JWT_SECRET: process.env.JWT_SECRET || "your_jwt_secret",
   JWT_REFRESH_SECRET:
     process.env.JWT_REFRESH_SECRET || "your_jwtJWT_REFRESH_SECRET",

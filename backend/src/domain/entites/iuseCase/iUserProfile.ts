@@ -24,5 +24,10 @@ interface IUserProfileInteractor {
     message: string;
     result: string;
   }>;
+  walletDetails(id: string | undefined): Promise<{
+    status: boolean;
+    message: string;
+    result: {};
+  }>;
 }
 export default IUserProfileInteractor;

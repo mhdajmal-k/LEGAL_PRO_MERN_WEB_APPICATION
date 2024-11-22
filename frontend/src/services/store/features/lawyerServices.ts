@@ -6,6 +6,8 @@ import {
   FETCHALLAPPOINTMENTS,
   FETCHAPPOINTMENTLAWYER,
   FETCHLAWYERSLOT,
+  FETCHONEBLOG,
+  LAWYERCREATEBLOG,
   LAWYERCREATESLOT,
   LAWYERFORGOTPASSWORD,
   LAWYERLOGIN,
@@ -20,6 +22,7 @@ import {
 } from "../../api/lawerApi";
 import { AxiosError } from "axios";
 import { LawyerSignUpResponse, response } from "../../../utils/type/lawyerType";
+import { number } from "yup";
 
 export const signUpLawyer = createAsyncThunk(
   "lawyer/singUpUser",
@@ -389,6 +392,80 @@ export const LawyerCancelAppointmentDataById = createAsyncThunk(
       if (error instanceof AxiosError) {
         if (error.response) {
           errorMessage = error.response.data.message || error || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const crateBlog = createAsyncThunk(
+  "lawyer/crateBlog",
+  async (blogData: FormData, { rejectWithValue }) => {
+    try {
+      alert("in here the blog creation");
+      const response = await axiosInstance.post(LAWYERCREATEBLOG, blogData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const fetchLawyerBlogs = createAsyncThunk(
+  "lawyer/fetchLawyerBlogs",
+  async (
+    { currentPage, limit }: { currentPage: number; limit: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.get(LAWYERCREATEBLOG, {
+        params: {
+          currentPage,
+          limit,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const fetchOneBlog = createAsyncThunk(
+  "lawyer/fetchOneBlog",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`${FETCHONEBLOG}/${id}`);
+
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
         } else if (error.request) {
           errorMessage = "Network error. Please check your connection.";
         }

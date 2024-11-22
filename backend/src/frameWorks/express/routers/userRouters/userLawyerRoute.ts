@@ -10,14 +10,18 @@ import { S3Service } from "../../../config/s3Setup";
 import { authorization } from "../../../middleware/authMilddlewere";
 import { UserRole } from "../../../utils/helpers/Enums";
 import UserAppointmentRepositories from "../../../../interFace_adapters/repositories/userRepositories/userAppointmentRepository";
+import LawyerBlogRepository from "../../../../interFace_adapters/repositories/lawyerRepositories/laywerBlogRepostire";
 const IS3Services = new S3Service();
 const repository = new UserLawyerRepositories();
+const blogRepository = new LawyerBlogRepository();
+
 const appointmentRepository = new UserAppointmentRepositories();
 
 const interactor = new UserLawyerInteractor(
   repository,
   IS3Services,
-  appointmentRepository
+  appointmentRepository,
+  blogRepository
 );
 
 const userLawyerController = new UserLawyerController(interactor);
@@ -43,6 +47,11 @@ userLawyerRoute.post(
 );
 userLawyerRoute.get(
   "/reviews/:id",
-  // authorization(UserRole.User),
+  authorization(UserRole.User),
   userLawyerController.getReviews.bind(userLawyerController)
+);
+userLawyerRoute.get(
+  "/blogs/",
+  // authorization(UserRole.User),
+  userLawyerController.getallBlogs.bind(userLawyerController)
 );

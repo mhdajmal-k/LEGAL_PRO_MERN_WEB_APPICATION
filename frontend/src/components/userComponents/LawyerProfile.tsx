@@ -6,8 +6,7 @@ import CustomToast from './CustomToast';
 import { toast } from 'sonner';
 import { fetchLawyerById } from '../../services/store/features/userServices';
 import { FaLocationDot } from "react-icons/fa6";
-import { Button, Skeleton } from '@nextui-org/react';
-import { FaHeart } from "react-icons/fa";
+import { Button, Image, Skeleton } from '@nextui-org/react';
 import { useNavigate } from 'react-router-dom';
 import { ReviewCard } from './ReveiwsList';
 
@@ -51,7 +50,7 @@ const ViewLawyerProfile: React.FC<LawyerProfile> = ({ id }) => {
                     {loading ? (
                         <Skeleton className="rounded-lg h-60 w-full mb-4" />
                     ) : (
-                        <img
+                        <Image
                             src={lawyer?.profile_picture || "/api/placeholder/395/429"}
                             alt={lawyer?.userName}
                             className="w-full h-full object-cover rounded"

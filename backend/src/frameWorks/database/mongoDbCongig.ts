@@ -3,6 +3,7 @@ import { config } from "../config/envConfig";
 export const connectToDatabase = async () => {
   try {
     await mongoose.connect(config.DB_URL);
+    // await mongoose.connect(config.DB_URLLOCAL);
     console.log("DB CONNECTED");
   } catch (error: unknown) {
     if (error instanceof Error) {

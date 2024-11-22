@@ -51,7 +51,10 @@ interface IUserAppointmentInteractor {
     message: string;
     result: string | {};
   }>;
-  cancellingAppointment(appointmentId: string): Promise<{
+  cancellingAppointment(
+    appointmentId: string,
+    refundTo: string
+  ): Promise<{
     statusCode: number;
     status: boolean;
     message: string;

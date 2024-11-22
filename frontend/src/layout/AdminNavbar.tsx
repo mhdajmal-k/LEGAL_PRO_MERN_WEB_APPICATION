@@ -17,18 +17,6 @@ const AdminNavbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const dispatch: AppDispatch = useDispatch()
     const { lawyerInfo } = useSelector((state: RootState) => state.lawyer)
-    // const handleLogout = async () => {
-    //     try {
-    //         dispatch(userLogout())
-    //         const response = await dispatch(logOut()).unwrap();
-    //         if (response) {
-    //             toast(<CustomToast message={response.message} type="success" />);
-
-    //         }
-    //     } catch (error: any) {
-    //         toast(<CustomToast message={error} type="error" />);
-    //     }
-    // }
     return (
         <nav className="bg-primary p-2 ">
             <div className="max-w-7xl mx-auto flex justify-between items-center ">
@@ -51,7 +39,7 @@ const AdminNavbar: React.FC = () => {
                     <Link to="/services" className="hover:text-black">
                         ABOUT
                     </Link>
-                    <Link to="/contact" className="hover:text-black">
+                    <Link to="/lawyer/blog" className="hover:text-black">
                         BLOG
                     </Link>
                 </div>

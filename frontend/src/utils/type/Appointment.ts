@@ -38,4 +38,5 @@ export interface Appointment {
   subTotal: number;
   paymentStatus?: string;
   imageUrl: string;
+  razorpayPaymentId?: string;
 }

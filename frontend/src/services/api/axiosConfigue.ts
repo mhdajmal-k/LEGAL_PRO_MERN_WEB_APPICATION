@@ -38,7 +38,14 @@ axiosInstance.interceptors.response.use(
             return axiosInstance(requestedApi);
           }
         }
-      } catch (error) {
+      } catch (error: any) {
+        // alert(error);
+        // console.log(error);
+
+        if (error?.response.data.result.user == "user") {
+          // alert("in the user accessToken");
+        }
+
         return Promise.reject(error);
       }
     }

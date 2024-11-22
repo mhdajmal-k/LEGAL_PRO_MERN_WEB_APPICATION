@@ -7,6 +7,7 @@ import {
   CREATEPAYMENT,
   FAILEDPAYMENT,
   FETCHALLAPPOINTMENT,
+  FETCHALLBLOGS,
   FETCHLAWYERBYID,
   FETCHLAWYERS,
   FETCHLAWYERSLOT,
@@ -14,6 +15,7 @@ import {
   FORGOTPASSWORD,
   GETAPPOINTMENT,
   GETREVIEWANDRATING,
+  GETWALLETDATA,
   GOOGLESIGNUP,
   POSTREVIEWANDRATING,
   RESENDOTP,
@@ -31,6 +33,7 @@ import {
 import { AxiosError } from "axios";
 import { userLoginData, userSignUp } from "../../../utils/type/userType";
 import { response } from "../../../utils/type/lawyerType";
+import { FETCHONEBLOG } from "../../api/lawerApi";
 
 export const signUpUser = createAsyncThunk(
   "user/singUpUser",
@@ -394,6 +397,7 @@ export const createAppointment = createAsyncThunk(
     }
   }
 );
+
 export const fetchAppointmentDataById = createAsyncThunk(
   "user/fetchAppointmentDataById",
   async (appointmentId: string | undefined, { rejectWithValue }) => {
@@ -417,10 +421,17 @@ export const fetchAppointmentDataById = createAsyncThunk(
 );
 export const cancelAppointmentDataById = createAsyncThunk(
   "user/cancelAppointmentDataById",
-  async (appointmentId: string | undefined, { rejectWithValue }) => {
+  async (
+    {
+      appointmentId,
+      refundTo,
+    }: { appointmentId: string | undefined; refundTo: "wallet" | "bank" },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axiosInstance.patch(
-        `${GETAPPOINTMENT}/${appointmentId}`
+        `${GETAPPOINTMENT}/${appointmentId}`,
+        { refundTo }
       );
       return response.data;
     } catch (error) {
@@ -507,28 +518,6 @@ export const fetchAllAppointment = createAsyncThunk(
     }
   }
 );
-// export const fetchOneAppointment = createAsyncThunk(
-//   "user/fetchOneAppointment",
-//   async (appointmentId: string | undefined, { rejectWithValue }) => {
-//     try {
-//       const response = await axiosInstance.get(
-//         `${FETCHONEAPPOINTMENT}/${appointmentId}`,
-//         {}
-//       );
-//       return response.data;
-//     } catch (error) {
-//       let errorMessage = "An unknown error occurred";
-//       if (error instanceof AxiosError) {
-//         if (error.response) {
-//           errorMessage = error.response.data.message || error || "Server error";
-//         } else if (error.request) {
-//           errorMessage = "Network error. Please check your connection.";
-//         }
-//       }
-//       return rejectWithValue(errorMessage);
-//     }
-//   }
-// );
 export const fetchLawyerById = createAsyncThunk(
   "user/fetchLawyerById",
   async (id: string, { rejectWithValue }) => {
@@ -677,6 +666,53 @@ export const getReviews = createAsyncThunk(
     }
   }
 );
+export const fetchAllBlog = createAsyncThunk(
+  "user/fetchAllBlog",
+  async (
+    { currentPage, limit }: { currentPage: number; limit: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.get(`${FETCHALLBLOGS}`, {
+        params: {
+          page: currentPage,
+          limit: limit,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || error || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const fetchOneBlogUserSide = createAsyncThunk(
+  "lawyer/fetchOneBlog",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`${FETCHONEBLOG}/${id}`);
+
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
 export const updateAppointmentStatus = createAsyncThunk(
   "user/updateAppointmentStatus",
   async (appointmentId: string, { rejectWithValue }) => {
@@ -684,6 +720,25 @@ export const updateAppointmentStatus = createAsyncThunk(
       const response = await axiosInstance.patch<response>(
         `${UPDATEAPPOINTMENTSTATUS}/${appointmentId}`
       );
+      return response.data;
+    } catch (error) {
+      let errorMessage = "Network error. try again later.";
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          errorMessage = error.response.data.message || "Server error";
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your connection.";
+        }
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+export const getWalletDetails = createAsyncThunk(
+  "user/updateAppointmentStatus",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get<response>(GETWALLETDATA);
       return response.data;
     } catch (error) {
       let errorMessage = "Network error. try again later.";

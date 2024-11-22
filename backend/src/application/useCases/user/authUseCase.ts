@@ -184,6 +184,9 @@ class userAuthInteractor implements IUserAuthInteractor {
       throw error;
     }
   }
+
+  ////////////
+
   async googleSignUP(
     user: IUser
   ): Promise<{ status: boolean; message: string; result: IUserResult | null }> {

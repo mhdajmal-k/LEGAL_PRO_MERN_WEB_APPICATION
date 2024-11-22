@@ -7,6 +7,7 @@ import {
   HttpStatusCode,
   MessageError,
 } from "../../../frameWorks/utils/helpers/Enums";
+import ILawyerBlogInteractor from "../../../domain/entites/iuseCase/ILawyerBlog";
 
 class UserLawyerController {
   constructor(private UserLawyerInteractor: IUsersLawyerInteractor) {}
@@ -193,6 +194,28 @@ class UserLawyerController {
       }
       const response = await this.UserLawyerInteractor.getLawyerReview(
         id,
+        Number(String(page)),
+        Number(String(limit))
+      );
+      console.log(response, "in the revewis ");
+      res.status(response.statusCode).json({
+        status: response.status,
+        message: response.message,
+        result: response.result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getallBlogs(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      const { page = 1, limit = 10 } = req.query;
+
+      const response = await this.UserLawyerInteractor.getBlogs(
         Number(String(page)),
         Number(String(limit))
       );

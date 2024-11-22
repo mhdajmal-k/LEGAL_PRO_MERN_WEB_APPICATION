@@ -10,12 +10,15 @@ import {
   MessageError,
 } from "../../../frameWorks/utils/helpers/Enums";
 import { IReview } from "../../../domain/entites/imodels/iReview";
+import ILawyerBlogRepository from "../../../domain/entites/irepositories/iLawyerBlogRespositry";
+import { IBlog } from "../../../domain/entites/imodels/iBlog";
 
 class UserLawyerInteractor implements IUsersLawyerInteractor {
   constructor(
     private readonly Repository: IUserLawyerRepository,
     private readonly s3Service: IS3Service,
-    private readonly AppointmentRepository: IUserAppointmentRepository
+    private readonly AppointmentRepository: IUserAppointmentRepository,
+    private readonly BlogRepository: ILawyerBlogRepository
   ) {}
   async getVerifiedLawyers(
     currentPage: number,
@@ -205,6 +208,48 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         statusCode: HttpStatusCode.OK,
       };
     } catch (error) {
+      throw error;
+    }
+  }
+  async getBlogs(
+    currentPage: number,
+    limit: number
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IBlog[];
+  }> {
+    try {
+      const lawyerBlog = await this.BlogRepository.getAllBlogs(
+        limit,
+        currentPage
+      );
+      // const totalPages = Math.ceil(totalLawyers / limit);
+      const updatedBlog = await Promise.all(
+        lawyerBlog.map(async (blog: any) => {
+          if (blog.author?.profile_picture) {
+            blog.author.profile_picture = await this.s3Service.fetchFile(
+              blog.author.profile_picture
+            );
+          }
+
+          if (blog.image) {
+            blog.image = await this.s3Service.fetchFile(blog.image);
+          }
+
+          return blog;
+        })
+      );
+
+      return {
+        status: true,
+        statusCode: HttpStatusCode.OK,
+        message: "blog Created",
+        result: updatedBlog,
+      };
+    } catch (error) {
+      console.log(error);
       throw error;
     }
   }

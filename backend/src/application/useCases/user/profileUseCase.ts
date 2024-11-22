@@ -83,6 +83,29 @@ class userProfileInteractor implements IUserProfileInteractor {
       throw error;
     }
   }
+  async walletDetails(
+    id: string | undefined
+  ): Promise<{ status: boolean; message: string; result: {} }> {
+    try {
+      console.log("hi");
+      const walletBalance = await this.Repository.getWalletBalance(id!);
+      const getTransactionDetails = await this.Repository.getTransactionDetails(
+        id!
+      );
+      const data = {
+        walletBalance,
+        getTransactionDetails,
+      };
+      console.log(data, "is the data");
+      return {
+        status: true,
+        message: "",
+        result: data,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default userProfileInteractor;

@@ -5,6 +5,7 @@ export interface IUser extends Document {
   userName: string;
   email: string;
   phoneNumber?: number;
+  walletBalance: number;
   password: string;
   profilePicture?: string;
   block?: boolean;

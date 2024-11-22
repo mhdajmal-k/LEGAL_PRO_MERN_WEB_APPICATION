@@ -1,4 +1,5 @@
 import { IUser } from "../../../domain/entites/imodels/Iuser";
+import { IBlog } from "../imodels/iBlog";
 import { ILawyer, LawyerQuery } from "../imodels/iLawyer";
 import { IReview } from "../imodels/iReview";
 import { IProfileUpdateData, IUpdateResponse } from "../imodels/iUserProfle";
@@ -41,6 +42,15 @@ interface IUsersLawyerInteractor {
     status: boolean;
     message: string;
     result: IReview[];
+  }>;
+  getBlogs(
+    currentPage: number,
+    limit: number
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IBlog[];
   }>;
 }
 export default IUsersLawyerInteractor;

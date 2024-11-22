@@ -18,7 +18,7 @@ interface ViewOneAppointmentProps {
 }
 
 const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }) => {
-    const [isCallAllowed, setIsCallAllowed] = useState(false);
+    // const [isCallAllowed, setIsCallAllowed] = useState(false);
     const [appointment, setAppointments] = useState<Appointment>();
     const [refundStatus, setRefundStatus] = useState<any>();
     const dispatch: AppDispatch = useDispatch();
@@ -111,41 +111,79 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
         toast(
             <div>
                 <p>Are you sure you want to cancel this appointment?</p>
-                <div className="flex space-x-2 mt-3">
-                    <button
-                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md"
-                        onClick={async () => {
-                            const response = await dispatch(cancelAppointmentDataById(appointmentId)).unwrap();
-                            if (response.status) {
-                                toast(
-                                    <CustomToast
-                                        message={response.message || "Appointment canceled successfully."}
-                                        type="success"
-                                    />
-                                );
-                                fetchAppointment(appointmentId); // Fetch updated appointments
-                            } else {
-                                toast(
-                                    <CustomToast
-                                        message={response.message || "Error canceling appointment."}
-                                        type="error"
-                                    />
-                                );
-                            }
-                        }}
-                    >
-                        Confirm
-                    </button>
-                    <button
-                        className="bg-gray-300 text-gray-700 px-3 py-1 rounded-md"
-                        onClick={() => toast.dismiss()}
-                    >
-                        Cancel
-                    </button>
+                <div className="flex flex-col mt-3 space-y-3">
+                    <div>
+                        <p>Conform refund method:</p>
+                        <div className="flex space-x-4 mt-2">
+                            <button
+                                className="bg-blue-500 hover:bg-blue-600 w-1/2  text-white px-3 py-1 rounded-md"
+                                onClick={async () => {
+                                    const response = await dispatch(
+                                        cancelAppointmentDataById({ appointmentId, refundTo: "wallet" })
+                                    ).unwrap();
+
+                                    if (response.status) {
+                                        toast(
+                                            <CustomToast
+                                                message={response.message || "Refunded to wallet successfully."}
+                                                type="success"
+                                            />
+                                        );
+                                        fetchAppointment(appointmentId); // Fetch updated appointments
+                                    } else {
+                                        toast(
+                                            <CustomToast
+                                                message={response.message || "Error refunding to wallet."}
+                                                type="error"
+                                            />
+                                        );
+                                    }
+                                }}
+                            >
+                                Wallet <span className='text-xs font-thin text-yellow-500'>(Instant Transfer)</span>
+                            </button>
+                            <button
+                                className="bg-blue-500 hover:bg-blue-600 w-1/2 text-white px-3 py-1 rounded-md"
+                                onClick={async () => {
+                                    const response = await dispatch(
+                                        cancelAppointmentDataById({ appointmentId, refundTo: "bank" })
+                                    ).unwrap();
+
+                                    if (response.status) {
+                                        toast(
+                                            <CustomToast
+                                                message={response.message || "Refunded to bank successfully."}
+                                                type="success"
+                                            />
+                                        );
+                                        fetchAppointment(appointmentId);
+                                    } else {
+                                        toast(
+                                            <CustomToast
+                                                message={response.message || "Error refunding to bank."}
+                                                type="error"
+                                            />
+                                        );
+                                    }
+                                }}
+                            >
+                                Refund To Source Bank <span className='text-xs font-thin text-yellow-500'>(3 working Days)</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex space-x-2">
+                        <button
+                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md"
+                            onClick={() => toast.dismiss()}
+                        >
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </div>,
-            { duration: 2000 }
+            { duration: 4000 }
         );
+
     };
     async function handileRefundStatus(appointmentId: string | undefined) {
 
@@ -283,7 +321,8 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
                                                         ) :
                                                         <div className='space-y-4'>
                                                             <h6>Appointment :<strong className='text-red-600'> {appointment?.status}</strong></h6>
-                                                            <Button onClick={() => handileRefundStatus(appointment?._id)} className='bg-blue-700 text-white'>Check Refund Status</Button>
+                                                            {appointment?.razorpayPaymentId && <Button onClick={() => handileRefundStatus(appointment?._id)} className='bg-blue-700 text-white'>Check Refund Status</Button>}
+
                                                         </div>
 
 

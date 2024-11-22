@@ -1,6 +1,9 @@
 import React, { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import LoadingFallback from '../../components/LoadingFallback';
+import Blogs from '../../pages/userPages/BlogList';
+import ViewBlogUserSide from '../../pages/userPages/UserBlogDetails';
+import Wallet from '../../components/Wallet';
 
 // Lazy loaded components
 const SignUp = lazy(() => import('../../pages/userPages/SignUp'));
@@ -42,10 +45,12 @@ const UserRouters: React.FC = () => {
           <Route path="/payment/:id" element={<AppointmentReviewAndPayment />} />
           <Route path="/paymentSuccess/:AppointmentId" element={<AppointmentSuccess />} />
           <Route path="/viewAppointment/:AppointmentId" element={<ViewAppointment />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path='/blog/:blogId' element={<ViewBlogUserSide />} />
           <Route path='/profile' element={<UserProfileLayout />}>
             <Route index element={<ProfileData />} />
             <Route path='appointment' element={<AppointmentList userType="user" />} />
-            <Route path='wallet' element={<h1>Wallet</h1>} />
+            <Route path='wallet' element={<Wallet />} />
             <Route path='changePassword' element={<ResetPassword />} />
           </Route>
         </Route>

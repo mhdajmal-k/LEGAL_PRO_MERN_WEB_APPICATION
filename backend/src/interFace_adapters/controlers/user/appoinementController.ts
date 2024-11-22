@@ -261,6 +261,7 @@ class AppointmentController {
   ): Promise<any> {
     try {
       const { appointmentId } = req.params;
+      const { refundTo } = req.body;
 
       if (!appointmentId) {
         return res.status(HttpStatusCode.BadRequest).json({
@@ -271,7 +272,8 @@ class AppointmentController {
       }
       const response =
         await this.UserAppointmentInteractor.cancellingAppointment(
-          appointmentId
+          appointmentId,
+          refundTo
         );
       if (response.status) {
         return res.status(response.statusCode).json({

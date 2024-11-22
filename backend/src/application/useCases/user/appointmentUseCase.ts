@@ -278,7 +278,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       const order = await razorpayInstance.orders.create(options);
       await this.createPaymentTimeout(appointmentId);
       return {
-        statusCode: 200,
+        statusCode: 201,
         status: true,
         message: "Payment Initiated successfully",
         result: {
@@ -463,7 +463,10 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
 
   ////cancel Appointment
 
-  async cancellingAppointment(appointmentId: string): Promise<{
+  async cancellingAppointment(
+    appointmentId: string,
+    refundTo: string
+  ): Promise<{
     statusCode: number;
     status: boolean;
     message: string;
@@ -477,27 +480,66 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
-      const razorpay_payment_id = getAppointment?.razorpayPaymentId!;
-      const consultationFeeWithoutConvenienceFee =
-        getAppointment?.consultationFee! * 100;
-      const issueRefund = await razorpayInstance.payments.refund(
-        razorpay_payment_id,
-        { amount: consultationFeeWithoutConvenienceFee }
-      );
-      if (!issueRefund) {
-        const error: CustomError = new Error(MessageError.RefundInitiatedFiled);
-        error.statusCode = HttpStatusCode.NotFound;
-        throw error;
-      }
-      console.log(issueRefund);
-      const canceledAppointment =
-        await this.AppointmentRepository.cancelAppointmentById(
-          appointmentId,
-          issueRefund.id,
-          "Cancelled"
+      if (refundTo === "wallet") {
+        // Add to wallet
+        const addToWallet = await this.UserRepository.addToWallet(
+          String(getAppointment.userId),
+          getAppointment.consultationFee
         );
-      const slot = canceledAppointment?.slotId;
-      const bookedSpecificSlot = canceledAppointment?.appointmentTime;
+
+        if (!addToWallet) {
+          const error: CustomError = new Error(MessageError.UserNotFound);
+          error.statusCode = HttpStatusCode.NotFound;
+          throw error;
+        }
+
+        // Add to transactions
+        const transactionData = {
+          userId: String(getAppointment.userId),
+          amount: getAppointment.consultationFee,
+          type: "credit",
+          description: "Refunded consultation fee to wallet",
+        };
+
+        const addToTransaction = await this.UserRepository.createTransaction(
+          transactionData
+        );
+
+        if (!addToTransaction) {
+          const error: CustomError = new Error("Failed to record transaction.");
+          error.statusCode = HttpStatusCode.InternalServerError;
+          throw error;
+        }
+        const canceledAppointment =
+          await this.AppointmentRepository.cancelAppointmentById(
+            appointmentId,
+            "",
+            "Cancelled"
+          );
+      } else {
+        const razorpay_payment_id = getAppointment?.razorpayPaymentId!;
+        const consultationFeeWithoutConvenienceFee =
+          getAppointment?.consultationFee! * 100;
+        const issueRefund = await razorpayInstance.payments.refund(
+          razorpay_payment_id,
+          { amount: consultationFeeWithoutConvenienceFee }
+        );
+        if (!issueRefund) {
+          const error: CustomError = new Error(
+            MessageError.RefundInitiatedFiled
+          );
+          error.statusCode = HttpStatusCode.NotFound;
+          throw error;
+        }
+        const canceledAppointment =
+          await this.AppointmentRepository.cancelAppointmentById(
+            appointmentId,
+            issueRefund.id,
+            "Cancelled"
+          );
+      }
+      const slot = getAppointment?.slotId;
+      const bookedSpecificSlot = getAppointment?.appointmentTime;
       const updateSlot =
         await this.UserLawyerRepository.updateStatusSlotBySpecifSlotId(
           slot as string,
@@ -509,6 +551,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
+
       return {
         statusCode: HttpStatusCode.OK,
         status: true,
@@ -516,10 +559,10 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         result: {},
       };
     } catch (error) {
-      console.log(error, "is the cancelling Appointment Error");
       throw error;
     }
   }
+
   async cancellingAppointmentWithOutRefund(appointmentId: string): Promise<{
     statusCode: number;
     status: boolean;
