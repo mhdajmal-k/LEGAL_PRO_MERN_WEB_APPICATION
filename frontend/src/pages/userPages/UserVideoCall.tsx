@@ -401,8 +401,7 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
                                 {message.sender !== currentSocketId && (
                                     <Avatar className="w-8 h-8 mr-2">
                                         <span>you</span>
-                                        {/* <AvatarImage src="/placeholder-avatar.jpg" alt="User Avatar" />
-                                <AvatarFallback>U</AvatarFallback> */}
+
                                     </Avatar>
                                 )}
                                 <div className={`rounded-lg px-3 pt-1  ${message.sender === currentSocketId ? 'bg-black text-white' : 'bg-white text-black'}`}>

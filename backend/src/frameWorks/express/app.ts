@@ -60,7 +60,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("message", ({ roomId, message, userId }) => {
-    console.log("message:", message);
     const messageData = {
       message: message,
       sender: userId,

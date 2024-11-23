@@ -27,15 +27,6 @@ const ViewOneAppointment: React.FC<ViewOneAppointmentProps> = ({ AppointmentId }
     const { socket } = useSocket();
 
     const handleVideoCallClick = () => {
-        // if (!isCallAllowed) {
-        //     toast(
-        //         <CustomToast
-        //             message="Video call is only available 5 minutes before and up to 1 hour minutes after the scheduled time"
-        //             type="error"
-        //         />
-        //     );
-        //     return;
-        // }
 
         socket?.emit("joinRoom", AppointmentId);
         setShowVideoCall(true)
