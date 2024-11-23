@@ -9,6 +9,7 @@ export const config = {
   JWT_REFRESH_SECRET:
     process.env.JWT_REFRESH_SECRET || "your_jwtJWT_REFRESH_SECRET",
   CORS_ORIGIN: process.env.CORS_ORIGIN,
+  CORS_ORIGIN2: process.env.CORS_ORIGIN2,
   EMAIL_PASS: process.env.EMAIL_PASS,
   EMAIL_ID: process.env.EMAIL_ID,
   S3ACCESS_KEY: process.env.ACCESS_KEY,
