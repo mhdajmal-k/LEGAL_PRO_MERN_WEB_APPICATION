@@ -33,7 +33,10 @@ class LawyerAuthRepository implements iLawyerRepository {
     try {
       console.log(email, "is the repo email");
 
-      const lawyer = await Lawyer.findOne({ email: email }).lean();
+      const lawyer = await Lawyer.findOne(
+        { email: email },
+        { verified: "verified" }
+      ).lean();
       console.log(lawyer);
       return lawyer;
     } catch (error) {
