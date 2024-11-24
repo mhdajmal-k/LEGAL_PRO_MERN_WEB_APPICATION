@@ -190,6 +190,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
     statusCode: number;
   }> {
     try {
+      console.log(user);
       const { email, password } = user;
       const validLawyer = await this.Repository.validLawyer(email);
       if (!validLawyer) {

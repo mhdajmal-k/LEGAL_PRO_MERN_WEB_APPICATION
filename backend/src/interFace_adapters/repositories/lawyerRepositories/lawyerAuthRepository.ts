@@ -24,24 +24,21 @@ class LawyerAuthRepository implements iLawyerRepository {
       } catch (error) {
         throw error;
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      throw error;
+      throw error.message;
     }
   }
   async validLawyer(email: string): Promise<any> {
     try {
       console.log(email, "is the repo email");
 
-      const lawyer = await Lawyer.findOne(
-        { email: email },
-        { verified: "verified" }
-      ).lean();
+      const lawyer = await Lawyer.findOne({ email: email }).lean();
       console.log(lawyer);
       return lawyer;
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      throw error;
+      throw error.message;
     }
   }
 
@@ -61,9 +58,9 @@ class LawyerAuthRepository implements iLawyerRepository {
       console.log(id, "is the id");
       const userId = await Lawyer.findById({ _id: id });
       return userId ? userId : null;
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      throw error;
+      throw error.message;
     }
   }
 
@@ -87,9 +84,9 @@ class LawyerAuthRepository implements iLawyerRepository {
         { new: true }
       );
       return updateLawyer ? true : false;
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      throw error;
+      throw error.message;
     }
   }
   async updatePassword(password: string, id: string): Promise<any> {
@@ -103,9 +100,9 @@ class LawyerAuthRepository implements iLawyerRepository {
         { new: true }
       );
       return updatedPasswordLawyer;
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      throw error;
+      throw error.message;
     }
   }
   async updateLawyerProfileData(data: any, id: string): Promise<boolean> {
