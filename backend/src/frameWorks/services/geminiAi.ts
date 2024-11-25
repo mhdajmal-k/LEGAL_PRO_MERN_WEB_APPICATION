@@ -3,11 +3,7 @@
  *
  * $ npm install @google/generative-ai
  */
-import {
-  GoogleGenerativeAI,
-  HarmCategory,
-  HarmBlockThreshold,
-} from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { config } from "../config/envConfig";
 
 const apiKey = process.env.GEMINI_API_KEY || (config.GEMINI_API_KEY as string);
@@ -20,7 +16,7 @@ const model = genAI.getGenerativeModel({
 const generationConfig = {
   temperature: 2,
   topP: 0.95,
-  topK: 64,
+  topK: 40,
   maxOutputTokens: 1024,
   responseMimeType: "text/plain",
 };

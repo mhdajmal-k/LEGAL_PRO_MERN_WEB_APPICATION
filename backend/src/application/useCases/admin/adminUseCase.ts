@@ -1,4 +1,3 @@
-import { Certificate } from "crypto";
 import { IUser } from "../../../domain/entites/imodels/Iuser";
 import IUserResult from "../../../domain/entites/imodels/IUserResult";
 import iAdminRepository from "../../../domain/entites/irepositories/IadminRepositries";
@@ -6,21 +5,16 @@ import IAdminInteractor from "../../../domain/entites/iuseCase/iadmin";
 import { iJwtService } from "../../../domain/services/ijwtService";
 import { config } from "../../../frameWorks/config/envConfig";
 import { S3Service } from "../../../frameWorks/config/s3Setup";
-import Lawyer from "../../../frameWorks/database/models/lawyerModel";
 import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
-import { hashPassword } from "../../../frameWorks/utils/helpers/passwordHelper";
 import { validatePassword } from "../../../frameWorks/utils/validatePassword";
 import EmailService from "../../../frameWorks/services/mailer";
-import e from "express";
+
 import {
   HttpStatusCode,
   MessageError,
   UserRole,
 } from "../../../frameWorks/utils/helpers/Enums";
-import {
-  IAppointmentAdminSide,
-  IAppointmentLawyerSide,
-} from "../../../domain/entites/imodels/iAppontment";
+import { IAppointmentAdminSide } from "../../../domain/entites/imodels/iAppontment";
 
 class AdminInteractor implements IAdminInteractor {
   constructor(

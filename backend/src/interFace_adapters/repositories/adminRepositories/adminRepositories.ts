@@ -86,8 +86,8 @@ class AdminRepository implements iAdminRepository {
         .lean();
       console.log(lawyers, "in thee db ");
       return lawyers;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 

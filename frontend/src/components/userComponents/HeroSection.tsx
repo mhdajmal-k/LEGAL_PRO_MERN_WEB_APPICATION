@@ -106,7 +106,7 @@ const HeroSection: React.FC = React.memo(() => {
                                         </div>
                                     ) : (
                                         <>
-                                            {result.trim() !== "" ? (
+                                            {result?.trim() !== "" ? (
                                                 <div>
                                                     <p>{result}</p>
                                                     <button

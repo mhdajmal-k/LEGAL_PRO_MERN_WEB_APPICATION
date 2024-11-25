@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import JwtToken from "../services/jwt";
 import { config } from "../config/envConfig";
 import UserAuthRepository from "../../interFace_adapters/repositories/userRepositories/userAuthRepository";

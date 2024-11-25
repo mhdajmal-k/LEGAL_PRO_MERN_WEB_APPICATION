@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import IAdminInteractor from "../../../domain/entites/iuseCase/iadmin";
-import { corsOptions } from "../../../frameWorks/config/corsConfig";
 import {
   HttpStatusCode,
   MessageError,
@@ -248,7 +247,9 @@ class AdminController {
           result: response.result,
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      next(error);
+    }
   }
   async getStaticsData(
     req: Request,

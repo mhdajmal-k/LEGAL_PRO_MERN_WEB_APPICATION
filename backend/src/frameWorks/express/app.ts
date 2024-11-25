@@ -1,7 +1,6 @@
 import express from "express";
 import http from "http";
 import dotenv from "dotenv";
-import session from "express-session";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { corsOptions } from "../config/corsConfig";
@@ -12,7 +11,7 @@ import { errorHandler } from "../middleware/errorHandiler";
 import helmet from "helmet";
 import morgan from "morgan";
 import { apiLimiter } from "../config/rateLimit";
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 
 const app = express();
 const server = http.createServer(app);
@@ -43,19 +42,26 @@ io.on("connection", (socket) => {
     console.log(`User ${socket.id} joined room ${roomId}`);
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   socket.on("offer", ({ roomId, offer, userId }) => {
     socket.to(roomId).emit("offer", { offer, userId: socket.id });
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   socket.on("answer", ({ roomId, answer, userId }) => {
+    console.log(answer, "is the answer");
     socket.to(roomId).emit("answer", { answer, userId: socket.id });
   });
 
   socket.on("candidate", ({ roomId, candidate, userId }) => {
+    console.log(rooms);
+    console.log(roomId);
     const otherUsers = [...(rooms.get(roomId) || new Set())].filter(
       (id) => id !== userId
     );
+    console.log(candidate, "is the candidate");
     const otherUser = String(otherUsers);
+    console.log(otherUser, "IS THE other user");
     socket.to(roomId).emit("candidate", { candidate, otherUser });
   });
 
@@ -104,7 +110,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-// app.use(apiLimiter);
+app.use(apiLimiter);
 routes(app);
 connectToDatabase();
 app.use(errorHandler);
