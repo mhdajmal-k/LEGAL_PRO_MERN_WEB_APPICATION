@@ -22,6 +22,9 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
     credentials: true,
   },
+  pingTimeout: 60000,
+  pingInterval: 25000,
+  transports: ["websocket", "polling"],
 });
 
 dotenv.config();
@@ -60,9 +63,9 @@ io.on("connection", (socket) => {
       (id) => id !== userId
     );
     console.log(candidate, "is the candidate");
-    const otherUser = String(otherUsers);
-    console.log(otherUser, "IS THE other user");
-    socket.to(roomId).emit("candidate", { candidate, otherUser });
+    // const otherUser = String(otherUsers);
+    console.log(otherUsers, "IS THE other user");
+    socket.to(roomId).emit("candidate", { candidate, userId: socket.id });
   });
 
   socket.on("message", ({ roomId, message, userId }) => {
