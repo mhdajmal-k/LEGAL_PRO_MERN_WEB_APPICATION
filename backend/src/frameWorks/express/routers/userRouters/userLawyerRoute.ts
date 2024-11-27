@@ -1,10 +1,8 @@
 import { Router } from "express";
 
 export const userLawyerRoute = Router();
-import multer from "multer";
 import UserLawyerRepositories from "../../../../interFace_adapters/repositories/userRepositories/userLawyerRepositoires";
 import UserLawyerInteractor from "../../../../application/useCases/user/userLawyerUseCase";
-import UserProfileController from "../../../../interFace_adapters/controlers/user/userProfileController";
 import UserLawyerController from "../../../../interFace_adapters/controlers/user/lawyerControler";
 import { S3Service } from "../../../config/s3Setup";
 import { authorization } from "../../../middleware/authMilddlewere";
@@ -52,6 +50,9 @@ userLawyerRoute.get(
 );
 userLawyerRoute.get(
   "/blogs/",
-  // authorization(UserRole.User),
   userLawyerController.getallBlogs.bind(userLawyerController)
+);
+userLawyerRoute.get(
+  "/top-recommended",
+  userLawyerController.topLawyers.bind(userLawyerController)
 );

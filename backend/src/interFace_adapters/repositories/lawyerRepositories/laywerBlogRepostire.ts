@@ -32,7 +32,7 @@ class LawyerBlogRepository implements ILawyerBlogRepository {
   ): Promise<IBlog[]> {
     try {
       const skip = (page - 1) * limit;
-      const blogs = await Blog.find({ author: "67136cfb24ccd19a7be5e5b7" })
+      const blogs = await Blog.find({ author: author })
         .skip(skip)
         .limit(limit)
         .sort({ createdAt: -1 })
@@ -68,10 +68,9 @@ class LawyerBlogRepository implements ILawyerBlogRepository {
         .limit(limit as number)
         .sort({ createdAt: -1 })
         .populate("author", "userName profile_picture");
-      console.log(blogs, "in the repo");
       return blogs;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 }

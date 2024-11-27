@@ -23,6 +23,7 @@ class LawyerAuthController {
     next: NextFunction
   ): Promise<void> {
     try {
+      console.log("in the lawyer singup");
       const data = req.body;
       const file = req.file;
       const validateDataError = validateLawyerInput(data);
@@ -151,7 +152,7 @@ class LawyerAuthController {
   ): Promise<void> {
     try {
       const data = req.body;
-
+      console.log("in the lawyer verify Data");
       const id = req.user?.id;
       const files = req.files as
         | { [fieldname: string]: Express.Multer.File[] }

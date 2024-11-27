@@ -1,4 +1,5 @@
 import { ITransaction } from "../../../domain/entites/imodels/ITransaction";
+import { IUser } from "../../../domain/entites/imodels/Iuser";
 import IUserProfileRepository from "../../../domain/entites/irepositories/iuserProfileRepostiry";
 import Transaction from "../../../frameWorks/database/models/transactionModel";
 import User from "../../../frameWorks/database/models/userModel";
@@ -86,6 +87,22 @@ class UserProfileRepository implements IUserProfileRepository {
     } catch (error) {
       console.error("Error fetching transaction details:", error);
       throw new Error("Failed to retrieve transaction details.");
+    }
+  }
+  async getProfileData(id: string): Promise<IUser> {
+    try {
+      const userData = await User.findById(id, {
+        userName: 1,
+        email: 1,
+        profilePicture: 1,
+        phoneNumber: 1,
+      });
+      if (!userData) {
+        throw new Error("User not found");
+      }
+      return userData as IUser;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 }

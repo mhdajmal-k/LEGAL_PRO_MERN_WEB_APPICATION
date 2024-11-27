@@ -6,6 +6,7 @@ interface IUserProfileInteractor {
     data: IProfileUpdateData,
     file: Express.Multer.File | null
   ): Promise<IUpdateResponse<IUser>>;
+  getProfileData(id: string): Promise<IUpdateResponse<IUser>>;
   resetPassword({
     currentPassword,
     newPassword,

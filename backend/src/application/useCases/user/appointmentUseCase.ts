@@ -12,7 +12,6 @@ import {
 } from "../../../frameWorks/utils/helpers/Enums";
 import { razorpayInstance } from "../../../frameWorks/services/razorPay";
 import { config } from "../../../frameWorks/config/envConfig";
-import { appointmentId } from "../../../frameWorks/utils/helpers/randomAppontmentId";
 import { iEmailService } from "../../../domain/services/IEmailService";
 import iUserRepository from "../../../domain/entites/irepositories/iuserRepositories";
 
@@ -44,7 +43,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       const validLawyer = await this.UserLawyerRepository.getLawyerById(
         LawyerId
       );
-      console.log(validLawyer);
       if (!validLawyer) {
         const error: CustomError = new Error(MessageError.LawyerNotFound);
         error.statusCode = HttpStatusCode.NotFound;
@@ -113,20 +111,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         error.statusCode = HttpStatusCode.InternalServerError;
         throw error;
       }
-      // const updateStatusInSlot =
-      //   await this.UserLawyerRepository.updateStatusSlotBySpecifSlotId(
-      //     slotId,
-      //     specificSlotId,
-      //     true
-      //   );
-
-      // if (!updateStatusInSlot) {
-      //   const error: CustomError = new Error(
-      //     MessageError.AppointmentCreationError
-      //   );
-      //   error.statusCode = HttpStatusCode.InternalServerError;
-      //   throw error;
-      // }
 
       return {
         statusCode: HttpStatusCode.Created,
@@ -134,8 +118,8 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         message: MessageError.AppointmentCreated,
         result: createdAppointment,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
@@ -251,7 +235,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       }
 
       if (specificSlot.availability[0].status == true) {
-        // console.log("in here status");
         const error: CustomError = new Error(MessageError.AlreadyBooked);
         error.statusCode = HttpStatusCode.BadRequest;
         throw error;
@@ -268,11 +251,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         amount: appointment.subTotal * 100,
         currency: "INR",
         receipt: appointmentId,
-        // notes: {
-        //   appointmentId: appointmentId,
-        //   lawyerId: appointment.lawyerId.toString(),
-        //   userId: appointment.userId.toString()
-        // }
       };
 
       const order = await razorpayInstance.orders.create(options);
@@ -290,7 +268,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         },
       };
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -410,8 +387,8 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         message: MessageError.PaymentSuccessFull,
         result: updatedAppointment,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
@@ -456,8 +433,8 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         result: appointments,
         totalPages: totalPages,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
@@ -654,7 +631,6 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       const getAppointment =
         await this.AppointmentRepository.getAppointmentById(appointmentId);
       if (!getAppointment) {
-        console.log("In here not found");
         const error: CustomError = new Error(MessageError.AppointmentNotFound);
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
@@ -663,9 +639,8 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         await this.AppointmentRepository.updateFailedAppointmentById(
           appointmentId
         );
-      console.log(updatedAppointment);
+
       if (!updatedAppointment) {
-        console.log("in here");
         const error: CustomError = new Error(MessageError.AppointmentNotFound);
         error.statusCode = HttpStatusCode.Forbidden;
         throw error;
@@ -689,8 +664,8 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         message: MessageError.paymentFiled,
         result: updatedAppointment,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
   async completeAppointment(appointmentId: string): Promise<{

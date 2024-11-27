@@ -23,6 +23,11 @@ profileRoute.put(
   userProfileController.updateProfileData.bind(userProfileController)
 );
 profileRoute.get(
+  "/",
+  authorization(UserRole.User),
+  userProfileController.getProfile.bind(userProfileController)
+);
+profileRoute.get(
   "/walletDetails",
   authorization(UserRole.User),
   userProfileController.walletDetails.bind(userProfileController)

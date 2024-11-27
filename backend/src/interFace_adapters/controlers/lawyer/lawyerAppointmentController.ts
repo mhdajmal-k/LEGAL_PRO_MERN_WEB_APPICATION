@@ -17,8 +17,6 @@ class LawyerAppointmentController {
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("called");
-      console.log(req.query);
       const { status } = req.query;
       const currentPage = req.query.page ? req.query.page : 1;
       const limit = req.query.limit ? req.query.limit : 5;
@@ -64,6 +62,7 @@ class LawyerAppointmentController {
       const response = await this.lawyerAppointmentInteractor.getAppointment(
         appointmentId
       );
+
       if (response.status) {
         return res.status(response.statusCode).json({
           status: response.status,

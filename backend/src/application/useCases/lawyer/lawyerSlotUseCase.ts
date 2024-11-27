@@ -24,7 +24,6 @@ class LawyerSlotInteractor implements ILawyerSlotInteractor {
         feeAmount,
         availabilityTime
       );
-      console.log(createSlot, "is the create Slot");
       return {
         statusCode: 200,
         status: true,
@@ -32,6 +31,7 @@ class LawyerSlotInteractor implements ILawyerSlotInteractor {
         result: createSlot,
       };
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }
@@ -68,7 +68,6 @@ class LawyerSlotInteractor implements ILawyerSlotInteractor {
     result: string | {};
   }> {
     try {
-      console.log(availabilityTime, "is the avilability");
       const updatedSlot = await this.Repository.updateSlot(
         slotId,
         feeAmount,
@@ -91,7 +90,6 @@ class LawyerSlotInteractor implements ILawyerSlotInteractor {
     result: string | {};
   }> {
     try {
-      console.log(slotId, "is the dleted Slotd Id");
       const deleteSlot = await this.Repository.deleteSlot(slotId);
       return {
         statusCode: 200,

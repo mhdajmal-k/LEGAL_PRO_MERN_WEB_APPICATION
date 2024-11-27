@@ -136,8 +136,8 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         status: true,
         statusCode: 200,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
   async creatingLawyerReview(
@@ -175,8 +175,8 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         status: true,
         statusCode: HttpStatusCode.OK,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
   async getLawyerReview(
@@ -251,6 +251,29 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
     } catch (error) {
       console.log(error);
       throw error;
+    }
+  }
+  async topLawyersForRecommendation(): Promise<IUpdateResponse<ILawyer[]>> {
+    try {
+      const topLawyers = await this.Repository.getLawyerTopLawyers();
+      const updatedTopLawyers = await Promise.all(
+        topLawyers.map(async (lawyer: ILawyer) => {
+          if (lawyer.profile_picture) {
+            lawyer.profile_picture = await this.s3Service.fetchFile(
+              lawyer.profile_picture
+            );
+          }
+          return lawyer;
+        })
+      );
+      return {
+        status: true,
+        statusCode: HttpStatusCode.OK,
+        message: "",
+        result: updatedTopLawyers,
+      };
+    } catch (error: any) {
+      throw error.message;
     }
   }
 }

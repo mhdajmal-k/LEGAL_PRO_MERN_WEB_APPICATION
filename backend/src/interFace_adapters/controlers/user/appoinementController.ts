@@ -25,22 +25,14 @@ class AppointmentController {
         appointmentTime,
         consultationFee,
         specificSlotId,
-        userId,
         description,
       } = req.body;
 
       const file = req.file ?? null;
-      console.log(file, "is the image file");
-      if (userIdFromToken !== userId) {
-        return res.status(HttpStatusCode.Forbidden).json({
-          status: false,
-          message: MessageError.Unauthorized,
-          result: {},
-        });
-      }
+
       if (
         !lawyerId ||
-        !slotId ||
+        !String(userIdFromToken) ||
         !appointmentDate ||
         !appointmentTime ||
         !consultationFee ||
@@ -62,7 +54,7 @@ class AppointmentController {
         appointmentTime,
         appointmentDate,
         description,
-        userId,
+        String(userIdFromToken),
         file
       );
       if (response.status) {
@@ -119,8 +111,7 @@ class AppointmentController {
       const { status } = req.query;
       const currentPage = req.query.page ? req.query.page : 1;
       const limit = req.query.limit ? req.query.limit : 5;
-      console.log(currentPage);
-      console.log(limit);
+
       const userIdFromToken = req.user?.id;
       const filter = status ?? "Pending";
       const response =
@@ -355,7 +346,6 @@ class AppointmentController {
   ): Promise<any> {
     try {
       const { appointmentId } = req.params;
-      console.log(appointmentId, "isn the compleat appointment");
       if (!appointmentId) {
         return res.status(HttpStatusCode.BadRequest).json({
           status: false,

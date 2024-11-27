@@ -1,4 +1,4 @@
-import { Express, Router } from "express";
+import { Router } from "express";
 import { lawyerAuthRouter } from "./authRouters";
 import { slotRoute } from "./slotRutes";
 import { lawyerAppointmentRoute } from "./appointmentRoute";

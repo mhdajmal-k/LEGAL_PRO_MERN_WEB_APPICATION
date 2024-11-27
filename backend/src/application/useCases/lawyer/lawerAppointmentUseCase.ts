@@ -59,8 +59,8 @@ class LawyerAppointmentInteractor implements ILawyerAppointmentInteractor {
         result: appointments,
         totalPages: totalPages,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
   async getAppointment(appointmentId: string): Promise<{
@@ -112,22 +112,22 @@ class LawyerAppointmentInteractor implements ILawyerAppointmentInteractor {
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
-      const razorpay_payment_id = getAppointment?.razorpayPaymentId!;
-      const consultationFeeWithoutConvenienceFee =
-        getAppointment?.subTotal * 100;
-      const issueRefund = await razorpayInstance.payments.refund(
-        razorpay_payment_id,
-        { amount: consultationFeeWithoutConvenienceFee }
-      );
-      if (!issueRefund) {
-        const error: CustomError = new Error(MessageError.RefundInitiatedFiled);
-        error.statusCode = HttpStatusCode.NotFound;
-        throw error;
-      }
+      // const razorpay_payment_id = getAppointment?.razorpayPaymentId!;
+      // const consultationFeeWithoutConvenienceFee =
+      //   getAppointment?.subTotal * 100;
+      // const issueRefund = await razorpayInstance.payments.refund(
+      //   razorpay_payment_id,
+      //   { amount: consultationFeeWithoutConvenienceFee }
+      // );
+      // if (!issueRefund) {
+      //   const error: CustomError = new Error(MessageError.RefundInitiatedFiled);
+      //   error.statusCode = HttpStatusCode.NotFound;
+      //   throw error;
+      // }
 
       await this.LawyerAppointmentRepository.cancelAppointmentById(
         appointmentId,
-        issueRefund.id,
+        "",
         "Cancelled"
       );
       const slot = getAppointment?.slotId;
@@ -151,7 +151,6 @@ class LawyerAppointmentInteractor implements ILawyerAppointmentInteractor {
       const user = await this.UserRepository.getId(
         getAppointment?.userId._id.toString()
       );
-
       const emailSentToLawyer =
         this.nodeMailer.sendCancellationConfirmationToLawyer(
           validLawyer?.email,
@@ -171,6 +170,34 @@ class LawyerAppointmentInteractor implements ILawyerAppointmentInteractor {
           lawyerName: validLawyer.userName,
         }
       );
+      const addToWallet = await this.UserRepository.addToWallet(
+        String(getAppointment.userId),
+        getAppointment.subTotal
+      );
+
+      if (!addToWallet) {
+        const error: CustomError = new Error(MessageError.UserNotFound);
+        error.statusCode = HttpStatusCode.NotFound;
+        throw error;
+      }
+
+      // Add to transactions
+      const transactionData = {
+        userId: String(getAppointment.userId),
+        amount: getAppointment.subTotal,
+        type: "credit",
+        description: `Refunded consultation fee due to cancellation by lawyer ${validLawyer.userName}`,
+      };
+
+      const addToTransaction = await this.UserRepository.createTransaction(
+        transactionData
+      );
+
+      if (!addToTransaction) {
+        const error: CustomError = new Error("Failed to record transaction.");
+        error.statusCode = HttpStatusCode.InternalServerError;
+        throw error;
+      }
       if (!emailSentToLawyer || !emailSentToUser)
         console.error("Failed to send booking confirmation");
       return {
@@ -179,8 +206,8 @@ class LawyerAppointmentInteractor implements ILawyerAppointmentInteractor {
         message: MessageError.lawyerCancelAppointment,
         result: {},
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 }

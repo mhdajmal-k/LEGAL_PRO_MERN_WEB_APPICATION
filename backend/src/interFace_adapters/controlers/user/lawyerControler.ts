@@ -95,7 +95,7 @@ class UserLawyerController {
     next: NextFunction
   ): Promise<any> {
     try {
-      let { id } = req.params;
+      const { id } = req.params;
       if (!id) {
         return res.status(HttpStatusCode.BadRequest).json({
           status: false,
@@ -124,7 +124,7 @@ class UserLawyerController {
     next: NextFunction
   ): Promise<any> {
     try {
-      let { id } = req.params;
+      const { id } = req.params;
       if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(HttpStatusCode.OK).json({
           status: false,
@@ -133,7 +133,6 @@ class UserLawyerController {
         });
       }
       const response = await this.UserLawyerInteractor.getLawyerslot(id);
-      console.log(response);
       if (response.status) {
         return res.status(response.statusCode).json({
           status: response.status,
@@ -181,7 +180,6 @@ class UserLawyerController {
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("hi in the getReviews");
       let { id } = req.params;
 
       const { page = 1, limit = 10 } = req.query;
@@ -197,7 +195,6 @@ class UserLawyerController {
         Number(String(page)),
         Number(String(limit))
       );
-      console.log(response, "in the revewis ");
       res.status(response.statusCode).json({
         status: response.status,
         message: response.message,
@@ -220,6 +217,24 @@ class UserLawyerController {
         Number(String(limit))
       );
       console.log(response, "in the revewis ");
+      res.status(response.statusCode).json({
+        status: response.status,
+        message: response.message,
+        result: response.result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async topLawyers(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    try {
+      console.log("hi");
+      const response =
+        await this.UserLawyerInteractor.topLawyersForRecommendation();
       res.status(response.statusCode).json({
         status: response.status,
         message: response.message,

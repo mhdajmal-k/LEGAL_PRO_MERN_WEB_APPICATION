@@ -40,6 +40,33 @@ class UserProfileController {
       next(error);
     }
   }
+  async getProfile(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const userId = req.user?.id;
+
+      const response = await this.userProfileInteractor.getProfileData(
+        String(userId)
+      );
+
+      if (!response.status) {
+        const error: CustomError = new Error(response.message) as CustomError;
+        error.statusCode = HttpStatusCode.BadRequest;
+        throw error;
+      }
+      console.log(response, "is the profile response");
+      return res.status(HttpStatusCode.OK).json({
+        status: true,
+        message: "Profile fetched successfully",
+        result: response.result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 
   ///////////////////////
 

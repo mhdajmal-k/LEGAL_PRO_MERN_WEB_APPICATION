@@ -1,5 +1,5 @@
 import {
-  IAppointment,
+  // IAppointment,
   IAppointmentLawyerSide,
 } from "../../../domain/entites/imodels/iAppontment";
 import ILawyerAppointmentRepository from "../../../domain/entites/irepositories/ILawyerAppointmentRepositories";
@@ -14,14 +14,14 @@ class LawyerAppointmentRepository implements ILawyerAppointmentRepository {
     limit: number
   ): Promise<IAppointmentLawyerSide[] | null | any> {
     try {
-      let filter = {};
-      if (status === "Pending") {
-        filter = { date: { $gte: new Date() }, status: "Pending" };
-      } else if (status === "Completed") {
-        filter = { date: { $lt: new Date() }, status: "Completed" };
-      } else if (status === "canceled") {
-        filter = { status: "Cancelled" };
-      }
+      // let filter = {};
+      // if (status === "Pending") {
+      //   filter = { date: { $gte: new Date() }, status: "Pending" };
+      // } else if (status === "Completed") {
+      //   filter = { date: { $lt: new Date() }, status: "Completed" };
+      // } else if (status === "canceled") {
+      //   filter = { status: "Cancelled" };
+      // }
       const appointments = await Appointment.find({
         lawyerId: lawyerId,
         status: status,
@@ -33,8 +33,8 @@ class LawyerAppointmentRepository implements ILawyerAppointmentRepository {
         .lean();
       console.log(appointments);
       return appointments;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
   // async getAppointmentById(
@@ -62,7 +62,7 @@ class LawyerAppointmentRepository implements ILawyerAppointmentRepository {
         status: status,
       });
       return appointmentsTotal;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error("field to get total counts");
     }
   }
@@ -73,11 +73,11 @@ class LawyerAppointmentRepository implements ILawyerAppointmentRepository {
       const appointment = await Appointment.findById({
         _id: appointmentId,
       })
-        .populate("lawyerId", "userName profile_picture city state designation")
+        .populate("userId", "userName profile_picture")
         .lean();
       return appointment as any;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
   async cancelAppointmentById(
@@ -123,8 +123,8 @@ class LawyerAppointmentRepository implements ILawyerAppointmentRepository {
 
       console.log(updateSlot, "is the updated Slot");
       return updateSlot;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 }

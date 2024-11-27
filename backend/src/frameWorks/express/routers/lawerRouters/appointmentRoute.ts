@@ -2,7 +2,6 @@ import { Router } from "express";
 import { authorization } from "../../../middleware/authMilddlewere";
 import LawyerAppointmentRepository from "../../../../interFace_adapters/repositories/lawyerRepositories/lawyerAppointmentRepository";
 import LawyerAppointmentInteractor from "../../../../application/useCases/lawyer/lawerAppointmentUseCase";
-import AppointmentController from "../../../../interFace_adapters/controlers/user/appoinementController";
 import LawyerAppointmentController from "../../../../interFace_adapters/controlers/lawyer/lawyerAppointmentController";
 import { S3Service } from "../../../config/s3Setup";
 import EmailService from "../../../services/mailer";

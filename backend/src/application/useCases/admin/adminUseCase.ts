@@ -451,15 +451,14 @@ class AdminInteractor implements IAdminInteractor {
         countDocuments: countDocuments,
         totalUsers: totalUsers,
       };
-      console.log(result, "is the stats result");
       return {
         statusCode: HttpStatusCode.OK,
         status: true,
         message: "",
         result,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 }

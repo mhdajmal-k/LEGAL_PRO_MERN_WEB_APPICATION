@@ -106,7 +106,7 @@ class LawyerSlotController {
   ): Promise<any> {
     try {
       const { slotId } = req.params;
-      console.log(slotId, "is backend slot id");
+
       if (!mongoose.Types.ObjectId.isValid(slotId)) {
         return res.status(400).json({
           status: false,

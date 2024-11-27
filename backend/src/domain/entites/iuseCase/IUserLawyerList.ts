@@ -1,8 +1,8 @@
-import { IUser } from "../../../domain/entites/imodels/Iuser";
+// import { IUser } from "../../../domain/entites/imodels/Iuser";
 import { IBlog } from "../imodels/iBlog";
 import { ILawyer, LawyerQuery } from "../imodels/iLawyer";
 import { IReview } from "../imodels/iReview";
-import { IProfileUpdateData, IUpdateResponse } from "../imodels/iUserProfle";
+import { IUpdateResponse } from "../imodels/iUserProfle";
 
 interface IUsersLawyerInteractor {
   getVerifiedLawyers(
@@ -17,6 +17,7 @@ interface IUsersLawyerInteractor {
     totalPages?: number;
   }>;
   getLawyerById(id: string): Promise<IUpdateResponse<ILawyer>>;
+  topLawyersForRecommendation(): Promise<IUpdateResponse<ILawyer[]>>;
   getLawyerslot(lawyerId: string): Promise<{
     statusCode: number;
     status: boolean;

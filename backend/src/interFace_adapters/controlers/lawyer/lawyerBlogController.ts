@@ -11,11 +11,10 @@ class BlogController {
     next: NextFunction
   ) {
     try {
-      console.log(req.body);
       const author = req.user?.id;
       const { title, content, category } = req.body;
       const file = req.file;
-      // console.log(file, "is the file");
+
       if (!file) {
         res.status(HttpStatusCode.BadRequest).json({
           status: false,
@@ -40,12 +39,14 @@ class BlogController {
         });
       }
     } catch (error) {
-      next();
+      next(error);
     }
   }
+
+  ///////////////
+
   async getBlogs(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
-      console.log("in herer");
       const author = req.user?.id;
       const { page, limit } = req.query;
 
@@ -57,7 +58,6 @@ class BlogController {
         parsedLimit,
         author
       );
-      console.log(response, "is the response");
 
       res.status(HttpStatusCode.OK).json({
         status: response.status,
@@ -65,20 +65,19 @@ class BlogController {
         result: response.result,
       });
     } catch (error) {
-      next(error); // Forward error to global error handler
+      next(error);
     }
   }
+
+  ////////////
+
   async getOneBlog(
     req: AuthenticatedRequest,
     res: Response,
     next: NextFunction
   ) {
     try {
-      // const author = req.user?.id;
-      console.log("called");
-
       const { id } = req.params;
-      console.log(id, "is the id");
       if (!id) {
         res.status(HttpStatusCode.BadRequest).json({
           status: false,
@@ -90,15 +89,13 @@ class BlogController {
       const response = await this.lawyerBlogInteractor.getOneBlogById(
         String(id)
       );
-      console.log(response, "is the response");
-
       res.status(HttpStatusCode.OK).json({
         status: response.status,
         message: response.message,
         result: response.result,
       });
     } catch (error) {
-      next(error); // Forward error to global error handler
+      next(error);
     }
   }
 }

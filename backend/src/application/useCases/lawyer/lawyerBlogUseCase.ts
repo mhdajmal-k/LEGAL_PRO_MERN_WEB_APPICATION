@@ -22,7 +22,6 @@ class LawyerBlogInteractor implements ILawyerBlogInteractor {
     result: string | {};
   }> {
     try {
-      console.log("in here blog creation '''''''''''''''''''");
       let image;
       if (file) {
         const key = `lawyer-blogImage/${Date.now()}-${file.originalname}`;

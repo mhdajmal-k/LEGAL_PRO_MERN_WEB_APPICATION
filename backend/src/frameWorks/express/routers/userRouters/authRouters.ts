@@ -10,7 +10,7 @@ import { apiLimiter } from "../../../config/rateLimit";
 import { S3Service } from "../../../config/s3Setup";
 
 export const authRouter = Router();
-require("dotenv").config();
+// require("dotenv").config();
 const emailService = new EmailService(
   process.env.EMAIL_ID as string,
   process.env.EMAIL_PASS as string

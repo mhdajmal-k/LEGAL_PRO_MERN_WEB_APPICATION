@@ -70,9 +70,8 @@ class userProfileInteractor implements IUserProfileInteractor {
     prompt: string
   ): Promise<{ status: boolean; message: string; result: string }> {
     try {
-      console.log("in the ai search ser");
       const response = await run(prompt);
-      console.log("ai response", response);
+
       const filteredResult = response?.replace(/\*\*(.*?)\*\*/g, "$1");
       return {
         status: true,
@@ -87,7 +86,6 @@ class userProfileInteractor implements IUserProfileInteractor {
     id: string | undefined
   ): Promise<{ status: boolean; message: string; result: {} }> {
     try {
-      console.log("hi");
       const walletBalance = await this.Repository.getWalletBalance(id!);
       const getTransactionDetails = await this.Repository.getTransactionDetails(
         id!
@@ -96,14 +94,34 @@ class userProfileInteractor implements IUserProfileInteractor {
         walletBalance,
         getTransactionDetails,
       };
-      console.log(data, "is the data");
+
       return {
         status: true,
         message: "",
         result: data,
       };
     } catch (error) {
-      throw error;
+      throw Error("Failed to fetching the wallet Data");
+    }
+  }
+
+  async getProfileData(id: string): Promise<IUpdateResponse<IUser>> {
+    try {
+      const userData = await this.Repository.getProfileData(id);
+      if (userData) {
+        userData.profilePicture = await this.s3Service.fetchFile(
+          String(userData.profilePicture)
+        );
+      }
+
+      return {
+        statusCode: 200,
+        status: true,
+        message: "",
+        result: userData,
+      };
+    } catch (error: any) {
+      throw error.message;
     }
   }
 }

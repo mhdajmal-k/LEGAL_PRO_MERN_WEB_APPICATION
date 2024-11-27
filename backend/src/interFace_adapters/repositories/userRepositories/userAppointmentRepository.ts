@@ -36,7 +36,6 @@ class UserAppointmentRepositories implements IUserAppointmentRepository {
       await createAppointment.save();
       return createAppointment;
     } catch (error) {
-      console.log("error", error);
       throw error;
     }
   }
@@ -196,7 +195,7 @@ class UserAppointmentRepositories implements IUserAppointmentRepository {
         _id: appointmentId,
         status: "Cancelled",
       });
-      console.log(cancelledAppointment, "in the repo");
+
       return cancelledAppointment;
     } catch (error: any) {
       throw Error(error.message);
@@ -204,12 +203,11 @@ class UserAppointmentRepositories implements IUserAppointmentRepository {
   }
   async updateFailedAppointmentById(appointmentId: string): Promise<any> {
     try {
-      console.log(appointmentId, "in the fi.de");
       const cancelledAppointment = await Appointment.findByIdAndUpdate(
         { _id: appointmentId },
         { $set: { status: "Cancelled", paymentStatus: "Failed" } }
       );
-      console.log(cancelledAppointment, "in the repo failed");
+
       return cancelledAppointment;
     } catch (error: any) {
       console.log(error, "in repo of filaed payment");

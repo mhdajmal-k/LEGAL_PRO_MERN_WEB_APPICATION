@@ -48,13 +48,11 @@ class UserAuthController {
   async verifyOtp(req: Request, res: Response): Promise<any> {
     try {
       const { otp } = req.body;
-
       if (!otp || otp.trim() == "")
         return res
           .status(HttpStatusCode.BadRequest)
           .json({ status: false, message: "otp is required", result: {} });
       const token = req.cookies.auth_token;
-
       if (!token)
         return res.status(HttpStatusCode.Unauthorized).json({
           status: false,
@@ -78,11 +76,14 @@ class UserAuthController {
           sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
+
         res.clearCookie("auth_token");
+        const token = data.tokenJwt;
+
         return res.status(HttpStatusCode.OK).json({
           status: status,
           message: response.message,
-          result: data.user,
+          result: { token },
         });
       } else {
         res.status(400).json({
@@ -132,7 +133,7 @@ class UserAuthController {
         res.status(HttpStatusCode.OK).json({
           status: status,
           message: response.message,
-          result: data.user,
+          result: data.tokenJwt,
         });
       } else {
         res.status(HttpStatusCode.InternalServerError).json({
@@ -167,6 +168,8 @@ class UserAuthController {
       const response = await this.userAuthInteractor.googleSignUP(req.body);
 
       const { status, message, result } = response;
+      console.log(response, "is the response google");
+      const token = result?.tokenJwt;
       if (status) {
         const data = result as IUserResult;
         res.cookie("User_AccessToken", data.tokenJwt, {
@@ -174,20 +177,15 @@ class UserAuthController {
           sameSite: "strict",
           maxAge: 15 * 60 * 1000,
         });
+
         res.clearCookie("auth_token");
         res.status(HttpStatusCode.OK).json({
           status: status,
           message: response.message,
-          result: data.user,
-        });
-      } else {
-        res.status(400).json({
-          status: status,
-          message: response.message,
-          result: {},
+          result: { token },
         });
       }
-      return res.status;
+      // return res.status;
     } catch (error) {
       console.log(error);
       next(error);

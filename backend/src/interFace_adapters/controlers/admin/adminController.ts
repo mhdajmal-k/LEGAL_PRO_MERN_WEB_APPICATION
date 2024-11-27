@@ -276,7 +276,6 @@ class AdminController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("in logout");
       res.clearCookie("auth_adminAccessToken");
       res.status(200).json({ message: "Logout successful", status: true });
     } catch (error) {

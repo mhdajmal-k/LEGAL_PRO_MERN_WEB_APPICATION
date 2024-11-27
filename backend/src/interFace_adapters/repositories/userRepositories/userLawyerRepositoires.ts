@@ -7,7 +7,7 @@ import {
   HttpStatusCode,
   MessageError,
 } from "../../../frameWorks/utils/helpers/Enums";
-import { LawyerQuery } from "../../../domain/entites/imodels/iLawyer";
+import { ILawyer, LawyerQuery } from "../../../domain/entites/imodels/iLawyer";
 import Review from "../../../frameWorks/database/models/reviews";
 import { IReview } from "../../../domain/entites/imodels/iReview";
 class UserLawyerRepositories implements IUserLawyerRepository {
@@ -50,7 +50,6 @@ class UserLawyerRepositories implements IUserLawyerRepository {
         error.statusCode = 400;
         throw error;
       }
-      console.log(getLawyer, "is htttttttttttttttttttttttttttttttttttt");
       return getLawyer;
     } catch (error) {
       throw error;
@@ -168,17 +167,46 @@ class UserLawyerRepositories implements IUserLawyerRepository {
     limit: number
   ): Promise<IReview[]> {
     try {
-      console.log(lawyerId, "in the respo");
-      console.log(currentPage, "in the respo");
-      console.log(limit, "in the respo");
       const reviews = await Review.find({ lawyerId })
         .sort({ createdAt: -1 })
         .skip((currentPage - 1) * limit)
         .limit(limit)
         .populate("userId", "userName profile_picture");
 
-      console.log(reviews, "in the repo");
       return reviews;
+    } catch (error: any) {
+      throw error.message;
+    }
+  }
+  async getLawyerTopLawyers(): Promise<ILawyer[]> {
+    try {
+      const topReviews = await Review.aggregate([
+        {
+          $group: {
+            _id: "$lawyerId",
+            averageRating: { $avg: "$rating" },
+            reviewCount: { $sum: 1 },
+          },
+        },
+        {
+          $sort: {
+            averageRating: -1,
+            reviewCount: -1,
+          },
+        },
+        { $limit: 3 },
+      ]);
+      const lawyerIds = topReviews.map((review) => review._id);
+      const topLawyers = await Lawyer.find({
+        _id: { $in: lawyerIds },
+        verified: "verified",
+        block: false,
+      })
+        .select(
+          "userName profile_picture practice_area years_of_experience city state courtPracticeArea designation"
+        )
+        .lean();
+      return topLawyers;
     } catch (error: any) {
       throw error.message;
     }

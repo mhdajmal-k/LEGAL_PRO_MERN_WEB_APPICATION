@@ -190,7 +190,6 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
     statusCode: number;
   }> {
     try {
-      console.log(user);
       const { email, password } = user;
       const validLawyer = await this.Repository.validLawyer(email);
       if (!validLawyer) {
@@ -256,9 +255,9 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
     try {
       const OTP = this.optGenerator.generateOTP();
       const decodeToken = decodeSingUpToken(token);
-      console.log(decodeToken);
+
       const currentTime = Math.floor(Date.now() / 1000);
-      console.log(decodeToken.otpExpiresAt);
+
       if (decodeToken.exp < currentTime) {
         const error: CustomError = new Error("Session is expired, try again");
         error.statusCode = 400;
@@ -329,14 +328,13 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
   }> {
     try {
       const decoded = this.jwt.verifyToken(token);
-      console.log(decoded?.id, "is the decoded token");
+
       if (!decoded) {
-        console.log("Hi");
         const error: CustomError = new Error("invalid Token");
         error.statusCode = 401;
         throw error;
       }
-      console.log(decoded.id, "is the id");
+
       const validUser = await this.Repository.getId(decoded?.id);
       if (!validUser) {
         const error: CustomError = new Error("user not found");
@@ -384,7 +382,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
             result: null,
           };
         }
-        console.log("existingUser._id", existUser._id);
+
         const newJwtAccessToken = this.jwt.generateToken(
           existUser._id,
           UserRole.Lawyer

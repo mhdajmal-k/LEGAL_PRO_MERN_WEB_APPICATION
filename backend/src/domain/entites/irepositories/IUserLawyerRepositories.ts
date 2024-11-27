@@ -1,4 +1,4 @@
-import { LawyerQuery } from "../imodels/iLawyer";
+import { ILawyer, LawyerQuery } from "../imodels/iLawyer";
 import { IReview } from "../imodels/iReview";
 
 interface IUserLawyerRepository {
@@ -8,6 +8,7 @@ interface IUserLawyerRepository {
     query: LawyerQuery
   ): Promise<any>;
   getLawyerById(id: string): Promise<any>;
+  getLawyerTopLawyers(): Promise<ILawyer[]>;
   getTotalCountOfLawyers(db: string, query: LawyerQuery): Promise<any>;
   getLawyerSlots(id: string): Promise<any>;
   getSlotBySlotId(slotId: string): Promise<any>;

@@ -29,6 +29,6 @@ blogRoute.get(
 );
 blogRoute.get(
   "/view/:id",
-  // authorization(UserRole.Lawyer),
+  authorization(UserRole.Lawyer),
   lawyerBlogController.getOneBlog.bind(lawyerBlogController)
 );

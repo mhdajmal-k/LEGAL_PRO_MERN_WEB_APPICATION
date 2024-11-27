@@ -78,7 +78,7 @@ class userAuthInteractor implements IUserAuthInteractor {
     result?: {} | IUserResult | undefined;
   }> {
     const decodeToken = decodeSingUpToken(token);
-    console.log(decodeToken);
+
     const currentTime = Math.floor(Date.now() / 1000);
     if (decodeToken.otpExpiresAt < currentTime)
       return {
@@ -161,7 +161,7 @@ class userAuthInteractor implements IUserAuthInteractor {
         validUser._id,
         UserRole.User
       );
-      console.log(validUser, "is the valid user");
+
       validUser.profilePicture
         ? (validUser.profilePicture = await this.s3Service.fetchFile(
             validUser.profilePicture
@@ -194,7 +194,6 @@ class userAuthInteractor implements IUserAuthInteractor {
       const { email, userName } = user;
       let validUser = await this.Repository.validUser(email);
       if (!validUser) {
-        console.log(validUser, "is the auth");
         validUser = await this.Repository.createUserFromGoogle(user);
       }
       const jwtToken = this.jwt.generateToken(validUser._id, UserRole.User);
@@ -231,7 +230,7 @@ class userAuthInteractor implements IUserAuthInteractor {
     try {
       const OTP = this.optGenerator.generateOTP();
       const decodeToken = decodeSingUpToken(token);
-      console.log(decodeToken);
+
       const currentTime = Math.floor(Date.now() / 1000);
       if (decodeToken.exp < currentTime) {
         console.log("hi");
@@ -250,8 +249,8 @@ class userAuthInteractor implements IUserAuthInteractor {
         message: "New OTP has been sent successfully",
         result: newSignUpToken,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
@@ -281,8 +280,8 @@ class userAuthInteractor implements IUserAuthInteractor {
         message: "Reset Password Link sended to Email",
         result: null,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
@@ -318,8 +317,8 @@ class userAuthInteractor implements IUserAuthInteractor {
         message: "password Resetted successFully",
         result: null,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
