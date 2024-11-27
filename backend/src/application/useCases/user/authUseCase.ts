@@ -233,7 +233,6 @@ class userAuthInteractor implements IUserAuthInteractor {
 
       const currentTime = Math.floor(Date.now() / 1000);
       if (decodeToken.exp < currentTime) {
-        console.log("hi");
         const error: CustomError = new Error("Session is expired, try again");
         error.statusCode = 400;
         throw error;

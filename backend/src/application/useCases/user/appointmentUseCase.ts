@@ -1,9 +1,7 @@
-import { app } from "firebase-admin";
 import IUserAppointmentRepository from "../../../domain/entites/irepositories/IUserAppointmentRepository";
 import IUserLawyerRepository from "../../../domain/entites/irepositories/IUserLawyerRepositories";
 import IUserAppointmentInteractor from "../../../domain/entites/iuseCase/iUserAppointment";
 import { IS3Service } from "../../../domain/services/Is3";
-import Appointment from "../../../frameWorks/database/models/appointmentModel";
 import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
 import crypto from "crypto";
 import {
@@ -151,8 +149,8 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         message: MessageError.AppointmentGot,
         result: appointment,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
 
@@ -267,8 +265,8 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
           key: process.env.RAZORPAY_API_KEY,
         },
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
 
@@ -535,8 +533,8 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         message: MessageError.cancelAppointment,
         result: {},
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
 
@@ -683,7 +681,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
-      console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+
       const updatedAppointment =
         await this.AppointmentRepository.updateAppointmentStatus(
           appointmentId,
@@ -697,8 +695,8 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
         message: MessageError.AppointmentCompleted,
         result: "",
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
 }

@@ -151,10 +151,11 @@ const VideoCallPage: React.FC<VideoCallPageProps> = ({ appointmentId, who }) => 
             }
 
             peerConnection.current = new RTCPeerConnection({
-                iceServers: [
-                    { urls: "stun:stun.l.google.com:19302" },
-                    { urls: "stun:stun1.l.google.com:19302" }
-                ]
+                // iceServers: [
+                //     { urls: "stun:stun.l.google.com:19302" },
+                //     { urls: "stun:stun1.l.google.com:19302" }
+                // ]
+                iceServers: [{ urls: ["stun:bn-turn1.xirsys.com"] }, { username: "6-Y9loHcFesyB2JASf4DXDre43Z-G_SvUxln5hiVrJVlb3tcl88YCgqFGbbsx8NxAAAAAGdHQepham1hbA==", credential: "9aee5d16-acd8-11ef-9ee5-0242ac140004", urls: ["turn:bn-turn1.xirsys.com:80?transport=udp", "turn:bn-turn1.xirsys.com:3478?transport=udp", "turn:bn-turn1.xirsys.com:80?transport=tcp", "turn:bn-turn1.xirsys.com:3478?transport=tcp", "turns:bn-turn1.xirsys.com:443?transport=tcp", "turns:bn-turn1.xirsys.com:5349?transport=tcp"] }]
             });
 
             localStream.getTracks().forEach(track => {

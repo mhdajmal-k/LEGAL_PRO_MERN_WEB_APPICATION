@@ -62,7 +62,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         result: SingUPTempToken,
       };
     } catch (error: any) {
-      throw error;
+      throw error.message;
     }
   }
 
@@ -113,8 +113,8 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
           tokenJwt: jwtToken,
         },
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
@@ -176,8 +176,8 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         message: "From submitted SuccessFully",
         result: {},
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
@@ -239,8 +239,8 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
           jwtRefreshToken: jwtRefreshToken,
         },
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
@@ -275,8 +275,8 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         message: "New OTP has been sent successfully",
         result: newSignUpToken,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
   async sendForgotPasswordLink(email: string): Promise<{
@@ -310,8 +310,8 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         message: "Reset Password Link sended to Email",
         result: null,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
@@ -356,8 +356,8 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         message: "password Resetted successFully",
         result: null,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
@@ -401,8 +401,8 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
           result: null,
         };
       }
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 
@@ -437,8 +437,8 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         message: "profile Updated SuccessFully",
         result: {},
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 }
