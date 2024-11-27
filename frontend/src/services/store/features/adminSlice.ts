@@ -65,10 +65,6 @@ const adminSlice = createSlice({
         state.loading = true;
       })
       .addCase(adminLogin.fulfilled, (state, actions) => {
-        console.log(
-          actions.payload.result,
-          "is the result in the extra reducer"
-        );
         state.adminInfo = actions.payload.result;
         state.error = "";
         state.loading = false;

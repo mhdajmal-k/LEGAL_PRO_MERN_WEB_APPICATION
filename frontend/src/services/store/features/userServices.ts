@@ -570,7 +570,6 @@ export const verifyPayment = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      console.log(verifyData, "is the verify DAtat");
       const response = await axiosInstance.post<response>(
         VERIFYPAYMENT,
         verifyData
