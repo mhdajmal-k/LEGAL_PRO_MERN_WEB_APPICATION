@@ -4,9 +4,6 @@ Welcome to the **LegalPro Backend** repository. This backend powers the **LegalP
 
 ---
 
-## 📸 UI Screenshot
-Here’s a screenshot of the UI interface:
-![UI Screenshot](https://github.com/mhdajmal-k/Ecommerce-D-k/blob/main/public/assets/imgs/home/dkimage.png?raw=true)
 
 
 ## 🚀 Features
