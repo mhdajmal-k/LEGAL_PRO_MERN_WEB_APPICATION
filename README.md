@@ -46,7 +46,8 @@ Welcome to the **LegalPro Backend** repository. This backend powers the **LegalP
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/<your-username>/legalpro-backend](https://github.com/mhdajmal-k/LEGAL_PRO_MERN_WEB_APPICATION.git
+  
+   git clone  https://github.com/mhdajmal-k/LEGAL_PRO_MERN_WEB_APPICATION.git
    cd backend
 
 Install dependencies:
@@ -58,7 +59,7 @@ Create a .env file in the root directory.
 Add the following variables:
 env
 
-Copy 
+Copy sample
 PORT=3000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
@@ -78,5 +79,5 @@ http://localhost:3000
 
 🚦 API Endpoints
 Authentication example
-POST /api/user/auth/singup: Register a new user/advocate.
-POST /api/user/auth/login: Login for users, admins, and advocates.
+POST /api/user/auth/singup: Register a new user.
+POST /api/user/auth/login: Login for users.
