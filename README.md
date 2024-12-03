@@ -47,7 +47,7 @@ Welcome to the **LegalPro Backend** repository. This backend powers the **LegalP
 1. Clone the repository:
    ```bash
    git clone https://github.com/<your-username>/legalpro-backend](https://github.com/mhdajmal-k/LEGAL_PRO_MERN_WEB_APPICATION.git
-   cd legalpro-backend
+   cd backend
 
 Install dependencies:
 npm install
