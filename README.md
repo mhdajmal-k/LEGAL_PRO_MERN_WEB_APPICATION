@@ -75,9 +75,12 @@ bash
 npm run dev
 
 Test the APIs using Postman or any API client:
+
 http://localhost:3000
 
 🚦 API Endpoints
+
 Authentication example
+
 POST /api/user/auth/singup: Register a new user.
 POST /api/user/auth/login: Login for users.
