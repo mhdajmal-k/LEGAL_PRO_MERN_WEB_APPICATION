@@ -67,8 +67,8 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         result: updatedVerifiedLawyers,
         totalPages: totalPages,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
   async getLawyerById(id: string): Promise<IUpdateResponse<ILawyer>> {
@@ -88,7 +88,7 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         status: true,
         statusCode: 200,
       };
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     }
   }
@@ -208,6 +208,7 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         statusCode: HttpStatusCode.OK,
       };
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }
@@ -245,7 +246,7 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
       return {
         status: true,
         statusCode: HttpStatusCode.OK,
-        message: "blog Created",
+        message: "",
         result: updatedBlog,
       };
     } catch (error) {

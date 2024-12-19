@@ -5,6 +5,7 @@ export interface IBlog extends Document {
   author: Schema.Types.ObjectId;
   category: string;
   image: string;
+  publish: boolean;
   createdAt: Date;
   updatedAt?: Date;
 }
@@ -14,6 +15,7 @@ export interface IBlogOne extends Document {
   author: { userName: string; profile_picture: string };
   category: string;
   image: string;
+  publish?: boolean;
   createdAt: Date;
   updatedAt?: Date;
 }

@@ -29,5 +29,11 @@ interface ILawyerBlogInteractor {
     message: string;
     result: IBlogOne;
   }>;
+  changeBlogStatusById(id: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IBlogOne;
+  }>;
 }
 export default ILawyerBlogInteractor;

@@ -63,7 +63,7 @@ class LawyerBlogRepository implements ILawyerBlogRepository {
   ): Promise<IBlog[]> {
     try {
       const skip = (page! - 1) * limit!;
-      const blogs = await Blog.find()
+      const blogs = await Blog.find({ publish: true })
         .skip(skip)
         .limit(limit as number)
         .sort({ createdAt: -1 })
@@ -71,6 +71,25 @@ class LawyerBlogRepository implements ILawyerBlogRepository {
       return blogs;
     } catch (error: any) {
       throw error.message;
+    }
+  }
+  async changeBlogStatus(id: string): Promise<IBlogOne | null> {
+    try {
+      const blog = await Blog.findById(id);
+
+      if (!blog) {
+        throw new Error("Blog not found");
+      }
+
+      const updatedBlog = await Blog.findByIdAndUpdate(
+        id,
+        { publish: !blog.publish, updatedAt: new Date() },
+        { new: true }
+      );
+
+      return updatedBlog as IBlogOne | null;
+    } catch (error: any) {
+      throw new Error(error.message);
     }
   }
 }

@@ -32,3 +32,8 @@ blogRoute.get(
   authorization(UserRole.Lawyer),
   lawyerBlogController.getOneBlog.bind(lawyerBlogController)
 );
+blogRoute.patch(
+  "/publishorunpublish/:id",
+  authorization(UserRole.Lawyer),
+  lawyerBlogController.getOneBlog.bind(lawyerBlogController)
+);

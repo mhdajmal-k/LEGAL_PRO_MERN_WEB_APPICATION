@@ -18,5 +18,6 @@ interface ILawyerBlogRepository {
     page: number | undefined
   ): Promise<IBlog[]>;
   getOneBlog(id: string): Promise<IBlogOne | null>;
+  changeBlogStatus(id: string): Promise<IBlogOne | null>;
 }
 export default ILawyerBlogRepository;

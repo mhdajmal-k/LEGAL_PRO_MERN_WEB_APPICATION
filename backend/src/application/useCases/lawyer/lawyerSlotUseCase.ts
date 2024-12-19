@@ -31,7 +31,6 @@ class LawyerSlotInteractor implements ILawyerSlotInteractor {
         result: createSlot,
       };
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }

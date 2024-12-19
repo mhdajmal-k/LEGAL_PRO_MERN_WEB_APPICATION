@@ -23,7 +23,6 @@ class EmailService implements iEmailService {
     otp: string,
     userName: string
   ): Promise<boolean> {
-    console.log(`Attempting to send OTP to: ${email}`);
     try {
       const info = await this.transporter.sendMail({
         from: this.EMAIL_ID,
@@ -78,7 +77,6 @@ class EmailService implements iEmailService {
     userName: string,
     status: "Verified" | "Unverified" | string
   ): Promise<boolean> {
-    console.log(`Attempting to send ${status} status email to: ${email}`);
     try {
       const info = await this.transporter.sendMail({
         from: this.EMAIL_ID,
@@ -135,7 +133,6 @@ class EmailService implements iEmailService {
     resetLink: string,
     userName: string
   ): Promise<boolean> {
-    console.log(`Attempting to send reset link to: ${email}`);
     try {
       const info = await this.transporter.sendMail({
         from: this.EMAIL_ID,

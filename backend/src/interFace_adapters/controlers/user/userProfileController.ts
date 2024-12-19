@@ -9,20 +9,22 @@ class UserProfileController {
 
   ////////////////////
 
-  async updateProfileData(req: Request, res: Response, next: NextFunction) {
+  async updateProfileData(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      const { email, userName, phoneNumber } = req.body;
-      const id = req.params.id;
+      console.log("consoled");
+      console.log(req.body);
+      const { userName, phoneNumber } = req.body;
+      const id = req.user?.id;
+      console.log(id, "is the id");
+      if (!id) throw Error("id is required");
       const file = req.file ?? null;
-      if (!email?.trim() || !userName?.trim()) {
-        const error: CustomError = new Error(
-          "Email and userName are required"
-        ) as CustomError;
-        error.statusCode = HttpStatusCode.BadRequest;
-        throw error;
-      }
+
       const response = await this.userProfileInteractor.updateProfile(
-        { email, userName, id, phoneNumber },
+        { userName, id, phoneNumber },
         file
       );
 
@@ -57,7 +59,7 @@ class UserProfileController {
         error.statusCode = HttpStatusCode.BadRequest;
         throw error;
       }
-      console.log(response, "is the profile response");
+
       return res.status(HttpStatusCode.OK).json({
         status: true,
         message: "Profile fetched successfully",

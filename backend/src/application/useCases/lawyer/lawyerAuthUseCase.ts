@@ -189,59 +189,56 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
     result: IUserResult | null;
     statusCode: number;
   }> {
-    try {
-      const { email, password } = user;
-      const validLawyer = await this.Repository.validLawyer(email);
-      if (!validLawyer) {
-        const error: CustomError = new Error();
-        error.message = "invalid Email ";
-        error.statusCode = HttpStatusCode.BadRequest;
-        throw error;
-      }
-      if (validLawyer.block) {
-        const error: CustomError = new Error(MessageError.Blocked);
-        error.statusCode = HttpStatusCode.Unauthorized;
-        throw error;
-      }
-      if (validLawyer.verified === "not_verified") {
-        const error: CustomError = new Error();
-        error.message =
-          "Your account is pending approval. Please wait for the admin to verify your account.";
-        error.statusCode = 401;
-        throw error;
-      }
-
-      const validPassword = validatePassword(password, validLawyer.password);
-      if (!validPassword) {
-        const error: CustomError = new Error();
-        error.message = "Incorrect Password";
-        error.statusCode = 400;
-        throw error;
-      }
-      const profile_picture = validLawyer.profile_picture;
-      const getProfile = await this.s3Service.fetchFile(profile_picture);
-
-      validLawyer.profile_picture = getProfile;
-      const jwtToken = this.jwt.generateToken(validLawyer._id, UserRole.Lawyer);
-      const jwtRefreshToken = this.jwt.generateRefreshToken(
-        validLawyer._id,
-        UserRole.Lawyer
-      );
-      const { password: userPassword, ...DataWithoutPassword } = validLawyer;
-
-      return {
-        statusCode: HttpStatusCode.OK,
-        status: true,
-        message: "logged SuccessFully",
-        result: {
-          user: DataWithoutPassword,
-          tokenJwt: jwtToken,
-          jwtRefreshToken: jwtRefreshToken,
-        },
-      };
-    } catch (error: any) {
-      throw error.message;
+    const { email, password } = user;
+    const validLawyer = await this.Repository.validLawyer(email);
+    if (!validLawyer) {
+      const error: CustomError = new Error();
+      error.message = "Invalid Email";
+      error.statusCode = HttpStatusCode.BadRequest;
+      throw error;
     }
+    if (validLawyer.block) {
+      const error: CustomError = new Error(MessageError.Blocked);
+      error.statusCode = HttpStatusCode.Unauthorized;
+      throw error;
+    }
+    if (validLawyer.verified === "not_verified") {
+      const error: CustomError = new Error();
+      error.message =
+        "Your account is pending approval. Please wait for the admin to verify your account.";
+      error.statusCode = 401;
+      throw error;
+    }
+
+    const validPassword = validatePassword(password, validLawyer.password);
+    if (!validPassword) {
+      const error: CustomError = new Error();
+      error.message = "Incorrect Password";
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const profile_picture = validLawyer.profile_picture;
+    const getProfile = await this.s3Service.fetchFile(profile_picture);
+
+    validLawyer.profile_picture = getProfile;
+    const jwtToken = this.jwt.generateToken(validLawyer._id, UserRole.Lawyer);
+    const jwtRefreshToken = this.jwt.generateRefreshToken(
+      validLawyer._id,
+      UserRole.Lawyer
+    );
+    const { password: userPassword, ...DataWithoutPassword } = validLawyer;
+
+    return {
+      statusCode: HttpStatusCode.OK,
+      status: true,
+      message: "Logged in Successfully",
+      result: {
+        user: DataWithoutPassword,
+        tokenJwt: jwtToken,
+        jwtRefreshToken: jwtRefreshToken,
+      },
+    };
   }
 
   ///////////
@@ -276,7 +273,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         result: newSignUpToken,
       };
     } catch (error: any) {
-      throw error.message;
+      throw error;
     }
   }
   async sendForgotPasswordLink(email: string): Promise<{
@@ -311,7 +308,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         result: null,
       };
     } catch (error: any) {
-      throw error.message;
+      throw error;
     }
   }
 
@@ -357,7 +354,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         result: null,
       };
     } catch (error: any) {
-      throw error.message;
+      throw error;
     }
   }
 
@@ -402,7 +399,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         };
       }
     } catch (error: any) {
-      throw error.message;
+      throw error;
     }
   }
 
@@ -438,7 +435,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         result: {},
       };
     } catch (error: any) {
-      throw error.message;
+      throw error;
     }
   }
 }

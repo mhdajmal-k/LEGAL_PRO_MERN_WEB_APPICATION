@@ -17,7 +17,7 @@ const interactor = new userProfileInteractor(repository, IS3Services);
 const userProfileController = new UserProfileController(interactor);
 
 profileRoute.put(
-  "/:id",
+  "/",
   authorization(UserRole.User),
   upload.single("profilePic"),
   userProfileController.updateProfileData.bind(userProfileController)

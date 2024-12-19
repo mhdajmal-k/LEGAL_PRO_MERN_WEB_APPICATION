@@ -23,6 +23,11 @@ const blogSchema = new Schema<IBlog>({
     type: String,
     required: true,
   },
+  publish: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

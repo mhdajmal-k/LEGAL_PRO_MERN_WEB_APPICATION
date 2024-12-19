@@ -34,6 +34,7 @@ class UserLawyerController {
       console.log(searchText);
       const query: LawyerQuery = {
         verified: "verified",
+        block: false,
       };
 
       if (searchText) {
@@ -150,9 +151,9 @@ class UserLawyerController {
     next: NextFunction
   ): Promise<any> {
     try {
-      let { id } = req.params;
+      const { id } = req.params;
       console.log(id, "is the params");
-      let { rating, review } = req.body;
+      const { rating, review } = req.body;
       if (!id) {
         return res.status(HttpStatusCode.OK).json({
           status: false,
@@ -211,12 +212,10 @@ class UserLawyerController {
   ): Promise<any> {
     try {
       const { page = 1, limit = 10 } = req.query;
-
       const response = await this.UserLawyerInteractor.getBlogs(
         Number(String(page)),
         Number(String(limit))
       );
-      console.log(response, "in the revewis ");
       res.status(response.statusCode).json({
         status: response.status,
         message: response.message,
@@ -226,13 +225,13 @@ class UserLawyerController {
       next(error);
     }
   }
+
   async topLawyers(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
     try {
-      console.log("hi");
       const response =
         await this.UserLawyerInteractor.topLawyersForRecommendation();
       res.status(response.statusCode).json({

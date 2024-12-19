@@ -26,14 +26,20 @@ class userProfileInteractor implements IUserProfileInteractor {
         data.file = url as string;
       }
       const updateProfile = await this.Repository.updateProfileData(data);
+      console.log(updateProfile, "is the update profile");
       return {
         status: true,
         message: "Profile updated successfully",
         result: updateProfile,
         statusCode: 200,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      return {
+        status: true,
+        message: "Profile filed ",
+        result: error.message,
+        statusCode: 500,
+      };
     }
   }
   async resetPassword({
@@ -62,8 +68,8 @@ class userProfileInteractor implements IUserProfileInteractor {
         message: "Password has been reset successfully",
         result: null,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
   async AiSearch(
@@ -78,8 +84,8 @@ class userProfileInteractor implements IUserProfileInteractor {
         message: "",
         result: filteredResult as string,
       };
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
   async walletDetails(

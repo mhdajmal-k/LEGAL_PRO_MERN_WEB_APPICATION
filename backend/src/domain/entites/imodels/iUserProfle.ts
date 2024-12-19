@@ -1,5 +1,5 @@
 interface IProfileUpdateData {
-  email: string;
+  email?: string;
   userName: string;
   id: string;
   phoneNumber?: string;

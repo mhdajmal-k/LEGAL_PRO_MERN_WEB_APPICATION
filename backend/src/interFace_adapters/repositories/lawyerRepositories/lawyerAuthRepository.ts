@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
 import { ILawyer } from "../../../domain/entites/imodels/iLawyer";
 import iLawyerRepository from "../../../domain/entites/irepositories/ilawyerRepositories";
 import Lawyer from "../../../frameWorks/database/models/lawyerModel";
@@ -31,10 +30,7 @@ class LawyerAuthRepository implements iLawyerRepository {
   }
   async validLawyer(email: string): Promise<any> {
     try {
-      console.log(email, "is the repo email");
-
       const lawyer = await Lawyer.findOne({ email: email }).lean();
-      console.log(lawyer);
       return lawyer;
     } catch (error: any) {
       console.log(error);

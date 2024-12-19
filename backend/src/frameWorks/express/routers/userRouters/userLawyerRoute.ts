@@ -31,6 +31,7 @@ userLawyerRoute.get(
 
 userLawyerRoute.get(
   "/profile/:id",
+  authorization(UserRole.User),
   userLawyerController.getLawyerById.bind(userLawyerController)
 );
 userLawyerRoute.get(
@@ -50,6 +51,7 @@ userLawyerRoute.get(
 );
 userLawyerRoute.get(
   "/blogs/",
+  authorization(UserRole.User),
   userLawyerController.getallBlogs.bind(userLawyerController)
 );
 userLawyerRoute.get(

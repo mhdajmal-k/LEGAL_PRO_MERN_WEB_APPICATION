@@ -11,6 +11,7 @@ import {
 class UserProfileRepository implements IUserProfileRepository {
   async updateProfileData(data: any): Promise<any> {
     try {
+      console.log(data, "is the repo data");
       const updateUser = await User.findByIdAndUpdate(
         data.id,
         {

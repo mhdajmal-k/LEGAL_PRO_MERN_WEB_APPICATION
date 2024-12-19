@@ -11,7 +11,7 @@ class UserAuthController {
 
   ///////////////////
 
-  async signUp(req: Request, res: Response): Promise<any> {
+  async signUp(req: Request, res: Response): Promise<void> {
     try {
       const data = req.body;
       const response = await this.userAuthInteractor.userSingUp(data);
@@ -22,20 +22,20 @@ class UserAuthController {
           maxAge: 5 * 60 * 1000,
         });
 
-        return res.status(HttpStatusCode.OK).json({
+        res.status(HttpStatusCode.OK).json({
           status: response.status,
           message: response.message,
           result: {},
         });
       } else {
-        return res.status(400).json({
+        res.status(400).json({
           status: response.status,
           message: response.message,
           result: {},
         });
       }
     } catch (error: any) {
-      return res.status(500).json({
+      res.status(500).json({
         status: false,
         message: error.message || MessageError.ServerError,
         result: {},
@@ -168,7 +168,7 @@ class UserAuthController {
       const response = await this.userAuthInteractor.googleSignUP(req.body);
 
       const { status, message, result } = response;
-      console.log(response, "is the response google");
+
       const token = result?.tokenJwt;
       if (status) {
         const data = result as IUserResult;
@@ -353,6 +353,7 @@ class UserAuthController {
   async logOut(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       res.clearCookie("User_AccessToken");
+      res.clearCookie("User_RefreshToken");
       res.status(200).json({ message: "Logout successful" });
     } catch (error) {
       next(error);

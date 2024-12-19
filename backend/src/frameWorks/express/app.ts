@@ -52,18 +52,14 @@ io.on("connection", (socket) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   socket.on("answer", ({ roomId, answer, userId }) => {
-    console.log(answer, "is the answer");
     socket.to(roomId).emit("answer", { answer, userId: socket.id });
   });
 
   socket.on("candidate", ({ roomId, candidate, userId }) => {
-    console.log(rooms);
-    console.log(roomId);
     const otherUsers = [...(rooms.get(roomId) || new Set())].filter(
       (id) => id !== userId
     );
-    console.log(candidate, "is the candidate");
-    // const otherUser = String(otherUsers);
+
     console.log(otherUsers, "IS THE other user");
     socket.to(roomId).emit("candidate", { candidate, userId: socket.id });
   });

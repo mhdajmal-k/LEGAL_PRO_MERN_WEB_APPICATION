@@ -98,6 +98,33 @@ class BlogController {
       next(error);
     }
   }
+  async blogPublishOrUnPublish(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        res.status(HttpStatusCode.BadRequest).json({
+          status: false,
+          message: "blog id is required",
+          result: {},
+        });
+        return;
+      }
+      const response = await this.lawyerBlogInteractor.changeBlogStatusById(
+        String(id)
+      );
+      res.status(HttpStatusCode.OK).json({
+        status: response.status,
+        message: response.message,
+        result: response.result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default BlogController;

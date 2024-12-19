@@ -4,7 +4,6 @@ import { iEmailService } from "../../../domain/services/IEmailService";
 import iUserRepository from "../../../domain/entites/irepositories/iuserRepositories";
 import { iOTPService } from "../../../domain/services/iOTPService";
 
-import bcryptjs from "bcryptjs";
 import { iJwtService } from "../../../domain/services/ijwtService";
 import IUserResult from "../../../domain/entites/imodels/IUserResult";
 import { CustomError } from "../../../frameWorks/middleware/errorHandiler";
@@ -38,7 +37,7 @@ class userAuthInteractor implements IUserAuthInteractor {
   ): Promise<{ status: boolean; message: string; result: {} }> {
     try {
       const validateDataError = validateUserInput(data);
-      const { email, userName, password } = data;
+      const { email, userName } = data;
       if (validateDataError) {
         return { status: false, message: validateDataError, result: {} };
       }
@@ -139,10 +138,12 @@ class userAuthInteractor implements IUserAuthInteractor {
         };
       }
       if (validUser.block) {
+        console.log("check");
         const error: CustomError = new Error(
           "oops you have been blocked By Admin"
         );
         error.statusCode = 401;
+        console.log(error, "in the custom error");
         throw error;
       }
       const validPassword = validatePassword(password, validUser.password);
@@ -179,8 +180,8 @@ class userAuthInteractor implements IUserAuthInteractor {
           jwtRefreshToken: jwtRefreshToken,
         },
       };
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error, "is useCases");
       throw error;
     }
   }

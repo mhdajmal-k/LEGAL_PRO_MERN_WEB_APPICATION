@@ -39,7 +39,7 @@ export const authorization =
         const existUser = await userRepository.getId(decodeToken.id);
         if (!existUser || existUser.block) {
           return res.status(HttpStatusCode.Unauthorized).json({
-            message: existUser
+            message: !existUser
               ? "Authorization denied. User does not exist."
               : "OOPS YOU HAVE BEEN BLOCKED BY ADMIN",
             result: {},

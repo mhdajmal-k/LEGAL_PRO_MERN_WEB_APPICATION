@@ -63,6 +63,7 @@ export interface ISlot extends Document {
 
 export interface LawyerQuery {
   verified?: string;
+  block?: boolean;
   years_of_experience?: { $gte: string };
   gender?: { $regex: string; $options: string };
   designation?: { $regex: string; $options: string };

@@ -11,12 +11,10 @@ export const errorHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
-  console.log("Middleware Error Hadnling");
   const errStatus = err.statusCode || res.statusCode || 500;
+  const errMsg =
+    err.message || res.statusMessage || err || "Something went wrong";
 
-  const errMsg = err.message || res.statusMessage || "Something went wrong";
-  console.log(errMsg, "erro.message");
-  console.log(res.statusMessage, "erro.message");
   res.status(errStatus).json({
     success: false,
     status: errStatus,

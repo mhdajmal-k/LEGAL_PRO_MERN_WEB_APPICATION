@@ -23,10 +23,9 @@ class UserLawyerRepositories implements IUserLawyerRepository {
         .skip((currentPage - 1) * limit)
         .limit(limit)
         .lean();
-      console.log(lawyers, "is the repo");
       return lawyers;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
   async getTotalCountOfLawyers(db: string, query: LawyerQuery): Promise<any> {
@@ -51,13 +50,12 @@ class UserLawyerRepositories implements IUserLawyerRepository {
         throw error;
       }
       return getLawyer;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
   async getLawyerSlots(id: string): Promise<any> {
     try {
-      console.log(id, "is the lawyerId");
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const getSlots = await Slot.find({
@@ -74,8 +72,8 @@ class UserLawyerRepositories implements IUserLawyerRepository {
       }
 
       return getSlots;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
   async getSlotBySlotId(slotId: string): Promise<any> {
@@ -87,8 +85,8 @@ class UserLawyerRepositories implements IUserLawyerRepository {
         throw error;
       }
       return slot;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw Error(error.message);
     }
   }
   async getSlotBySpecifSlotId(
@@ -118,10 +116,6 @@ class UserLawyerRepositories implements IUserLawyerRepository {
     status: boolean
   ): Promise<any> {
     try {
-      console.log(status, "is the status");
-      console.log(slotId, "is the slot id");
-      console.log(specificSlotId, "is the specificSlotId id");
-
       const updateSlot = await Slot.updateOne(
         {
           _id: slotId,
@@ -134,8 +128,6 @@ class UserLawyerRepositories implements IUserLawyerRepository {
         },
         { new: true }
       );
-
-      console.log(updateSlot, "is the updated Slot");
       return updateSlot;
     } catch (error) {
       throw error;

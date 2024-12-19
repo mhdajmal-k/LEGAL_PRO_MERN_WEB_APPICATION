@@ -23,7 +23,6 @@ class LawyerAuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("in the lawyer singup");
       const data = req.body;
       const file = req.file;
       const validateDataError = validateLawyerInput(data);
@@ -152,7 +151,6 @@ class LawyerAuthController {
   ): Promise<void> {
     try {
       const data = req.body;
-      console.log("in the lawyer verify Data");
       const id = req.user?.id;
       const files = req.files as
         | { [fieldname: string]: Express.Multer.File[] }
@@ -267,7 +265,7 @@ class LawyerAuthController {
       }
       return res.status;
     } catch (error) {
-      console.log(error);
+      console.log(error, "is the error in controller");
       next(error);
     }
   }
@@ -396,6 +394,7 @@ class LawyerAuthController {
   ): Promise<void> {
     try {
       res.clearCookie("Lawyer_AccessToken");
+      res.clearCookie("Lawyer_refreshToken");
       res.status(HttpStatusCode.OK).json({ message: "Logout successful" });
     } catch (error) {
       next(error);

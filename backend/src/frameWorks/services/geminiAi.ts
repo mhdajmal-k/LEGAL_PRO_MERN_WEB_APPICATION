@@ -147,7 +147,6 @@ async function run(prompt: string) {
     const result = await chatSession.sendMessage(
       `${prompt} in short and accurate`
     );
-    console.log(result, "is the result");
     return (
       result.response.text() ||
       "Sorry, I couldn't process your request Please Try again later."

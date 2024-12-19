@@ -42,7 +42,6 @@ class LawyerBlogInteractor implements ILawyerBlogInteractor {
         result: createBlog,
       };
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -85,9 +84,8 @@ class LawyerBlogInteractor implements ILawyerBlogInteractor {
         message: "blog Created",
         result: updatedBlog,
       };
-    } catch (error) {
-      console.log(error);
-      throw error;
+    } catch (error: any) {
+      throw error.message;
     }
   }
   async getOneBlogById(id: string): Promise<{
@@ -108,12 +106,29 @@ class LawyerBlogInteractor implements ILawyerBlogInteractor {
       return {
         status: true,
         statusCode: HttpStatusCode.OK,
-        message: "blog fetched SuccessFully",
+        message: "",
         result: blog as IBlogOne,
       };
     } catch (error) {
-      console.log(error);
       throw error;
+    }
+  }
+  async changeBlogStatusById(id: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IBlogOne;
+  }> {
+    try {
+      const blog = await this.Repository.changeBlogStatus(id);
+      return {
+        status: true,
+        statusCode: HttpStatusCode.OK,
+        message: "blog updated SuccessFully",
+        result: blog as IBlogOne,
+      };
+    } catch (error: any) {
+      throw error.message;
     }
   }
 }
