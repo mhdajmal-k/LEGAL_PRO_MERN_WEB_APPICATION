@@ -13,7 +13,7 @@ import IUserResult from "../../../domain/entites/imodels/IUserResult";
 import { HttpStatusCode } from "../../../frameWorks/utils/helpers/Enums";
 
 class LawyerAuthController {
-  constructor(private lawyerAuthInteractor: ILawyerAuthInteractor) {}
+  constructor(private lawyerAuthInteractor: ILawyerAuthInteractor) { }
 
   /////////////////////////////////
 
@@ -196,6 +196,7 @@ class LawyerAuthController {
     next: NextFunction
   ): Promise<void> {
     try {
+      console.log("called");
       const data = req.body;
 
       const id = req.user?.id;
@@ -209,16 +210,41 @@ class LawyerAuthController {
         return;
       }
       data.practice_area = JSON.parse(data.practice_area);
-      const response = await this.lawyerAuthInteractor.updateProfessionalData(
+      const response = await this.lawyerAuthInteractor.updateProfileData(
         data,
         file,
         id
       );
-      res.clearCookie("auth_lawyerAccessToken");
+
       res.status(response.statusCode).json({
         status: true,
         message: response.message,
         result: {},
+      });
+    } catch (error) {
+      console.log(error, "is the error ");
+      next(error);
+    }
+  }
+  async getProfileData(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      console.log("called");
+
+
+      const id = req.user?.id;
+
+
+
+      const response = await this.lawyerAuthInteractor.getProfileData(id!);
+
+      res.status(response.statusCode).json({
+        status: true,
+        message: response.message,
+        result: response.result,
       });
     } catch (error) {
       console.log(error, "is the error ");

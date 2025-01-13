@@ -15,11 +15,9 @@ class UserProfileController {
     next: NextFunction
   ) {
     try {
-      console.log("consoled");
       console.log(req.body);
       const { userName, phoneNumber } = req.body;
       const id = req.user?.id;
-      console.log(id, "is the id");
       if (!id) throw Error("id is required");
       const file = req.file ?? null;
 
@@ -139,7 +137,7 @@ class UserProfileController {
         });
       }
     } catch (error) {
-      next();
+      next(error);
     }
   }
 
@@ -159,7 +157,7 @@ class UserProfileController {
         });
       }
     } catch (error) {
-      next();
+      next(error);
     }
   }
 }

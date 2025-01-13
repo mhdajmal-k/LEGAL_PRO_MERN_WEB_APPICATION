@@ -14,6 +14,7 @@ interface iLawyerRepository {
     id: string
   ): Promise<boolean>;
   updateLawyerProfileData(data: any, id: string): Promise<boolean>;
+  getProfileData(id: string): Promise<ILawyer>;
 }
 
 export default iLawyerRepository;

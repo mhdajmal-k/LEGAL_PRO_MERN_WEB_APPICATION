@@ -19,7 +19,7 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
     private readonly s3Service: IS3Service,
     private readonly AppointmentRepository: IUserAppointmentRepository,
     private readonly BlogRepository: ILawyerBlogRepository
-  ) {}
+  ) { }
   async getVerifiedLawyers(
     currentPage: number,
     limit: number,
@@ -89,6 +89,7 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         statusCode: 200,
       };
     } catch (error: any) {
+      console.log(error);
       throw error;
     }
   }
@@ -220,13 +221,12 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
     status: boolean;
     message: string;
     result: IBlog[];
+    hasMore: boolean;
   }> {
     try {
-      const lawyerBlog = await this.BlogRepository.getAllBlogs(
-        limit,
-        currentPage
-      );
-      // const totalPages = Math.ceil(totalLawyers / limit);
+      const skip = (currentPage - 1) * limit;
+      const lawyerBlog = await this.BlogRepository.getAllBlogs(limit, skip);
+
       const updatedBlog = await Promise.all(
         lawyerBlog.map(async (blog: any) => {
           if (blog.author?.profile_picture) {
@@ -243,11 +243,16 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         })
       );
 
+      const totalCount = await this.BlogRepository.getBlogsCount();
+
+      const hasMore = totalCount > skip + lawyerBlog.length;
+
       return {
         status: true,
         statusCode: HttpStatusCode.OK,
         message: "",
         result: updatedBlog,
+        hasMore,
       };
     } catch (error) {
       console.log(error);
@@ -273,10 +278,15 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         message: "",
         result: updatedTopLawyers,
       };
-    } catch (error: any) {
-      throw error.message;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
     }
   }
+
 }
 
 export default UserLawyerInteractor;

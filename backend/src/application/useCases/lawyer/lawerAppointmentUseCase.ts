@@ -93,7 +93,11 @@ class LawyerAppointmentInteractor implements ILawyerAppointmentInteractor {
         result: appointment,
       };
     } catch (error) {
-      throw error;
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
     }
   }
   async cancellingAppointment(appointmentId: string): Promise<{

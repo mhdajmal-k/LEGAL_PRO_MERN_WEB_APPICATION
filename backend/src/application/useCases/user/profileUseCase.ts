@@ -13,7 +13,7 @@ class userProfileInteractor implements IUserProfileInteractor {
   constructor(
     private readonly Repository: IUserProfileRepository,
     private readonly s3Service: IS3Service
-  ) {}
+  ) { }
   async updateProfile(
     data: IProfileUpdateData,
     file: Express.Multer.File | null
@@ -22,15 +22,16 @@ class userProfileInteractor implements IUserProfileInteractor {
       if (file) {
         const key = `lawyer-profiles/${Date.now()}-${file.originalname}`;
         await this.s3Service.uploadFile(file, key);
-        const url = await this.s3Service.fetchFile(key);
-        data.file = url as string;
+        // const url = await this.s3Service.fetchFile(key);
+        data.file = key as string;
       }
       const updateProfile = await this.Repository.updateProfileData(data);
-      console.log(updateProfile, "is the update profile");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...userDataWithoutPassword } = updateProfile.toObject();
       return {
         status: true,
         message: "Profile updated successfully",
-        result: updateProfile,
+        result: userDataWithoutPassword,
         statusCode: 200,
       };
     } catch (error: any) {

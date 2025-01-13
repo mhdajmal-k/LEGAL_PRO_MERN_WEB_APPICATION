@@ -29,7 +29,7 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
     private readonly optGenerator: iOTPService,
     private readonly jwt: iJwtService,
     private s3Service: S3Service
-  ) {}
+  ) { }
 
   ///////////////////
 
@@ -131,17 +131,15 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         const filesArray = files[fieldname];
         if (fieldname === "imageIndia") {
           for (const file of filesArray) {
-            const key = `legalProBarCouncilIndiaCertificate/${Date.now()}-${
-              file.originalname
-            }`;
+            const key = `legalProBarCouncilIndiaCertificate/${Date.now()}-${file.originalname
+              }`;
             const uploadedUrl = this.s3Service.uploadFile(file, key);
             data.barCouncilCertificate = key || "";
           }
         } else if (fieldname === "imageKerala") {
           for (const file of filesArray) {
-            const key = `legalProBarCouncilKeralaCertificate/${Date.now()}-${
-              file.originalname
-            }`;
+            const key = `legalProBarCouncilKeralaCertificate/${Date.now()}-${file.originalname
+              }`;
             const uploadedUrl = this.s3Service.uploadFile(file, key);
             data.stateBarCouncilCertificate = key || "";
           }
@@ -272,8 +270,12 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         message: "New OTP has been sent successfully",
         result: newSignUpToken,
       };
-    } catch (error: any) {
-      throw error;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
     }
   }
   async sendForgotPasswordLink(email: string): Promise<{
@@ -307,8 +309,12 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         message: "Reset Password Link sended to Email",
         result: null,
       };
-    } catch (error: any) {
-      throw error;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
     }
   }
 
@@ -353,8 +359,12 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         message: "password Resetted successFully",
         result: null,
       };
-    } catch (error: any) {
-      throw error;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
     }
   }
 
@@ -398,20 +408,24 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
           result: null,
         };
       }
-    } catch (error: any) {
-      throw error;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
     }
   }
 
   ///////////
 
-  async updateProfessionalData(
+  async updateProfileData(
     data: any,
     file?: Express.Multer.File,
     id?: string
   ): Promise<{ statusCode: number; message: string; result: string | {} }> {
     try {
-      let updateData;
+
       if (file) {
         const key = `lawyer-profiles/${Date.now()}-${file.originalname}`;
         const uploadPromise = this.s3Service.uploadFile(file, key);
@@ -434,8 +448,31 @@ class LawyerAuthInteractor implements ILawyerAuthInteractor {
         message: "profile Updated SuccessFully",
         result: {},
       };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  async getProfileData(id: string): Promise<{ statusCode: number; message: string; result: ILawyer; }> {
+    try {
+      const userData = await this.Repository.getProfileData(id);
+      if (userData) {
+        userData.profile_picture = await this.s3Service.fetchFile(
+          String(userData.profile_picture)
+        );
+      }
+
+      return {
+        statusCode: 200,
+        message: "",
+        result: userData,
+      };
     } catch (error: any) {
-      throw error;
+      throw error.message;
     }
   }
 }

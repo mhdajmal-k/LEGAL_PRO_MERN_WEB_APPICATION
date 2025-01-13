@@ -32,7 +32,9 @@ class LawyerBlogRepository implements ILawyerBlogRepository {
   ): Promise<IBlog[]> {
     try {
       const skip = (page - 1) * limit;
-      const blogs = await Blog.find({ author: author })
+      const blogs = await Blog.find({
+        $and: [{ author: author }, { publish: true }],
+      })
         .skip(skip)
         .limit(limit)
         .sort({ createdAt: -1 })
@@ -57,23 +59,23 @@ class LawyerBlogRepository implements ILawyerBlogRepository {
       throw error;
     }
   }
-  async getAllBlogs(
-    limit: number | undefined,
-    page: number | undefined
-  ): Promise<IBlog[]> {
+  async getAllBlogs(limit: number | undefined, skip: number): Promise<IBlog[]> {
     try {
-      const skip = (page! - 1) * limit!;
       const blogs = await Blog.find({ publish: true })
         .skip(skip)
         .limit(limit as number)
         .sort({ createdAt: -1 })
         .populate("author", "userName profile_picture");
       return blogs;
-    } catch (error: any) {
-      throw error.message;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
     }
   }
-  async changeBlogStatus(id: string): Promise<IBlogOne | null> {
+  async changeBlogStatus(id: string): Promise<boolean | null> {
     try {
       const blog = await Blog.findById(id);
 
@@ -83,13 +85,64 @@ class LawyerBlogRepository implements ILawyerBlogRepository {
 
       const updatedBlog = await Blog.findByIdAndUpdate(
         id,
-        { publish: !blog.publish, updatedAt: new Date() },
+        { publish: false, updatedAt: new Date() },
         { new: true }
       );
 
-      return updatedBlog as IBlogOne | null;
-    } catch (error: any) {
-      throw new Error(error.message);
+      return updatedBlog as boolean | null;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
+    }
+  }
+  async getBlogsCount(): Promise<number> {
+    try {
+      const query: any = { publish: true };
+      const count = await Blog.countDocuments(query);
+      return count;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
+    }
+  }
+  async updateBlog(
+    blogId: string,
+    updateData: {
+      title?: string;
+      content?: string;
+      category?: string;
+
+    }, image?: string
+  ): Promise<IBlog> {
+    try {
+      const updatedBlog = await Blog.findByIdAndUpdate(
+        blogId,
+        {
+          ...updateData,
+          image,
+          updatedAt: new Date(),
+        },
+        { new: true }
+      );
+
+      if (!updatedBlog) {
+        throw new Error("Blog not found");
+      }
+
+      return updatedBlog;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(
+          error.message || "An unexpected error occurred",
+        );
+      }
+      throw error;
     }
   }
 }

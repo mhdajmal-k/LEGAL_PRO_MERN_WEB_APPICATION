@@ -52,6 +52,7 @@ interface IUsersLawyerInteractor {
     status: boolean;
     message: string;
     result: IBlog[];
+    hasMore: boolean
   }>;
 }
 export default IUsersLawyerInteractor;

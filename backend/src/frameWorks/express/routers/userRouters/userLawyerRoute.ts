@@ -51,7 +51,6 @@ userLawyerRoute.get(
 );
 userLawyerRoute.get(
   "/blogs/",
-  authorization(UserRole.User),
   userLawyerController.getallBlogs.bind(userLawyerController)
 );
 userLawyerRoute.get(

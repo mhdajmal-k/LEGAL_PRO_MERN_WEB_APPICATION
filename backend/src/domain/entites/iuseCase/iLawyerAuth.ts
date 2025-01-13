@@ -20,7 +20,7 @@ interface ILawyerAuthInteractor {
     files?: { [fieldname: string]: Express.Multer.File[] },
     id?: string
   ): Promise<{ statusCode: number; message: string; result: string | {} }>;
-  updateProfessionalData(
+  updateProfileData(
     data: IProfessionalData,
     file?: Express.Multer.File,
     id?: string
@@ -31,6 +31,7 @@ interface ILawyerAuthInteractor {
     message: string;
     result: IUserResult | null;
   }>;
+  getProfileData(id: string): Promise<{ statusCode: number; message: string; result: ILawyer }>;
   sendForgotPasswordLink(email: string): Promise<{
     statusCode: number;
     status: boolean;

@@ -8,7 +8,7 @@ class LawyerBlogInteractor implements ILawyerBlogInteractor {
   constructor(
     private readonly Repository: ILawyerBlogRepository,
     private s3Service: S3Service
-  ) {}
+  ) { }
   async createBlog(
     title: string,
     content: string,
@@ -42,7 +42,11 @@ class LawyerBlogInteractor implements ILawyerBlogInteractor {
         result: createBlog,
       };
     } catch (error) {
-      throw error;
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
     }
   }
   async getBlogs(
@@ -110,25 +114,88 @@ class LawyerBlogInteractor implements ILawyerBlogInteractor {
         result: blog as IBlogOne,
       };
     } catch (error) {
-      throw error;
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
     }
   }
-  async changeBlogStatusById(id: string): Promise<{
+  async updateBlog(
+    blogId: string,
+    updateData: {
+      title?: string;
+      content?: string;
+      author: string;
+      category?: string;
+      file?: Express.Multer.File
+    }
+  ): Promise<{
     statusCode: number;
     status: boolean;
     message: string;
-    result: IBlogOne;
+    result: IBlog;
   }> {
     try {
-      const blog = await this.Repository.changeBlogStatus(id);
+      const existingBlog = await this.Repository.getOneBlog(blogId);
+
+      if (!existingBlog) {
+        throw new Error("Blog not found");
+      }
+
+      let image;
+      if (updateData.file) {
+        const key = `lawyer-blogImage/${Date.now()}-${updateData.file.originalname}`;
+        const uploadPromise = this.s3Service.uploadFile(updateData.file, key);
+        image = key;
+      }
+      const updatedBlog = await this.Repository.updateBlog(blogId, updateData, image);
+
       return {
         status: true,
         statusCode: HttpStatusCode.OK,
-        message: "blog updated SuccessFully",
-        result: blog as IBlogOne,
+        message: "Blog Updated",
+        result: updatedBlog,
       };
-    } catch (error: any) {
-      throw error.message;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
+
+    }
+  }
+  async changeBlogStatusById(blogId: string): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: [];
+  }> {
+    try {
+      console.log("called in int useCases");
+      const blog = await this.Repository.changeBlogStatus(blogId);
+      if (!blog) {
+        return {
+          status: true,
+          statusCode: HttpStatusCode.OK,
+          message: "error during  blog deletion",
+          result: [],
+        };
+      }
+      console.log(blog, "is expecting the deleted Blog");
+      return {
+        status: true,
+        statusCode: HttpStatusCode.OK,
+        message: "blog deleted successFully",
+        result: [],
+      };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw error;
+      }
     }
   }
 }

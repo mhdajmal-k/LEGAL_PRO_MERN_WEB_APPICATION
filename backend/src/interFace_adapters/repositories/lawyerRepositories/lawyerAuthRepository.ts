@@ -17,6 +17,7 @@ class LawyerAuthRepository implements iLawyerRepository {
         state: data.state,
         profile_picture: data.profile_picture,
       });
+      // eslint-disable-next-line no-useless-catch
       try {
         await newUser.save();
         return newUser;
@@ -62,6 +63,8 @@ class LawyerAuthRepository implements iLawyerRepository {
 
   async updateLawyerProfessionalData(data: any, id: string): Promise<boolean> {
     try {
+      console.log(data, "in the repo");
+      console.log(id);
       data.practiceArea = JSON.parse(data.practiceArea);
       data.languages = JSON.parse(data.languages);
       const updateLawyer = await Lawyer.findByIdAndUpdate(
@@ -109,6 +112,20 @@ class LawyerAuthRepository implements iLawyerRepository {
       return updatedLawyer ? true : false;
     } catch (error: any) {
       throw Error(error.message);
+    }
+  }
+  async getProfileData(id: string): Promise<ILawyer> {
+    try {
+      const userData = await Lawyer.findById(id, {
+
+        password: 0,
+      });
+      if (!userData) {
+        throw new Error("User not found");
+      }
+      return userData as ILawyer;
+    } catch (error: any) {
+      throw error.message;
     }
   }
 }

@@ -23,6 +23,21 @@ interface ILawyerBlogInteractor {
     message: string;
     result: IBlog[];
   }>;
+  updateBlog(
+    blogId: string,
+    updateData: {
+      title?: string;
+      content?: string;
+      author: string;
+      category?: string;
+      file?: Express.Multer.File
+    }
+  ): Promise<{
+    statusCode: number;
+    status: boolean;
+    message: string;
+    result: IBlog;
+  }>;
   getOneBlogById(id: string): Promise<{
     statusCode: number;
     status: boolean;
@@ -33,7 +48,7 @@ interface ILawyerBlogInteractor {
     statusCode: number;
     status: boolean;
     message: string;
-    result: IBlogOne;
+    result: [];
   }>;
 }
 export default ILawyerBlogInteractor;

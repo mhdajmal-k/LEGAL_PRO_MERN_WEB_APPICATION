@@ -129,8 +129,8 @@ class UserLawyerRepositories implements IUserLawyerRepository {
         { new: true }
       );
       return updateSlot;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw new Error(error.message);
     }
   }
   async createRating(
@@ -203,5 +203,6 @@ class UserLawyerRepositories implements IUserLawyerRepository {
       throw error.message;
     }
   }
+
 }
 export default UserLawyerRepositories;

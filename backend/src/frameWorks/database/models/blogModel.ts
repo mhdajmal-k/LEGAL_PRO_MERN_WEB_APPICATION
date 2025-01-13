@@ -25,7 +25,7 @@ const blogSchema = new Schema<IBlog>({
   },
   publish: {
     type: Boolean,
-    default: false,
+    default: true,
     required: true,
   },
   createdAt: {

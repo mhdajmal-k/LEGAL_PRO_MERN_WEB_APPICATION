@@ -10,7 +10,7 @@ import {
 import ILawyerBlogInteractor from "../../../domain/entites/iuseCase/ILawyerBlog";
 
 class UserLawyerController {
-  constructor(private UserLawyerInteractor: IUsersLawyerInteractor) {}
+  constructor(private UserLawyerInteractor: IUsersLawyerInteractor) { }
 
   ///////////////////
 
@@ -216,10 +216,13 @@ class UserLawyerController {
         Number(String(page)),
         Number(String(limit))
       );
+
       res.status(response.statusCode).json({
         status: response.status,
         message: response.message,
         result: response.result,
+        hasMore: response.hasMore
+
       });
     } catch (error) {
       next(error);

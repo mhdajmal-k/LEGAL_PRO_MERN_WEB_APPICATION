@@ -26,7 +26,8 @@ class UserProfileRepository implements IUserProfileRepository {
           new: true,
         }
       );
-      console.log(updateUser, "is the updated User");
+
+      console.log(updateUser);
       return updateUser;
     } catch (error) {
       throw new Error("filed to update UserData");
@@ -90,6 +91,7 @@ class UserProfileRepository implements IUserProfileRepository {
       throw new Error("Failed to retrieve transaction details.");
     }
   }
+
   async getProfileData(id: string): Promise<IUser> {
     try {
       const userData = await User.findById(id, {

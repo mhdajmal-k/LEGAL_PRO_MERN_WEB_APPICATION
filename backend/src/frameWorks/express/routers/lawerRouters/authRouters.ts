@@ -67,6 +67,11 @@ lawyerAuthRouter.post(
   upload.single("profilePicture"),
   lawyerAuthController.updateProfileData.bind(lawyerAuthController)
 );
+lawyerAuthRouter.get(
+  "/getProfessionalData",
+  authorization(UserRole.Lawyer),
+  lawyerAuthController.getProfileData.bind(lawyerAuthController)
+);
 
 lawyerAuthRouter.post(
   "/login",

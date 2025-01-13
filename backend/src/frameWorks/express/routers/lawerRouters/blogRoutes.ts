@@ -27,13 +27,32 @@ blogRoute.get(
   authorization(UserRole.Lawyer),
   lawyerBlogController.getBlogs.bind(lawyerBlogController)
 );
+
+blogRoute.put(
+  "/:blogId",
+  (req, res, next) => {
+    if (!req.headers["content-type"]?.includes("multipart/form-data")) {
+      return next();
+    }
+    upload.single("image")(req, res, next);
+  },
+  authorization(UserRole.Lawyer),
+  lawyerBlogController.updateBlog.bind(lawyerBlogController)
+);
+
+
+blogRoute.patch(
+  "/:blogId",
+  authorization(UserRole.Lawyer),
+  lawyerBlogController.deleteBlog.bind(lawyerBlogController)
+);
 blogRoute.get(
   "/view/:id",
   authorization(UserRole.Lawyer),
   lawyerBlogController.getOneBlog.bind(lawyerBlogController)
 );
-blogRoute.patch(
-  "/publishorunpublish/:id",
-  authorization(UserRole.Lawyer),
-  lawyerBlogController.getOneBlog.bind(lawyerBlogController)
-);
+// blogRoute.patch(
+//   "/publishorunpublish/:id",
+//   authorization(UserRole.Lawyer),
+//   lawyerBlogController.getOneBlog.bind(lawyerBlogController)
+// );
