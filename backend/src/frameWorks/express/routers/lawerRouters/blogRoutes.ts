@@ -48,11 +48,6 @@ blogRoute.patch(
 );
 blogRoute.get(
   "/view/:id",
-  authorization(UserRole.Lawyer),
   lawyerBlogController.getOneBlog.bind(lawyerBlogController)
 );
-// blogRoute.patch(
-//   "/publishorunpublish/:id",
-//   authorization(UserRole.Lawyer),
-//   lawyerBlogController.getOneBlog.bind(lawyerBlogController)
-// );
+
