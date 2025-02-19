@@ -1,4 +1,4 @@
-// import { config } from "dotenv";
+
 import {
   ILawyer,
   IProfessionalData,

@@ -210,9 +210,8 @@ class EmailService implements iEmailService {
               <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin: 15px 0;">
                 <p style="font-size: 16px; color: #555; margin: 5px 0;">
                   <img src="https://img.icons8.com/color/48/000000/calendar.png" alt="Calendar Icon" style="width: 18px; vertical-align: middle; margin-right: 5px;" />
-                  <strong>Date and Time:</strong> ${
-                    appointmentDetails.date
-                  } at ${appointmentDetails.time}
+                  <strong>Date and Time:</strong> ${appointmentDetails.date
+          } at ${appointmentDetails.time}
                 </p>
                 <p style="font-size: 16px; color: #555; margin: 5px 0;">
                   <img src="https://img.icons8.com/color/48/000000/lawyer.png" alt="Lawyer Icon" style="width: 18px; vertical-align: middle; margin-right: 5px;" />
@@ -266,16 +265,14 @@ class EmailService implements iEmailService {
                 Dear <strong>${userName}</strong>,
               </p>
               <p style="font-size: 16px; color: #555;">
-                We regret to inform you that your scheduled appointment has been canceled due to unforeseen commitments from <strong>${
-                  appointmentDetails.lawyerName
-                }</strong>. We apologize for any inconvenience caused and appreciate your understanding.
+                We regret to inform you that your scheduled appointment has been canceled due to unforeseen commitments from <strong>${appointmentDetails.lawyerName
+          }</strong>. We apologize for any inconvenience caused and appreciate your understanding.
               </p>
               <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin: 15px 0;">
                 <p style="font-size: 16px; color: #555; margin: 5px 0;">
                  
-                  <strong>Date and Time:</strong> ${
-                    appointmentDetails.date
-                  } at ${appointmentDetails.time}
+                  <strong>Date and Time:</strong> ${appointmentDetails.date
+          } at ${appointmentDetails.time}
                 </p>
                 <p style="font-size: 16px; color: #555; margin: 5px 0;">
                
@@ -289,7 +286,7 @@ class EmailService implements iEmailService {
               <footer style="text-align: center; color: #888; font-size: 12px;">
                 <p>&copy; ${new Date().getFullYear()} Legal_Pro | Legal Services</p>
                 <p>Legal_Pro, 123 Legal St, Kochi, Kerala<br>
-                  <a href="https://Legal_Pro.com" style="color: #0044cc; text-decoration: none;">Visit our website</a>
+                  <a href="https://LegalPro.solutions" style="color: #0044cc; text-decoration: none;">Visit our website</a>
                 </p>
               </footer>
             </div>
@@ -339,9 +336,8 @@ class EmailService implements iEmailService {
                   <strong>Client Name:</strong> ${appointmentDetails.userName}
                 </p>
                 <p style="font-size: 16px; color: #555; margin: 5px 0;">
-                  <strong>Date and Time:</strong> ${
-                    appointmentDetails.date
-                  } at ${appointmentDetails.time}
+                  <strong>Date and Time:</strong> ${appointmentDetails.date
+          } at ${appointmentDetails.time}
                 </p>
               </div>
               <p style="font-size: 16px; color: #555;">

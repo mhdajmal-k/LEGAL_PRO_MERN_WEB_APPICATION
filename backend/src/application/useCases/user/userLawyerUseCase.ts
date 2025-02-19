@@ -111,7 +111,7 @@ class UserLawyerInteractor implements IUsersLawyerInteractor {
         userName: slots[0].lawyerId.userName,
         profile_picture: await this.s3Service.fetchFile(
           slots[0].lawyerId.profile_picture
-        ), // Fetch the profile picture
+        ),
         city: slots[0].lawyerId.city,
         state: slots[0].lawyerId.state,
         designation: slots[0].lawyerId.designation,

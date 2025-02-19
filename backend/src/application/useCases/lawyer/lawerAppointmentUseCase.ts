@@ -18,7 +18,7 @@ class LawyerAppointmentInteractor implements ILawyerAppointmentInteractor {
     private readonly nodeMailer: iEmailService,
     private readonly UserRepository: iUserRepository,
     private readonly UserLawyerRepository: IUserLawyerRepository
-  ) {}
+  ) { }
   async getAllAppointmentBasedStatus(
     status: string,
     userId: string,
@@ -116,18 +116,7 @@ class LawyerAppointmentInteractor implements ILawyerAppointmentInteractor {
         error.statusCode = HttpStatusCode.NotFound;
         throw error;
       }
-      // const razorpay_payment_id = getAppointment?.razorpayPaymentId!;
-      // const consultationFeeWithoutConvenienceFee =
-      //   getAppointment?.subTotal * 100;
-      // const issueRefund = await razorpayInstance.payments.refund(
-      //   razorpay_payment_id,
-      //   { amount: consultationFeeWithoutConvenienceFee }
-      // );
-      // if (!issueRefund) {
-      //   const error: CustomError = new Error(MessageError.RefundInitiatedFiled);
-      //   error.statusCode = HttpStatusCode.NotFound;
-      //   throw error;
-      // }
+
 
       await this.LawyerAppointmentRepository.cancelAppointmentById(
         appointmentId,
