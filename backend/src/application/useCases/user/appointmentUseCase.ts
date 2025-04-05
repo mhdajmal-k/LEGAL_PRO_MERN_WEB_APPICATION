@@ -20,7 +20,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
     private readonly s3Service: IS3Service,
     private readonly nodeMailer: iEmailService,
     private readonly UserRepository: iUserRepository
-  ) {}
+  ) { }
   async createAppointment(
     LawyerId: string,
     slotId: string,
@@ -252,6 +252,7 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
       };
 
       const order = await razorpayInstance.orders.create(options);
+      console.log(order, "order")
       await this.createPaymentTimeout(appointmentId);
       return {
         statusCode: 201,
@@ -262,10 +263,11 @@ class UserAppointmentInteractor implements IUserAppointmentInteractor {
           amount: order.amount,
           currency: order.currency,
           receipt: order.receipt,
-          key: process.env.RAZORPAY_API_KEY,
+          key: process.env.RAZORPAY_ID,
         },
       };
     } catch (error: any) {
+      console.log(error, "hhhhhhhhhhhhhhhhhhhhhhhhhh")
       throw Error(error.message);
     }
   }

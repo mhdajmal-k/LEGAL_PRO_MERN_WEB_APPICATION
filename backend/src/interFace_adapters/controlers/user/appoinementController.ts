@@ -7,7 +7,7 @@ import IUserAppointmentInteractor from "../../../domain/entites/iuseCase/iUserAp
 import { AuthenticatedRequest } from "../../../domain/entites/imodels/iLawyer";
 
 class AppointmentController {
-  constructor(private UserAppointmentInteractor: IUserAppointmentInteractor) {}
+  constructor(private UserAppointmentInteractor: IUserAppointmentInteractor) { }
 
   ////////////////////
 
@@ -154,6 +154,7 @@ class AppointmentController {
       const response = await this.UserAppointmentInteractor.createPayment(
         appointmentId
       );
+      console.log(response, "response")
       if (response.status) {
         return res.status(response.statusCode).json({
           status: response.status,
